@@ -1,0 +1,33 @@
+.navbar {
+    border-bottom-style: solid;
+    border-width: 1px;
+    border-color: #ddd;
+    height: 75px;
+    background-color: white!important;
+}
+
+body {
+    background-color: #f8f9fa!important;
+}
+
+.navbar-brand {
+    font-size: 1.6rem;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+}
+
+.nav-item.dropdown .nav-link {
+    color: black;
+}
+
+.nav-item.dropdown .nav-link:hover {
+    color: rgba(0, 0, 0, .85)
+}
+
+.no-border-radius {
+    border-radius: 0px;
+}
+
+.auth-button {
+    width: 150px;
+}
