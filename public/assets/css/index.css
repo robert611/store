@@ -79,7 +79,11 @@ footer {
 }
 
 .search-input {
-    width: 350px!important;
+    width: 300px!important;
+}
+
+.search-select-input {
+    width: 170px!important;
 }
 
 .max-width-100{
