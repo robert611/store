@@ -29,20 +29,29 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
                                 twoje konto
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <ul class="dropdown-menu max-width-100" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Action</a></li>
                                 <li><a class="dropdown-item" href="#">Another action</a></li>
                                 <li><hr class="dropdown-divider"></li>
+                                {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <li>
                                     <a class="dropdown-item no-background-on-active" href="{{ path('app_login') }}">
-                                        <button class="btn btn-primary no-border-radius auth-button">Zaloguj się</button>
+                                        <button class="btn btn-primary no-border-radius auth-button max-width-100">Zaloguj się</button>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item no-background-on-active" href="{{ path('app_register') }}">
-                                        <button class="btn btn-danger no-border-radius auth-button">Zarejestruj się</button>
+                                        <button class="btn btn-danger no-border-radius auth-button max-width-100">Zarejestruj się</button>
                                     </a>
                                 </li>
+                                {% else %}
+                                    <li>
+                                    <a class="dropdown-item no-background-on-active" href="{{ path('app_logout') }}">
+                                        <button class="btn btn-danger no-border-radius auth-button max-width-100">Wyloguj się</button>
+                                    </a>
+                                </li>
+
+                                {% endif %}
                             </ul>
                         </li>
                     </ul>

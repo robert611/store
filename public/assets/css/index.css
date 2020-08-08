@@ -82,3 +82,6 @@ footer {
     width: 350px!important;
 }
 
+.max-width-100{
+    max-width: 100%;
+}
