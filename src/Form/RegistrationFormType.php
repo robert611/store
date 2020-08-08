@@ -6,6 +6,8 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -17,13 +19,34 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email')
-            ->add('username')
+            ->add('email', EmailType::class)
+            ->add('username', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Proszę podaj nazwę użytkownika.',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Twoja nazwa użytkownika musi mieć przynajmniej {{ limit }} znaków.',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 32,
+                        'maxMessage' => 'Twoja nazwa użytkownika może mieć maksymalnie {{ limit }} znaków.',
+                    ]),
+                ],
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Musisz zaakceptować nasz regulamin.',
+                    ]),
+                ],
+            ])
+            ->add('agreeDataUsing', CheckboxType::class, [
+                'mapped' => false,
+                'constraints' => [
+                    new IsTrue([
+                        'message' => 'Musisz zaakceptować ten warunek.',
                     ]),
                 ],
             ])
@@ -37,9 +60,10 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Twoje hasło musi mieć przynajmniej {{ limit }} znaków',
                         // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                        'max' => 32,
+                        'maxMessage' => 'Twoje hasło może mieć maksymalnie {{ limit }} znaków',
                     ]),
                 ],
             ])

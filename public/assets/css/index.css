@@ -85,3 +85,7 @@ footer {
 .max-width-100{
     max-width: 100%;
 }
+
+.register-error-msg {
+    color: #c62828;
+}
