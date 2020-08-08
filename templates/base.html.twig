@@ -12,15 +12,17 @@
     <body>
         <main>
         
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <a class="navbar-brand" href="{{ path('index') }}">Store</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand mr-5 mt-2 mb-2" href="{{ path('index') }}">Store</a>
+                <button class="navbar-toggler mt-2 mb-2" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse mt-2 mb-2" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
-                        
+                        <li class="nav-item">
+                            {% include 'index/_search_form.html.twig' %}
+                        </li>
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
@@ -32,12 +34,12 @@
                                 <li><a class="dropdown-item" href="#">Another action</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item no-background-on-active" href="{{ path('app_login') }}">
                                         <button class="btn btn-primary no-border-radius auth-button">Zaloguj się</button>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item no-background-on-active" href="{{ path('app_register') }}">
                                         <button class="btn btn-danger no-border-radius auth-button">Zarejestruj się</button>
                                     </a>
                                 </li>

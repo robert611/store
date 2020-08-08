@@ -2,7 +2,11 @@
     border-bottom-style: solid;
     border-width: 1px;
     border-color: #ddd;
-    height: 75px;
+    min-height: 75px;
+    background-color: white!important;
+}
+
+.navbar-collapse {
     background-color: white!important;
 }
 
@@ -69,3 +73,12 @@ footer {
 .login-entice-card {
     text-align: center;
 }
+
+.no-background-on-active:active {
+    background-color: inherit;
+}
+
+.search-input {
+    width: 350px!important;
+}
+
