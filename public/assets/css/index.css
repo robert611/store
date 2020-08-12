@@ -93,3 +93,54 @@ footer {
 .register-error-msg {
     color: #c62828;
 }
+
+.vertical-product-image-height {
+    height: 168px;
+}
+
+.horizontal-product-image-height {
+    height: 64px!important;
+    min-width: 70%;
+}
+
+.product-row-caption {
+    font-size: 39px!important;
+}
+
+.container-fluid {
+    padding-left: 9rem!important;
+    padding-right: 9rem!important;
+}
+
+.list-style-type-none {
+    list-style-type: none;
+}
+
+.icon-align {
+    vertical-align: text-bottom;
+    margin-right: 9px;
+}
+
+@media(min-width: 1510px) {
+    .height-350 {
+       height: 350px;
+    } 
+
+    .height-320 {
+       height: 320px!important;
+    }    
+}
+
+@media(max-width: 1172px) {
+    .container-fluid {
+        padding-left: 6rem!important;
+        padding-right: 6rem!important;
+    }    
+}
+
+@media(max-width: 972px) {
+    .container-fluid {
+        padding-left: 2rem!important;
+        padding-right: 2rem!important;
+    }    
+}
