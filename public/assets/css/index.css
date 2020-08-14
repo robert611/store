@@ -121,6 +121,10 @@ footer {
     margin-right: 9px;
 }
 
+.width-100 {
+    width: 100%!important;
+}
+
 @media(min-width: 1510px) {
     .height-350 {
        height: 350px;
