@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <b>{{ form_label(form.pictures, 'Wybierz zdjęcie', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            <b>{{ form_label(form.pictures, 'Wybierz zdjęcie(max 24)', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                             <div class="form-file">
                                 {{ form_widget(form.pictures, {'attr': { 'class' : 'form-file-input', 'id': 'customFile' }}) }}
                                 <label class="form-file-label" for="customFile">
