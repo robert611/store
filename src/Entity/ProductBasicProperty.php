@@ -29,7 +29,7 @@ class ProductBasicProperty
     private $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="productPhysicalProperties")
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="productBasicProperties")
      * @ORM\JoinColumn(nullable=false)
      */
     private $product;

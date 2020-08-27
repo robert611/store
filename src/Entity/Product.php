@@ -27,7 +27,7 @@ class Product
     /**
      * @ORM\Column(type="string", length=2048)
      */
-    private $descritpion;
+    private $description;
 
     /**
      * @ORM\Column(type="integer")
@@ -42,11 +42,13 @@ class Product
 
     /**
      * @ORM\OneToMany(targetEntity=ProductBasicProperty::class, mappedBy="product")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $productBasicProperties;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductPhysicalProperty::class, mappedBy="product")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $productPhysicalProperties;
 
@@ -55,9 +57,31 @@ class Product
      */
     private $productSpecificProperties;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $state;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $auction_type;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=DeliveryType::class, mappedBy="product")
+     */
+    private $deliveryTypes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ProductPicture::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $productPictures;
+
     public function __construct()
     {
         $this->productPhysicalProperties = new ArrayCollection();
+        $this->deliveryTypes = new ArrayCollection();
+        $this->productPictures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,14 +101,14 @@ class Product
         return $this;
     }
 
-    public function getDescritpion(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descritpion;
+        return $this->description;
     }
 
-    public function setDescritpion(string $descritpion): self
+    public function setDescription(string $description): self
     {
-        $this->descritpion = $descritpion;
+        $this->description = $description;
 
         return $this;
     }
@@ -158,5 +182,88 @@ class Product
     public function getProductSpecificProperties(): Collection
     {
         return $this->productSpecificProperties;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state): self
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function getAuctionType(): ?string
+    {
+        return $this->auction_type;
+    }
+
+    public function setAuctionType(string $auction_type): self
+    {
+        $this->auction_type = $auction_type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DeliveryType[]
+     */
+    public function getDeliveryTypes(): Collection
+    {
+        return $this->deliveryTypes;
+    }
+
+    public function addDeliveryType(DeliveryType $deliveryType): self
+    {
+        if (!$this->deliveryTypes->contains($deliveryType)) {
+            $this->deliveryTypes[] = $deliveryType;
+            $deliveryType->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDeliveryType(DeliveryType $deliveryType): self
+    {
+        if ($this->deliveryTypes->contains($deliveryType)) {
+            $this->deliveryTypes->removeElement($deliveryType);
+            $deliveryType->removeProduct($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductPicture[]
+     */
+    public function getProductPictures(): Collection
+    {
+        return $this->productPictures;
+    }
+
+    public function addProductPicture(ProductPicture $productPicture): self
+    {
+        if (!$this->productPictures->contains($productPicture)) {
+            $this->productPictures[] = $productPicture;
+            $productPicture->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductPicture(ProductPicture $productPicture): self
+    {
+        if ($this->productPictures->contains($productPicture)) {
+            $this->productPictures->removeElement($productPicture);
+            // set the owning side to null (unless already changed)
+            if ($productPicture->getProduct() === $this) {
+                $productPicture->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

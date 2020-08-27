@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-3">
+                {% include 'account/_side_menu.html.twig' %}
+            </div>
+            <div class="col-md-9">
+                <div class="card card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            <b>{{ form_label(form.name, 'Nazwa przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            {{ form_widget(form.name, {'attr': { 'class' : 'form-control' }}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <b>{{ form_label(form.description, 'Opis przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            {{ form_widget(form.description, {'attr': { 'class' : 'form-control' }}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <b>{{ form_label(form.state, 'Stan przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            {% for choice in form.state %}
+                                <div class="form-check">
+                                    {{ form_widget(choice,  {'attr': { 'class' : 'form-check-input' }}) }}
+                                    {{ form_label(choice) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            <b>{{ form_label(form.category, 'Wybierz kategorię', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            {{ form_widget(form.category, {'attr': { 'class' : 'form-select' }}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <b>{{ form_label(form.pictures, 'Wybierz zdjęcie', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            <div class="form-file">
+                                {{ form_widget(form.pictures, {'attr': { 'class' : 'form-file-input', 'id': 'customFile' }}) }}
+                                <label class="form-file-label" for="customFile">
+                                    <span class="form-file-text">Wybierz zdjęcia</span>
+                                    <span class="form-file-button">Przeglądaj</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <b>{{ form_label(form.price, 'Cena przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            {{ form_widget(form.price, {'attr': { 'class' : 'form-control', 'min' : '0' }}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <b>{{ form_label(form.delivery_types, 'Metody dostawy', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            <table class="table delivery-methods-table">
+                                {% for type in form.delivery_types %} 
+                                    <tr>
+                                        <td>
+                                            <div class="form-check mb-3">
+                                                {{ form_widget(type,  {'attr': { 'class' : 'form-check-input' }}) }}
+                                                {{ form_label(type) }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="string" disabled in="0" value="{{ type.vars.errors.form.parent.config.attributes.choice_list_view.choices[type.vars.value].data.default_price }} zł" name="product[{{ type.vars.value }}-price]" class="form-control delivery-method-price-input">
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+
+                        <div class="mb-3">
+                            <b>{{ form_label(form.auction_type, 'Wystaw jako', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            {% for choice in form.auction_type %}
+                                <div class="form-check mb-3">
+                                    {{ form_widget(choice,  {'attr': { 'class' : 'form-check-input' }}) }}
+                                    {{ form_label(choice) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+
+                        <button class="btn btn-success no-border-radius mt-3 put-up-product">{{ button_label|default('Wystaw') }}</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
