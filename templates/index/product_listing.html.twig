@@ -114,44 +114,31 @@
             </div>
 
             <div class="col-sm-12 col-md-9 mb-2">
+                {% if products is iterable and products[0] is defined %}
                 <div class="card card-body no-border-radius pl-4 pt-4">
-                    {% for i in 1..5 %}
+                    {% for product in products %}
                         <div class="row mb-2">
                             <div class="col-4 col-sm-4 col-md-3 col-xl-2 text-center mb-2">
-                                <img class="img-fluid" src="https://c.allegroimg.com/s128/0373cd/a255bb9d49d6b2a7264e19914cdc/50L-12-230-AGREGAT-LODOWKA-TURYSTYCZNA-SAMOCHODOWA"/>
+                                <img class="img-fluid" src="{{ asset('uploads/pictures/'~product.productPictures[0].name) }}"/>
                             </div>
 
                             <div class="col-8 col-sm-6 col-md-9 col-xl-10 mb-2">
                                 <p>
-                                    50L 12/230 AGREGAT LODÓWKA TURYSTYCZNA SAMOCHODOWA <br>
-                                    <small>Rodzaj: jednodzwiow</small> <small class="ml-3">No Frost: brak informacji</small> <small class="ml-3">Klasa efektywności energetycznej: A+++</small>
+                                    {{ product.name }} <br>
+                                    <small>Stan: {{ product.state }} </small> <small class="ml-3">No Frost: brak informacji</small> <small class="ml-3">Klasa efektywności energetycznej: A+++</small>
                                 </p>
 
-                                <h4>389, 00 zł</h4>
+                                <h4>{{ product.price }} zł</h4>
                             </div>
                         </div>
 
                         <hr>
                     {% endfor %}
-
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-end">
-                            <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    {% include 'index/_pagination.html.twig' %}
                 </div>
+                {% else %}
+                    <p class="h4">Nie ma produktów pasujących do twoich kryteriów.</p>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -7,17 +7,9 @@
                 <div class="card card-body no-border-radius height-350 pr-1">
                     <h5>Kategorie</h5>
                     <ul class="list-style-type-none pl-0">
-                        <li><i class="material-icons icon-align">computer</i>Elektronika</li>
-                        <li><i class="material-icons icon-align">style</i>Moda</li>
-                        <li><i class="material-icons icon-align">home</i>Dom i ogród</li>
-                        <li><i class="material-icons icon-align">shopping_basket</i>Supermarket</li>
-                        <li><i class="material-icons icon-align">child_friendly</i>Dziecko</li>
-                        <li><i class="material-icons icon-align">face</i>Uroda</li>
-                        <li><i class="material-icons icon-align">healing</i>Zdrowie</li>
-                        <li><i class="material-icons icon-align">panorama</i>Kultura i rozrywka</li>
-                        <li><i class="material-icons icon-align">directions_run</i>Sport i turystyka</li>
-                        <li><i class="material-icons icon-align">directions_car</i>Motoryzacja</li>
-                        <li><i class="material-icons icon-align">home</i>Nieruchomości</li>
+                        {% for category in categories %}
+                            <li><a class="no-anchor-styles" href="{{ path('product_listing', {'category': category.id}) }}"><i class="material-icons icon-align mr-2">{{ category.icon }}</i>{{ category.name }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>

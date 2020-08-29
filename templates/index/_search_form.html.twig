@@ -3,9 +3,9 @@
         <input type="text" name="product" class="form-control no-border-radius search-input" placeholder="czego szukasz?" aria-label="product name">
         <select class="form-select search-select-input" name="category" aria-label=".form-select-sm">
             <option selected>Kategorie</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            {% for category in categoriesService.getCategories() %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
         </select>
         <button class="btn btn-outline-secondary no-border-radius" type="submit">Szukaj</button>
     </div>

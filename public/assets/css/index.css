@@ -118,7 +118,6 @@ footer {
 
 .icon-align {
     vertical-align: text-bottom;
-    margin-right: 9px;
 }
 
 .width-100 {
@@ -163,6 +162,41 @@ footer {
 
 .put-up-product {
     min-width: 120px;
+}
+
+.no-anchor-styles {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+.m-pagination li {
+    display: inline-block;
+    border-radius: 2px;
+    text-align: center;
+    vertical-align: top;
+    height: 30px;
+}
+
+.m-pagination li a {
+    color: #444;
+    display: inline-block;
+    font-size: 1.2rem;
+    padding: 0 10px;
+    line-height: 30px;
+    text-decoration: none;
+}
+
+.m-pagination li.active {
+    background-color: #ee6e73;
+}
+
+.m-pagination li.active a {
+    color: #fff;
+}
+
+m.pagination li i {
+    font-size: 2rem;
 }
 
 @media(min-width: 1510px) {

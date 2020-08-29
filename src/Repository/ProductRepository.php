@@ -19,6 +19,34 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    /**
+     * @return Product[]
+     */
+    public function findProductByNameAndCategory(?string $name, ?string $category): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $categoryClause = 'p.category = :category';
+
+        /* If category is a string like for instance "Category" it will set it to 0 otherwise if it is proper number string like "1" to its number of type int */
+        $category = (int) $category;
+
+        if (is_null($category) or $category < 1) {
+            $category = 0;
+            $categoryClause = 'p.category != :category ';
+        }
+
+        $name = (string) $name;
+
+        $query = $entityManager->createQuery(
+            'SELECT p FROM App\Entity\Product p
+            WHERE ' . $categoryClause . '
+            AND p.name LIKE :name'
+        )->setParameter('category', $category)->setParameter('name', "%$name%");
+
+        return $query->getResult();
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
