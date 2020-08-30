@@ -10,6 +10,7 @@ use App\Entity\Product;
 use App\Entity\ProductPicture;
 use App\Entity\DeliveryType;
 use App\Form\ProductType;
+use App\Model\SaveProductProperties;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
@@ -81,6 +82,12 @@ class AccountController extends AbstractController
                     $entityManager->persist($productPicture);
                 }
             }
+
+            $saveProductProperties = new SaveProductProperties($entityManager, $product);
+
+            $saveProductProperties->saveBasicProperties($request->request->get('product')['basic_properties']);
+            $saveProductProperties->saveSpecificProperties($request->request->get('product')['specific_properties']);
+            $saveProductProperties->savePhysicalProperties($request->request->get('product')['physical_properties']);
 
             $entityManager->persist($product);
             $entityManager->flush();

@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/new_product_form.js') }}"></script>
+{% endblock %}
+
 {% block body %}
     <div class="container mt-5">
         <div class="row">
@@ -48,6 +53,51 @@
                         <div class="mb-3">
                             <b>{{ form_label(form.price, 'Cena przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                             {{ form_widget(form.price, {'attr': { 'class' : 'form-control', 'min' : '0' }}) }}
+                        </div>
+
+                        <div class="mb-3" id="basic-parameters-div">
+                            <b><label class="mb-3">Podstawowe Parametry</label></b>
+                            <div class="row">
+                                <div class="col-5">
+                                    <input type="text" name="product[basic_properties][name][]" class="form-control" placeholder="nazwa">
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" name="product[basic_properties][value][]" class="form-control" placeholder="wartość">
+                                </div>
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-info" id="add-basic-parameter-row-button"><i class="material-icons icon-align">add</i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3" id="specific-parameters-div">
+                            <b><label class="mb-3">Specyficzne Parametry</label></b>
+                            <div class="row">
+                                <div class="col-5">
+                                    <input type="text" name="product[specific_properties][name][]" class="form-control" placeholder="nazwa">
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" name="product[specific_properties][value][]" class="form-control" placeholder="wartość">
+                                </div>
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-info" id="add-specific-parameter-row-button"><i class="material-icons icon-align">add</i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3" id="physical-parameters-div">
+                            <b><label class="mb-3">Parametry Fizyczne</label></b>
+                            <div class="row basic-parameters-input-row">
+                                <div class="col-5">
+                                    <input type="text" name="product[physical_properties][name][]" class="form-control" placeholder="nazwa">
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" name="product[physical_properties][value][]"class="form-control" placeholder="wartość">
+                                </div>
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-info" id="add-physical-parameter-row-button"><i class="material-icons icon-align">add</i></button>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mb-3">
