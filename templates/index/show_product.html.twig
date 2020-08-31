@@ -5,13 +5,34 @@
         <div class="card card-body no-border-radius">
             <div class="row pt-3">
                 <div class="col-7 text-center">
-                    <img class="img-fluid" src="https://c.allegroimg.com/s512/0373cd/a255bb9d49d6b2a7264e19914cdc/50L-12-230-AGREGAT-LODOWKA-TURYSTYCZNA-SAMOCHODOWA"/>
+                    <div id="carouselIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+                        <ol class="carousel-indicators">
+                            {% for i, picture in product.productPictures %}
+                                <li data-target="#carouselExampleCaptions" data-slide-to="{{ i }}" {% if i == 0 %} class="active" {% endif %}></li>
+                            {% endfor %}
+                        </ol>
+                        <div class="carousel-inner">
+                            {% for i, picture in product.productPictures %}
+                                <div class="carousel-item {% if i == 0 %} active {% endif %}">
+                                    <img class="d-block w-100" src="{{ asset('uploads/pictures/'~picture.name) }}"/>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselIndicators" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselIndicators" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
                 </div>
                 <div class="col-5">
-                    <h5>50L 12/230 AGREGAT LODÓWKA TURYSTYCZNA SAMOCHODOWA</h5>
-                    <small>od warszawski_sklep - 99,4%</small>
+                    <h5>{{ product.name }}</h5>
+                    <small>od {{ product.owner.getUsername() }} - 99,4%</small>
 
-                    <h3 class="mt-4 mb-4">389,00zł</h3>
+                    <h3 class="mt-4 mb-4">{{ product.price }} zł</h3>
 
                     <hr>
                         <ul class="list-style-type-none pl-1">
@@ -28,77 +49,46 @@
 
         <div class="card card-body no-border-radius mt-3">
             <h4 class="mb-3">Parametry</h4>
-            <p>Faktura: Wystawiam fakturę VAT</p>
 
-            <h5 class="mb-3">Dane Podstawowe</h5>
-            <div class="row">
-                <div class="col-6">
-                    Stan: Nowa
-                </div> 
-                <div class="col-6">
-                    Model: MAX-50L
-                </div> 
-                <div class="col-6">
-                    Marka: Germin
+            {% if product.getProductBasicProperties is iterable %}
+                <h5 class="mb-3 mt-3">Parametry Fizyczne</h5>
+                <div class="row">
+                    {% for property in product.getProductBasicProperties %}
+                    <div class="col-6">
+                        {{ property.property }}: {{ property.value }}
+                    </div>
+                    {% endfor %} 
                 </div>
-                <div class="col-6">
-                    Kod producenta: MAX-50L
-                </div>
-            </div>
+            {% endif %}
 
-            <h5 class="mb-3 mt-3">Parametry fizyczne</h5>
-            <div class="row">
-                <div class="col-6">
-                    Stan: Nowa
-                </div> 
-                <div class="col-6">
-                    Model: MAX-50L
-                </div> 
-                <div class="col-6">
-                    Marka: Germin
+            {% if product.getProductPhysicalProperties is iterable %}
+                <h5 class="mb-3 mt-3">Parametry Fizyczne</h5>
+                <div class="row">
+                    {% for property in product.getProductPhysicalProperties %}
+                    <div class="col-6">
+                        {{ property.property }}: {{ property.value }}
+                    </div>
+                    {% endfor %} 
                 </div>
-                <div class="col-6">
-                    Kod producenta: MAX-50L
+            {% endif %}
+
+            {% if product.getProductSpecificProperties is iterable %}
+                <h5 class="mb-3 mt-3">Dane szczegółowe</h5>
+                <div class="row">
+                    {% for property in product.getProductSpecificProperties %}
+                    <div class="col-6">
+                        {{ property.property }}: {{ property.value }}
+                    </div>
+                    {% endfor %} 
                 </div>
-            </div>
+            {% endif %}
         </div>
 
         <div class="card card-body no-border-radius mt-3">
             <h4 class="mb-3">Opis</h4>
             <p>
-                <h4>LODÓWKA TURYSTYCZNA MAX-50L</h4>
-                <h4>DO SAMOCHODU I DO DOMU</h4>
-                <h4>PODWÓJNY SYSTEM CHŁODZĄCY</h4>
-
-                <ul>
-                    <li>PRODUKT JEST NOWY NIEUŻYWANY ORYGINALNIE ZAPAKOWANY BEZPOŚREDNIO OD PRODUCENTA</li>
-                    <li>FUNKCJA CHŁODZENIA I GRZANIA</li>
-                    <li>TEMPERATURA CHŁODZENIA DO 25°C PONIŻEJ TEMPERATURY OTOCZENIA</li>
-                    <li>PODWÓJNY SYSTEM CHŁODZENIA</li>
-                    <li>PROSTA OBSŁUGA</li>
-                    <li>KÓŁKA UMOŻLIWIAJĄCE TRANSPORT</li>
-                    <li>ZASILANA 230V LUB 12V</li>
-                    <li>WYGODNE UCHWYTY</li>
-                    <li>PRZEWODY ZASILAJĄCE W ZESTAWIE</li>
-                    <li>POJEMNOŚĆ 50L</li>
-                    <li>IZOLACJA PIANKOWA O WYSOKIEJ JAKOŚCI</li>
-                    <li>PANEL STERUJĄCY Z WEJŚCIAMI ZASILANIA, DIODAMI KONTROLNYMI, PRZEŁĄCZNIKIEM GRZANIA I CHŁODZENIA</li>
-                    <li>MOŻLIWOŚĆ PRACY W PIONIE</li>
-                    <li>DOSKONALE SPRAWDZI SIĘ W DOMU, SAMOCHODZIE, HOTELU, DOMKU LETNISKOWYM CZY W SZPITALU</li>
-                    <li>SOLIDNE, ESTETYCZNE WYKONANIE</li>
-                    <li>INSTRUKCJA W JEZYKU POLSKIM</li>
-                </ul>
-
-                <h4>LODÓWKA TURYSTYCZNA GERMIN MAX-50L</h4>
-                Lodówka turystyczna wyróżnia się wysoką jakością użytych materiałów, a co za tym idzie, dobrą izolacją termiczną oraz energooszczędnością.
-                Lodówka turystyczna - samochodowa o pojemności 50 litrów świetnie sprawdzi się zarówno w dłuższej podróży, jak i w krótkim wypadzie na łono natury. Model oferuje funkcję chłodzenia do 25°C poniżej temperatury otoczenia oraz funkcję ogrzewania do temperatury 65°C. Dzięki kompaktowym wymiarom i niewielkiej wadze każdy znajdzie na nią miejsce w swoim samochodzie.
-
-                Urządzenie ma możliwość zasilania samochodowego napięciem 12 V oraz napięciem 230 V dzięki wbudowanemu zasilaczowi. Posiada wygodny uchwyty do przenoszenia oraz przewody zasilające. Doskonały wybór dla turystów i nie tylko.
-
-                Lodówka posiada podwójny system chłodzący.
-
-                Nadaje się do chłodzenia żywności, napojów, owoców, kosmetyków, produktów ochrony zdrowia.
-</p>
+                {{ product.description }}
+            </p>
         </div>
     </div>
 {% endblock %}

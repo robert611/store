@@ -37,6 +37,8 @@ class AccountController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+
+            $product->setOwner($this->getUser());
             
             $deliveryTypes = $request->request->get('product')["delivery_types"];
 

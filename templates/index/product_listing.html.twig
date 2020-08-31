@@ -124,7 +124,7 @@
 
                             <div class="col-8 col-sm-6 col-md-9 col-xl-10 mb-2">
                                 <p>
-                                    {{ product.name }} <br>
+                                    <a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a> <br>
                                     <small>Stan: {{ product.state }} </small> <small class="ml-3">No Frost: brak informacji</small> <small class="ml-3">Klasa efektywności energetycznej: A+++</small>
                                 </p>
 
