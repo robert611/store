@@ -89,7 +89,7 @@ class AccountController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
 
-            return $this->redirectToRoute('account_new_product_message');
+            return $this->redirectToRoute('account_new_product_message', ['productId' => $product->getId()]);
         }
 
         return $this->render('account/index.html.twig', [
@@ -98,10 +98,10 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/account/product/posting/message", name="account_new_product_message")
+     * @Route("/account/product/posting/message/{productId}", name="account_new_product_message")
      */
-    public function showMessageAfterPostingProduct()
+    public function showMessageAfterPostingProduct($productId)
     {
-        return $this->render('account/product_posting_message.html.twig');
+        return $this->render('account/product_posting_message.html.twig', ['productId' => $productId]);
     }
 }

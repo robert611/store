@@ -7,7 +7,7 @@
                 {% include 'account/_side_menu.html.twig' %}
             </div>
             <div class="col-md-9">
-                <p class="h4">Twoja oferta została wystawiona. Możesz ją zobaczyć <a href="#">tutaj</a>. Zachęcamy do dalszych sprzedaży.</p>
+                <p class="h4">Twoja oferta została wystawiona. Możesz ją zobaczyć <a href="{{ path('product_show', {'id': productId} )}}">tutaj</a>. Zachęcamy do dalszych sprzedaży.</p>
             </div>
         </div>
     </div>

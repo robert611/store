@@ -50,7 +50,7 @@
         <div class="card card-body no-border-radius mt-3">
             <h4 class="mb-3">Parametry</h4>
 
-            {% if product.getProductBasicProperties is iterable %}
+            {% if product.getProductBasicProperties|length > 0 %}
                 <h5 class="mb-3 mt-3">Parametry Fizyczne</h5>
                 <div class="row">
                     {% for property in product.getProductBasicProperties %}
@@ -61,7 +61,7 @@
                 </div>
             {% endif %}
 
-            {% if product.getProductPhysicalProperties is iterable %}
+            {% if product.getProductPhysicalProperties|length > 0 %}
                 <h5 class="mb-3 mt-3">Parametry Fizyczne</h5>
                 <div class="row">
                     {% for property in product.getProductPhysicalProperties %}
@@ -72,7 +72,7 @@
                 </div>
             {% endif %}
 
-            {% if product.getProductSpecificProperties is iterable %}
+            {% if product.getProductSpecificProperties|length > 0 %}
                 <h5 class="mb-3 mt-3">Dane szczegółowe</h5>
                 <div class="row">
                     {% for property in product.getProductSpecificProperties %}

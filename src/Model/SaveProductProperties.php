@@ -23,6 +23,9 @@ class SaveProductProperties
 
         for ($key = 0; $key < $propertiesLength; $key++)
         {
+
+            if(strlen($basicProperties['name'][$key]) == 0) continue;
+
             $productBasicProperty = new ProductBasicProperty();
 
             $productBasicProperty->setProperty($basicProperties['name'][$key]);
@@ -40,6 +43,8 @@ class SaveProductProperties
 
         for ($key = 0; $key < $propertiesLength; $key++)
         {
+            if(strlen($specificProperties['name'][$key]) == 0) continue;
+
             $productSpecificProperty = new ProductSpecificProperty();
 
             $productSpecificProperty->setProperty($specificProperties['name'][$key]);
@@ -56,6 +61,8 @@ class SaveProductProperties
 
         for ($key = 0; $key < $propertiesLength; $key++)
         {
+            if(strlen($physicalProperties['name'][$key]) == 0) continue;
+
             $productPhysicalProperty = new ProductPhysicalProperty();
 
             $productPhysicalProperty->setProperty($physicalProperties['name'][$key]);
