@@ -18,33 +18,33 @@
                         <div class="mb-3">
                             {{ form_label(registrationForm.email) }}
                             {{ form_widget(registrationForm.email, {'attr': { 'class' : 'form-control' }}) }}
-                            <div class="register-error-msg mt-1">{{ form_errors(registrationForm.email) }}</div>
+                            <div class="error-msg mt-1">{{ form_errors(registrationForm.email) }}</div>
                         </div>
 
                         <div class="mb-3">
                             {{ form_label(registrationForm.username) }}
                             {{ form_widget(registrationForm.username, {'attr': { 'class' : 'form-control' }}) }}
-                            <div class="register-error-msg mt-1">{{ form_errors(registrationForm.username) }}</div>
+                            <div class="error-msg mt-1">{{ form_errors(registrationForm.username) }}</div>
                         </div>
 
                         <div class="mb-3">
                             <label>Hasło</label>
                             {{ form_widget(registrationForm.plainPassword, {'attr': { 'class' : 'form-control' }}) }}
-                            <div class="register-error-msg mt-1">{{ form_errors(registrationForm.plainPassword) }}</div>
+                            <div class="error-msg mt-1">{{ form_errors(registrationForm.plainPassword) }}</div>
                         </div>
 
                         <div class="checkbox mb-3">
                             <label>
                                 {{ form_widget(registrationForm.agreeTerms) }} Akceptuje Regulamin platformy store.
                             </label>
-                            <div class="register-error-msg mt-1">{{ form_errors(registrationForm.agreeTerms) }}</div>
+                            <div class="error-msg mt-1">{{ form_errors(registrationForm.agreeTerms) }}</div>
                         </div>
 
                         
                         <div class="checkbox mb-3">
                             <label>
                                 {{ form_widget(registrationForm.agreeDataUsing) }} Akceptuje Regulamin platformy store. Wyrażam zgodę na przetwarzanie moich danych osobowych w celach marketingowych i otrzymywanie informacji handlowych od Allegro z wykorzystaniem telekomunikacyjnych urządzeń końcowych (m.in. telefon) oraz środków komunikacji elektronicznej (m.in. SMS, e-mail).
-                                <div class="register-error-msg mt-1">{{ form_errors(registrationForm.agreeDataUsing) }}</div>
+                                <div class="error-msg mt-1">{{ form_errors(registrationForm.agreeDataUsing) }}</div>
                             </label>
                         </div>
 

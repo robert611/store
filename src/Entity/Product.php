@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -59,11 +60,13 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull(message="Wybierz którąś z opcji")
      */
     private $state;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotNull(message="Wybierz którąś z opcji")
      */
     private $auction_type;
 
@@ -82,6 +85,11 @@ class Product
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $delivery_time;
 
     public function __construct()
     {
@@ -283,5 +291,29 @@ class Product
         $this->owner = $owner;
 
         return $this;
+    }
+
+    public function getDeliveryTime(): ?string
+    {
+        return $this->delivery_time;
+    }
+
+    public function setDeliveryTime(string $delivery_time): self
+    {
+        $this->delivery_time = $delivery_time;
+
+        return $this;
+    }
+
+    public function getCheapestDeliveryPrice()
+    {
+        $min = $this->deliveryTypes[0]->getDefaultPrice();
+
+        foreach($this->deliveryTypes as $delivery)
+        {
+            if ($min > $delivery->getDefaultPrice()) $min = $delivery->getDefaultPrice();
+        }
+
+        return $min;
     }
 }

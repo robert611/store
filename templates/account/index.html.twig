@@ -17,11 +17,17 @@
                         <div class="mb-3">
                             <b>{{ form_label(form.name, 'Nazwa przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                             {{ form_widget(form.name, {'attr': { 'class' : 'form-control' }}) }}
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.name) }}
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <b>{{ form_label(form.description, 'Opis przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                             {{ form_widget(form.description, {'attr': { 'class' : 'form-control' }}) }}
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.description) }}
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -32,11 +38,17 @@
                                     {{ form_label(choice) }}
                                 </div>
                             {% endfor %}
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.state) }}
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <b>{{ form_label(form.category, 'Wybierz kategorię', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                             {{ form_widget(form.category, {'attr': { 'class' : 'form-select' }}) }}
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.category) }}
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -48,11 +60,17 @@
                                     <span class="form-file-button">Przeglądaj</span>
                                 </label>
                             </div>
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.pictures) }}
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <b>{{ form_label(form.price, 'Cena przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                             {{ form_widget(form.price, {'attr': { 'class' : 'form-control', 'min' : '0' }}) }}
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.price) }}
+                            </div>
                         </div>
 
                         <div class="mb-3" id="basic-parameters-div">
@@ -117,6 +135,17 @@
                                     </tr>
                                 {% endfor %}
                             </table>
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.delivery_types) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <b>{{ form_label(form.delivery_time, 'Przewidywany czas wysyłki(w godzinach)', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                            {{ form_widget(form.delivery_time, {'attr': { 'class' : 'form-control' }}) }}
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.delivery_time) }}
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -127,6 +156,9 @@
                                     {{ form_label(choice) }}
                                 </div>
                             {% endfor %}
+                            <div class="error-msg form-error mt-1">
+                                {{ form_errors(form.auction_type) }}
+                            </div>
                         </div>
 
 

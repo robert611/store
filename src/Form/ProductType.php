@@ -18,13 +18,26 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ProductType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new Length([
+                        'min' => 4,
+                        'max' => 150,
+                        'minMessage' => 'Nazwa musi składać się z przynajmniej {{ limit }} znaków',
+                        'maxMessage' => 'Nazwa nie może się składać z więcej niz {{ limit }} znaków',
+                        'allowEmptyString' => false
+                    ])
+                ]
+            ])
             ->add('description', TextareaType::class)
             ->add('price', NumberType::class, [
                 'scale' => 3
@@ -37,7 +50,7 @@ class ProductType extends AbstractType
                 ],
                 'label_attr' => ['class' => 'form-check-label'],
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
             ])
             ->add('pictures', FileType::class, [
                 'mapped' => false,
@@ -47,6 +60,12 @@ class ProductType extends AbstractType
                         'maxSize' => '4096k', 
                         'mimeTypesMessage' => 'Proszę przesyłać tylko zdjęcia',
                         'groups' => true
+                    ]),
+                    new Count([
+                        'min' => 1,
+                        'max' => 24,
+                        'minMessage' => 'Musisz przesłać przynajmniej jedno zdjęcie',
+                        'maxMessage' => 'Nie możesz przesłać więcej niż 24 zdjęć'
                     ])
                 ]
             ])
@@ -58,17 +77,30 @@ class ProductType extends AbstractType
                 ],
                 'label_attr' => ['class' => 'form-check-label'],
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
             ])
             ->add('delivery_types', EntityType::class, [
                 'class' => DeliveryType::class, 
                 'multiple' => true,
                 'expanded' => true,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
+                'constraints' => [
+                    new Count([
+                        'min' => 1,
+                        'minMessage' => 'Musisz wybrać formę przesyłki'
+                    ])
+                ]
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name'
+            ])
+            ->add('delivery_time', TextType::class, [
+                'constraints' => [
+                    new NotNull([
+                        'message' => 'Ta wartość nie może być pusta'
+                    ])
+                ]
             ])
         ;
     }

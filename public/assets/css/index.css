@@ -90,8 +90,13 @@ footer {
     max-width: 100%;
 }
 
-.register-error-msg {
+.error-msg {
     color: #c62828;
+}
+
+.form-error > ul {
+    list-style-type: none;
+    padding-left: 0px;
 }
 
 .vertical-product-image-height {

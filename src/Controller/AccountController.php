@@ -51,11 +51,6 @@ class AccountController extends AbstractController
 
             $pictures = $form->get('pictures')->getData();
      
-            /* Make sure there will not be more than 24 files */
-            if (count($pictures) > 24) {
-                $pictures = array_slice($pictures, 0, 24);
-            }
-
             if ($pictures) {
                 foreach ($pictures as $picture) 
                 {
