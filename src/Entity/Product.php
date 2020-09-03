@@ -316,4 +316,17 @@ class Product
 
         return $min;
     }
+
+    public function __toString()
+    {
+        return "name: $this->getName()";
+        return [
+            'name' => $this->getName(),
+            'price' => $this->getPrice(),
+            'state' => $this->getState(),
+            'deliveryTypes' => $this->getDeliveryTypes(),
+            'productBasicProperties' => $this->getProductBasicProperties(),
+            'productSpecificProperties' => $this->getProductSpecificProperties()
+        ];
+    }
 }

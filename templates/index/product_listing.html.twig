@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/filter_products.js') }}"></script>
+{% endblock %}
+
 {% block body %}
 
     <div class="container mt-5">
@@ -12,67 +17,73 @@
 
                     <h5>stan</h5>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="state_new">
+                        <input class="form-check-input" name="product_state" type="radio" data-state="nowy" id="state_new">
                         <label class="form-check-label" for="state_new">
-                            nowe
+                            nowy
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="state_used">
+                        <input class="form-check-input" name="product_state" type="radio" data-state="używany" id="state_used">
                         <label class="form-check-label" for="state_used">
-                           używane
+                           używany
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="state_after_exposure">
-                        <label class="form-check-label" for="flexCheckChecked">
-                           powystawowe
+                        <input class="form-check-input" name="product_state" type="radio" data-state="bardzo dobry" id="state_very_good">
+                        <label class="form-check-label" for="state_very_good">
+                           bardzo dobry
                         </label>
                     </div>
 
                     <h5 class="mt-3">rodzaj oferty</h5>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="offer_type_buy_now">
+                        <input class="form-check-input product-auction-type" name="product_auction_type" type="radio" data-auctionType="buy_now">
                         <label class="form-check-label" for="state_new">
                             kup teraz
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="offer_type_auction">
+                        <input class="form-check-input product-auction-type" name="product_auction_type" type="radio" data-auctionType="auction">
                         <label class="form-check-label" for="state_used">
                            licytacja
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input product-auction-type" name="product_auction_type" type="radio" data-auctionType="free_advertisment">
+                        <label class="form-check-label" for="offer_free_advertisment">
+                           ogłoszenie
                         </label>
                     </div>
 
                     <h5 class="mt-3">cena (zł)</h5>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
+                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="0" data-maxPrice="349.99" id="prize-bracket-one">
+                        <label class="form-check-label" for="prize-bracket-one">
                             poniżej 350 zł
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            900 zł do 1750 zł
+                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="350" data-maxPrice="1750" id="prize-bracket-two">
+                        <label class="form-check-label" for="prize-bracket-two">
+                            350 zł do 1750 zł
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-                        <label class="form-check-label" for="flexRadioDefault2">
+                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="1750.01" data-maxPrice="2750" id="prize-bracket-three">
+                        <label class="form-check-label" for="prize-bracket-three">
                             1750 zł do 2750 zł
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-                        <label class="form-check-label" for="flexRadioDefault2">
+                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="2750" data-maxPrice="1000000000" id="prize-bracket-four">
+                        <label class="form-check-label" for="prize-bracket-four">
                             powyżej 2750 zł
                         </label>
                     </div>
 
                     <form class="row row-cols-md-auto g-3 align-items-center mt-2">
                         <div class="col-md-5">
-                            <input type="text" class="form-control" placeholder="od">
+                            <input type="text" class="form-control" placeholder="od" id="minimum-price">
                         </div>
 
                         <div class="col-md-2 text-center">
@@ -80,42 +91,25 @@
                         </div>
                         
                         <div class="col-md-5">
-                            <input type="text" class="form-control" placeholder="do">
+                            <input type="text" class="form-control" placeholder="do" id="maximum-price">
                         </div>
-
                     </form>
 
                     <h5 class="mt-3">sposoby dostawy</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="offer_type_buy_now">
-                        <label class="form-check-label" for="state_new">
-                            Kurier
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="offer_type_auction">
-                        <label class="form-check-label" for="state_used">
-                           Paczkomaty InPost
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="offer_type_auction">
-                        <label class="form-check-label" for="state_used">
-                           Odbiór w punkcie
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="offer_type_auction">
-                        <label class="form-check-label" for="state_used">
-                           List
-                        </label>
-                    </div>
+                    {% for type in deliveryTypes %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input delivery-type-checkbox" value="{{ type.name }}" type="checkbox" value="">
+                            <label class="form-check-label" for="state_new">
+                                {{ type.name }}
+                            </label>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
 
             <div class="col-sm-12 col-md-9 mb-2">
                 {% if products is iterable and products[0] is defined %}
-                <div class="card card-body no-border-radius pl-4 pt-4">
+                <div class="card card-body no-border-radius pl-4 pt-4" id="product-container">
                     {% for product in products %}
                         <div class="row mb-2">
                             <div class="col-4 col-sm-4 col-md-3 col-xl-2 text-center mb-2">
@@ -125,7 +119,19 @@
                             <div class="col-8 col-sm-6 col-md-9 col-xl-10 mb-2">
                                 <p>
                                     <a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a> <br>
-                                    <small>Stan: {{ product.state }} </small> <small class="ml-3">No Frost: brak informacji</small> <small class="ml-3">Klasa efektywności energetycznej: A+++</small>
+                                    <small>
+                                        Stan: {{ product.state }}
+                                    </small> 
+                                    {% if product.getProductSpecificProperties()[0] is defined %}
+                                        <small class="ml-3">
+                                            {{ product.getProductSpecificProperties()[0].property }} : {{ product.getProductSpecificProperties()[0].value }}
+                                        </small>
+                                    {% endif %}
+                                    {% if product.getProductBasicProperties()[0] is defined %}
+                                        <small class="ml-3">
+                                            {{ product.getProductBasicProperties()[0].property }} : {{ product.getProductBasicProperties()[0].value }}
+                                        </small>
+                                    {% endif %}
                                 </p>
 
                                 <h4>{{ product.price }} zł</h4>
