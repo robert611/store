@@ -7,11 +7,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Product;
-use App\Entity\ProductPicture;
 use App\Entity\DeliveryType;
 use App\Form\ProductType;
 use App\Model\SaveProductProperties;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Model\UploadProductPictures;
+use App\Model\SaveProductDeliveryTypes;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -40,51 +41,26 @@ class AccountController extends AbstractController
 
             $product->setOwner($this->getUser());
             
-            $deliveryTypes = $request->request->get('product')["delivery_types"];
-
-            $deliveryTypeRepository = $this->getDoctrine()->getRepository(DeliveryType::class);
-
-            foreach ($deliveryTypes as $type) 
-            {
-                $entityManager->persist($deliveryTypeRepository->find($type)->addProduct($product));
-            }
-
             $pictures = $form->get('pictures')->getData();
-     
-            if ($pictures) {
-                foreach ($pictures as $picture) 
-                {
-                    $productPicture = new ProductPicture();
 
-                    $originalFilename = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                    
-                    // this is needed to safely include the file name as part of the URL
-                    $safeFilename = $slugger->slug($originalFilename);
-                    $newFilename = $safeFilename.'-'.uniqid().'.'.$picture->guessExtension();
-    
-                    try {
-                        $picture->move(
-                            $this->getParameter('pictures_directory'),
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                        // ... handle exception if something happens during file upload
-                    }
-
-                    $productPicture->setName($newFilename);
-                    $productPicture->setProduct($product);
-
-                    $product->addProductPicture($productPicture);
-
-                    $entityManager->persist($productPicture);
-                }
+            /* Make sure there is at least 1 picture and less than 24, It can be done in ProductType with constraints because it would affect also editting */
+            if (!$this->validatePictures($pictures))
+            {
+                return $this->render('account/index.html.twig', [
+                    'form' => $form->createView()
+                ]);
             }
+            
+            $uploadProductPictures = new UploadProductPictures($entityManager, $this->getParameter('pictures_directory'), $product);
+
+            $uploadProductPictures->uploadPicturesAndPersistToDatabase($pictures, $slugger);
+
+            $deliveryTypes = $form->get('delivery_types')->getData();
+
+            (new SaveProductDeliveryTypes($this->getDoctrine()->getRepository(DeliveryType::class), $entityManager, $product))->save($deliveryTypes);
 
             $saveProductProperties = new SaveProductProperties($entityManager, $product);
-
-            $saveProductProperties->saveBasicProperties($request->request->get('product')['basic_properties']);
-            $saveProductProperties->saveSpecificProperties($request->request->get('product')['specific_properties']);
-            $saveProductProperties->savePhysicalProperties($request->request->get('product')['physical_properties']);
+            $saveProductProperties->save($request->request->get('product'));
 
             $entityManager->persist($product);
             $entityManager->flush();
@@ -103,5 +79,17 @@ class AccountController extends AbstractController
     public function showMessageAfterPostingProduct($productId)
     {
         return $this->render('account/product_posting_message.html.twig', ['productId' => $productId]);
+    }
+
+    public function validatePictures($pictures)
+    {
+        if (count($pictures) < 1 || count($pictures) > 24) 
+        {
+            $this->addFlash('product_form_picture_error', 'Wybierz przynajmniej jedno zdjęcie i nie więcej niż 24');
+
+            return false;
+        }
+
+        return true;
     }
 }

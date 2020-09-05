@@ -17,59 +17,48 @@ class SaveProductProperties
         $this->product = $product;
     }
 
-    public function saveBasicProperties(array $basicProperties)
+    public function save($productForm)
     {
-        $propertiesLength = count($basicProperties['name']);
-
-        for ($key = 0; $key < $propertiesLength; $key++)
-        {
-
-            if(strlen($basicProperties['name'][$key]) == 0) continue;
-
-            $productBasicProperty = new ProductBasicProperty();
-
-            $productBasicProperty->setProperty($basicProperties['name'][$key]);
-            $productBasicProperty->setValue($basicProperties['value'][$key]);
-            $productBasicProperty->setProduct($this->product);
-            
-            $this->entityManager->persist($productBasicProperty);
-        }
-
+        $this->saveProperties($productForm['basic_properties'], ProductBasicProperty::class);
+        $this->saveProperties($productForm['specific_properties'], ProductSpecificProperty::class);
+        $this->saveProperties($productForm['physical_properties'], ProductPhysicalProperty::class);
     }
 
-    public function saveSpecificProperties(array $specificProperties)
+    public function edit($productForm)
     {
-        $propertiesLength = count($specificProperties['name']);
+        /* First remove all of the properties, and then recreate it with data from the form */
+        $this->removeAllProperties();
+
+        $this->save($productForm);
+    }
+
+    private function saveProperties($properties, $entityObject)
+    {
+        $propertiesLength = count($properties['name']);
 
         for ($key = 0; $key < $propertiesLength; $key++)
         {
-            if(strlen($specificProperties['name'][$key]) == 0) continue;
+            /* If user wants to delete that one, do not recreate it */
+            if (isset($properties['remove'][$key])) continue;
 
-            $productSpecificProperty = new ProductSpecificProperty();
+            if(strlen($properties['name'][$key]) == 0) continue;
 
-            $productSpecificProperty->setProperty($specificProperties['name'][$key]);
-            $productSpecificProperty->setValue($specificProperties['value'][$key]);
-            $productSpecificProperty->setProduct($this->product);
+            $productProperty = new $entityObject();
+
+            $productProperty->setProperty($properties['name'][$key]);
+            $productProperty->setValue($properties['value'][$key]);
+            $productProperty->setProduct($this->product);
             
-            $this->entityManager->persist($productSpecificProperty);
+            $this->entityManager->persist($productProperty);
         }
     }
 
-    public function savePhysicalProperties(array $physicalProperties)
+    private function removeAllProperties()
     {
-        $propertiesLength = count($physicalProperties['name']);
+        $productId = $this->product->getId();
 
-        for ($key = 0; $key < $propertiesLength; $key++)
-        {
-            if(strlen($physicalProperties['name'][$key]) == 0) continue;
-
-            $productPhysicalProperty = new ProductPhysicalProperty();
-
-            $productPhysicalProperty->setProperty($physicalProperties['name'][$key]);
-            $productPhysicalProperty->setValue($physicalProperties['value'][$key]);
-            $productPhysicalProperty->setProduct($this->product);
-            
-            $this->entityManager->persist($productPhysicalProperty);
-        }
+        $this->entityManager->getRepository(ProductBasicProperty::class)->removeAll($productId);
+        $this->entityManager->getRepository(ProductSpecificProperty::class)->removeAll($productId);
+        $this->entityManager->getRepository(ProductPhysicalProperty::class)->removeAll($productId);
     }
 }

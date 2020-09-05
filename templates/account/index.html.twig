@@ -62,6 +62,9 @@
                             </div>
                             <div class="error-msg form-error mt-1">
                                 {{ form_errors(form.pictures) }}
+                                {% for message in app.flashes('product_form_picture_error') %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
                             </div>
                         </div>
 

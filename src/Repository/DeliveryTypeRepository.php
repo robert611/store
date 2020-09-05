@@ -19,32 +19,15 @@ class DeliveryTypeRepository extends ServiceEntityRepository
         parent::__construct($registry, DeliveryType::class);
     }
 
-    // /**
-    //  * @return DeliveryType[] Returns an array of DeliveryType objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function removeAll($productId)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $conn = $this->getEntityManager()->getConnection();
 
-    /*
-    public function findOneBySomeField($value): ?DeliveryType
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $sql = "DELETE FROM delivery_type_product WHERE product_id = :productId";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['productId' => $productId]);
+
+        return true;
     }
-    */
 }

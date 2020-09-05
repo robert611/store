@@ -61,13 +61,8 @@ class ProductType extends AbstractType
                         'mimeTypesMessage' => 'Proszę przesyłać tylko zdjęcia',
                         'groups' => true
                     ]),
-                    new Count([
-                        'min' => 1,
-                        'max' => 24,
-                        'minMessage' => 'Musisz przesłać przynajmniej jedno zdjęcie',
-                        'maxMessage' => 'Nie możesz przesłać więcej niż 24 zdjęć'
-                    ])
-                ]
+                ],
+                'required' => false
             ])
             ->add('auction_type', ChoiceType::class, [
                 'choices' => [

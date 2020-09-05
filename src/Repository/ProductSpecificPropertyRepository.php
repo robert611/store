@@ -19,32 +19,15 @@ class ProductSpecificPropertyRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductSpecificProperty::class);
     }
 
-    // /**
-    //  * @return ProductSpecificProperty[] Returns an array of ProductSpecificProperty objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function removeAll($productId)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $conn = $this->getEntityManager()->getConnection();
 
-    /*
-    public function findOneBySomeField($value): ?ProductSpecificProperty
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $sql = "DELETE FROM product_specific_property WHERE product_id = :productId";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['productId' => $productId]);
+
+        return true;
     }
-    */
 }
