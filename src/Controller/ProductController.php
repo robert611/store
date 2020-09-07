@@ -17,35 +17,88 @@ use App\Model\UploadProductPictures;
 use App\Model\SaveProductDeliveryTypes;
 use App\Model\SaveProductProperties;
 
-/**
- * @Route("admin/product")
- */
 class ProductController extends AbstractController
 {
     /**
-     * @Route("/", name="admin_product_index", methods={"GET"})
+     * @Route("admin/product/", name="admin_product_index", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function index(ProductRepository $productRepository): Response
     {
-        return $this->render('admin/product/index.html.twig', [
+        return $this->render('product/index.html.twig', [
             'products' => $productRepository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="admin_product_show", methods={"GET"})
+     * @Route("admin/product/{id}", name="admin_product_show", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function show(Product $product): Response
+    public function showAdmin(Product $product): Response
     {
-        return $this->render('admin/product/show.html.twig', [
+        return $this->render('product/show.html.twig', [
             'product' => $product,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="product_edit", methods={"GET","POST"})
+     * @Route("product/new", name="product_new")
+     */
+    public function new(Request $request, SluggerInterface $slugger)
+    {
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $product->setOwner($this->getUser());
+            
+            $pictures = $form->get('pictures')->getData();
+
+            /* Make sure there is at least 1 picture and less than 24, It can be done in ProductType with constraints because it would affect also editting */
+            if (!$this->validatePictures($pictures))
+            {
+                return $this->render('product/product.html.twig', [
+                    'form' => $form->createView()
+                ]);
+            }
+            
+            $uploadProductPictures = new UploadProductPictures($entityManager, $this->getParameter('pictures_directory'), $product);
+
+            $uploadProductPictures->uploadPicturesAndPersistToDatabase($pictures, $slugger);
+
+            $deliveryTypes = $form->get('delivery_types')->getData();
+
+            (new SaveProductDeliveryTypes($this->getDoctrine()->getRepository(DeliveryType::class), $entityManager, $product))->save($deliveryTypes);
+
+            $saveProductProperties = new SaveProductProperties($entityManager, $product);
+            $saveProductProperties->save($request->request->get('product'));
+
+            $entityManager->persist($product);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('account_new_product_message', ['productId' => $product->getId()]);
+        }
+
+        return $this->render('product/new.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/product/{id}", name="product_show", methods={"GET"})
+     */
+    public function show(Product $product): Response
+    {
+        return $this->render('index/show_product.html.twig', [
+            'product' => $product,
+        ]);
+    }
+
+    /**
+     * @Route("product/{id}/edit", name="product_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Product $product, SluggerInterface $slugger): Response
     {
@@ -82,17 +135,17 @@ class ProductController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin_product_edit', ['id' => $product->getId()]);
+            return $this->redirectToRoute('product_edit', ['id' => $product->getId()]);
         }
 
-        return $this->render('admin/product/edit.html.twig', [
+        return $this->render('product/edit.html.twig', [
             'product' => $product,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="admin_product_delete", methods={"DELETE"})
+     * @Route("product/{id}", name="product_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Product $product): Response
     {
@@ -103,5 +156,17 @@ class ProductController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_product_index');
+    }
+
+    public function validatePictures($pictures)
+    {
+        if (count($pictures) < 1 || count($pictures) > 24) 
+        {
+            $this->addFlash('product_form_picture_error', 'Wybierz przynajmniej jedno zdjęcie i nie więcej niż 24');
+
+            return false;
+        }
+
+        return true;
     }
 }

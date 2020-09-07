@@ -1,14 +1,5 @@
-{% extends 'base.html.twig' %}
+{% extends 'account/account_template.html.twig' %}
 
-{% block body %}
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-3">
-                {% include 'account/_side_menu.html.twig' %}
-            </div>
-            <div class="col-md-9">
-                <p class="h4">Twoja oferta została wystawiona. Możesz ją zobaczyć <a href="{{ path('product_show', {'id': productId} )}}">tutaj</a>. Zachęcamy do dalszych sprzedaży.</p>
-            </div>
-        </div>
-    </div>
+{% block account_body %}
+    <p class="h4">Twoja oferta została wystawiona. Możesz ją zobaczyć <a href="{{ path('product_show', {'id': productId} )}}">tutaj</a>. Zachęcamy do dalszych sprzedaży.</p>
 {% endblock %}

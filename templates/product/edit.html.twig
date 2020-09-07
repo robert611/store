@@ -1,0 +1,14 @@
+{% extends 'account/account_template.html.twig' %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/product_form.js') }}"></script>
+{% endblock %}
+
+{% block account_body %}
+    <div class="card card-body">
+        {{ include('product/_form.html.twig', {'button_label': 'Edytuj'}) }}
+    </div>
+{% endblock %}

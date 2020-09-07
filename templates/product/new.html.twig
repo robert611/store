@@ -1,0 +1,165 @@
+{% extends 'account/account_template.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/product_form.js') }}"></script>
+{% endblock %}
+
+{% block account_body %}
+    <div class="card card-body">
+        {{ form_start(form) }}
+            <div class="mb-3">
+                <b>{{ form_label(form.name, 'Nazwa przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {{ form_widget(form.name, {'attr': { 'class' : 'form-control' }}) }}
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.name) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <b>{{ form_label(form.description, 'Opis przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {{ form_widget(form.description, {'attr': { 'class' : 'form-control' }}) }}
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.description) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <b>{{ form_label(form.state, 'Stan przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {% for choice in form.state %}
+                    <div class="form-check">
+                        {{ form_widget(choice,  {'attr': { 'class' : 'form-check-input' }}) }}
+                        {{ form_label(choice) }}
+                    </div>
+                {% endfor %}
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.state) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <b>{{ form_label(form.category, 'Wybierz kategorię', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {{ form_widget(form.category, {'attr': { 'class' : 'form-select' }}) }}
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.category) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <b>{{ form_label(form.pictures, 'Wybierz zdjęcie(max 24)', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                <div class="form-file">
+                    {{ form_widget(form.pictures, {'attr': { 'class' : 'form-file-input', 'id': 'customFile' }}) }}
+                    <label class="form-file-label" for="customFile">
+                        <span class="form-file-text">Wybierz zdjęcia</span>
+                        <span class="form-file-button">Przeglądaj</span>
+                    </label>
+                </div>
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.pictures) }}
+                    {% for message in app.flashes('product_form_picture_error') %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <b>{{ form_label(form.price, 'Cena przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {{ form_widget(form.price, {'attr': { 'class' : 'form-control', 'min' : '0' }}) }}
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.price) }}
+                </div>
+            </div>
+
+            <div class="mb-3" id="basic-parameters-div">
+                <b><label class="mb-3">Podstawowe Parametry</label></b>
+                <div class="row">
+                    <div class="col-5">
+                        <input type="text" name="product[basic_properties][name][]" class="form-control" placeholder="nazwa">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" name="product[basic_properties][value][]" class="form-control" placeholder="wartość">
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-info" id="add-basic-parameter-row-button"><i class="material-icons icon-align">add</i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3" id="specific-parameters-div">
+                <b><label class="mb-3">Specyficzne Parametry</label></b>
+                <div class="row">
+                    <div class="col-5">
+                        <input type="text" name="product[specific_properties][name][]" class="form-control" placeholder="nazwa">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" name="product[specific_properties][value][]" class="form-control" placeholder="wartość">
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-info" id="add-specific-parameter-row-button"><i class="material-icons icon-align">add</i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3" id="physical-parameters-div">
+                <b><label class="mb-3">Parametry Fizyczne</label></b>
+                <div class="row basic-parameters-input-row">
+                    <div class="col-5">
+                        <input type="text" name="product[physical_properties][name][]" class="form-control" placeholder="nazwa">
+                    </div>
+                    <div class="col-5">
+                        <input type="text" name="product[physical_properties][value][]"class="form-control" placeholder="wartość">
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-info" id="add-physical-parameter-row-button"><i class="material-icons icon-align">add</i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <b>{{ form_label(form.delivery_types, 'Metody dostawy', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                <table class="table delivery-methods-table">
+                    {% for type in form.delivery_types %} 
+                        <tr>
+                            <td>
+                                <div class="form-check mb-3">
+                                    {{ form_widget(type,  {'attr': { 'class' : 'form-check-input' }}) }}
+                                    {{ form_label(type) }}
+                                </div>
+                            </td>
+                            <td>
+                                <input type="string" disabled in="0" value="{{ type.vars.errors.form.parent.config.attributes.choice_list_view.choices[type.vars.value].data.default_price }} zł" name="product[{{ type.vars.value }}-price]" class="form-control delivery-method-price-input">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.delivery_types) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <b>{{ form_label(form.delivery_time, 'Przewidywany czas wysyłki(w godzinach)', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {{ form_widget(form.delivery_time, {'attr': { 'class' : 'form-control' }}) }}
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.delivery_time) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <b>{{ form_label(form.auction_type, 'Wystaw jako', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {% for choice in form.auction_type %}
+                    <div class="form-check mb-3">
+                        {{ form_widget(choice,  {'attr': { 'class' : 'form-check-input' }}) }}
+                        {{ form_label(choice) }}
+                    </div>
+                {% endfor %}
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.auction_type) }}
+                </div>
+            </div>
+
+
+            <button class="btn btn-success no-border-radius mt-3 put-up-product">{{ button_label|default('Wystaw') }}</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

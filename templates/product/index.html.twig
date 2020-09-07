@@ -23,7 +23,7 @@
                     <td>{{ product.price }}</td>
                     <td>
                         <a class="btn btn-success" href="{{ path('admin_product_show', {'id': product.id}) }}">show</a>
-                        <a class="btn btn-info" href="{{ path('admin_product_edit', {'id': product.id}) }}">edit</a>
+                        <a class="btn btn-info" href="{{ path('product_edit', {'id': product.id}) }}">edit</a>
                     </td>
                 </tr>
             {% else %}

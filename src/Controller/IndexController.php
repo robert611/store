@@ -28,16 +28,6 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/product/{id}", name="product_show", methods={"GET"})
-     */
-    public function showProduct(Product $product): Response
-    {
-        return $this->render('index/show_product.html.twig', [
-            'product' => $product,
-        ]);
-    }
-
-    /**
      * @Route("/listing", name="product_listing")
      */
     public function productListing(Request $request)

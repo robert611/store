@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -90,6 +91,12 @@ class Product
      * @ORM\Column(type="string", length=64)
      */
     private $delivery_time;
+
+    /**
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    protected $created_at;
 
     public function __construct()
     {
@@ -301,6 +308,18 @@ class Product
     public function setDeliveryTime(string $delivery_time): self
     {
         $this->delivery_time = $delivery_time;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

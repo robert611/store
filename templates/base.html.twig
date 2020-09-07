@@ -30,9 +30,6 @@
                                 twoje konto
                             </a>
                             <ul class="dropdown-menu max-width-100" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ path('account_product_new') }}">Wystaw przedmiot</a></li>
-                                <li><a class="dropdown-item" href="{{ path('account') }}">Twoje Konto</a></li>
-                                <li><hr class="dropdown-divider"></li>
                                 {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <li>
                                     <a class="dropdown-item no-background-on-active" href="{{ path('app_login') }}">
@@ -45,12 +42,15 @@
                                     </a>
                                 </li>
                                 {% else %}
+                                    <li><a class="dropdown-item" href="{{ path('product_new') }}">Wystaw przedmiot</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('account_user_auction_list') }}">Twoje oferty</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('account') }}">Twoje Konto</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li>
-                                    <a class="dropdown-item no-background-on-active" href="{{ path('app_logout') }}">
-                                        <button class="btn btn-danger no-border-radius auth-button max-width-100">Wyloguj się</button>
-                                    </a>
-                                </li>
-
+                                        <a class="dropdown-item no-background-on-active" href="{{ path('app_logout') }}">
+                                            <button class="btn btn-danger no-border-radius auth-button max-width-100">Wyloguj się</button>
+                                        </a>
+                                    </li>
                                 {% endif %}
                             </ul>
                         </li>
