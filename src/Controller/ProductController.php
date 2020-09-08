@@ -20,7 +20,7 @@ use App\Model\SaveProductProperties;
 class ProductController extends AbstractController
 {
     /**
-     * @Route("admin/product/", name="admin_product_index", methods={"GET"})
+     * @Route("admin/product", name="admin_product_index", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function index(ProductRepository $productRepository): Response
@@ -54,6 +54,7 @@ class ProductController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
 
             $product->setOwner($this->getUser());
+            $product->setCreatedAt(new \DateTime());
             
             $pictures = $form->get('pictures')->getData();
 
@@ -88,7 +89,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/{id}", name="product_show", methods={"GET"})
+     * @Route("product/{id}", name="product_show", methods={"GET"})
      */
     public function show(Product $product): Response
     {
