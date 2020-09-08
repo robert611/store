@@ -25,6 +25,11 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item">
+                                <a href="{{ path('admin') }}" class="nav-link no-anchor-styles">Panel Administratora</a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
                                 twoje konto

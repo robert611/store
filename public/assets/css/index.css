@@ -220,6 +220,10 @@ m.pagination li i {
     display: inline-block!important;
 }
 
+.admin-icon {
+    font-size: 56px!important;
+}
+
 @media(min-width: 1510px) {
     .height-350 {
        height: 350px;
