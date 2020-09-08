@@ -12,7 +12,7 @@ class UploadProductPictures
 
     private $product;
 
-    public function __construct($entityManager, $path, $product)
+    public function __construct(?object $entityManager, $path, $product)
     {
         $this->entityManager = $entityManager;
         $this->path = $path;
@@ -52,16 +52,30 @@ class UploadProductPictures
     {
         foreach ($picturesToRemove as $key => $pictureId)
         {
-            $product = $this->entityManager->getRepository(ProductPicture::class)->find($key);
+            $picture = $this->entityManager->getRepository(ProductPicture::class)->find($key);
 
-            $path = $this->path . "/" . $product->getName();
+            $path = $this->path . "/" . $picture->getName();
 
             if(file_exists($path) && is_file($path))
             {
                 unlink($path);
             }
 
-            $this->entityManager->remove($product);
+            $this->entityManager->remove($picture);
         }
+    }
+
+    public function removeAllProductPictures()
+    {
+        $folderPath = $this->path;
+
+        $this->product->getProductPictures()->map(function($picture) use($folderPath) {
+            $path = $folderPath . "/" . $picture->getName();
+
+            if(file_exists($path) && is_file($path))
+            {
+                unlink($path);
+            }
+        });
     }
 }

@@ -23,7 +23,7 @@
                     </div>
                     <div class="col-6 text-right">
                         <a href="{{ path('product_edit', {'id': product.id}) }}"><button class="btn btn-info no-border-radius">Edytuj</button></a>
-                        <button class="btn btn-danger no-border-radius">Usuń</button>
+                        {% include 'product/_delete_form.html.twig' %}
                     </div>
                 </div>
             </div>

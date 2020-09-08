@@ -154,9 +154,12 @@ class ProductController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($product);
             $entityManager->flush();
+
+            $uploadProductPictures = new UploadProductPictures($entityManager, $this->getParameter('pictures_directory'), $product);
+            $uploadProductPictures->removeAllProductPictures();
         }
 
-        return $this->redirectToRoute('admin_product_index');
+        return $this->redirectToRoute('account_user_auction_list');
     }
 
     public function validatePictures($pictures)

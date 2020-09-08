@@ -216,6 +216,10 @@ m.pagination li i {
     height: 50px;
 }
 
+.display-inline {
+    display: inline-block!important;
+}
+
 @media(min-width: 1510px) {
     .height-350 {
        height: 350px;

@@ -43,19 +43,19 @@ class Product
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductBasicProperty::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=ProductBasicProperty::class, mappedBy="product", orphanRemoval=true)
      * @ORM\JoinColumn(nullable=false)
      */
     private $productBasicProperties;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductPhysicalProperty::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=ProductPhysicalProperty::class, mappedBy="product", orphanRemoval=true)
      * @ORM\JoinColumn(nullable=false)
      */
     private $productPhysicalProperties;
 
     /**
-     * @ORM\OneToMany(targetEntity=ProductSpecificProperty::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=ProductSpecificProperty::class, mappedBy="product", orphanRemoval=true)
      */
     private $productSpecificProperties;
 

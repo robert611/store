@@ -34,8 +34,6 @@ class AccountController extends AbstractController
     {
         $products = $this->getDoctrine()->getRepository(Product::class)->findBy(['owner' => $this->getUser()]);
 
-        dump($products);
-
         return $this->render('account/user_auctions_list.html.twig', ['products' => $products]);
     }
 
