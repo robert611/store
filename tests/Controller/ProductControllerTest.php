@@ -38,7 +38,7 @@ class ProductControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->testAdminUser);
     
-        $this->client->request('GET', "product/{$this->productId}");
+        $this->client->request('GET', "admin/product/{$this->productId}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
