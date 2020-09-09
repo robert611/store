@@ -113,7 +113,9 @@
                     {% for product in products %}
                         <div class="row mb-2">
                             <div class="col-4 col-sm-4 col-md-3 col-xl-2 text-center mb-2">
-                                <img class="img-fluid" src="{{ asset('uploads/pictures/'~product.productPictures[0].name) }}"/>
+                                {% if product.productPictures[0] is defined %}
+                                    <img class="img-fluid" src="{{ asset('uploads/pictures/'~product.productPictures[0].name) }}"/>
+                                {% endif %}
                             </div>
 
                             <div class="col-8 col-sm-6 col-md-9 col-xl-10 mb-2">
