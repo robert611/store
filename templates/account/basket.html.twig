@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        {% if basketElements|length != 0 %}
+            <h3 class="mb-4">Twój koszyk</h3>
+        {% endif %}
+        <div class="col-md-9">
+            {% if basketElements|length == 0 %}
+                <p class="h4 mt-2">Twój koszyk jest pusty.</p>
+            {% else %}
+                {% for element in basketElements %} 
+                    <div class="card card-body mb-3">
+                        <div class="row">
+                            <div class="col-sm-3 col-lg-2">
+                                {% if element.product.productPictures[0] is defined %}
+                                    <img class="img-fluid" src="{{ asset('uploads/pictures/'~element.product.productPictures[0].name ) }}">
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-6 col-lg-8 xs-mt-2">
+                                <span><a href="{{ path('product_show', {'id': element.product.id}) }}" class="no-anchor-styles">{{ element.product.name }}</a></span> <br>
+                            </div>
+                            <div class="col-sm-3 col-lg-2 center-div-verticaly xs-mt-1">
+                                <span><h4 class="display-inline">{{ element.product.price }} zł</h4></span>
+                                <form method="post" class="display-inline" action="{{ path('account_basket_delete_product', {'id': element.id}) }}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('basket_delete' ~ element.id) }}">
+                                    <button class="btn bg-inherit no-border-radius"><i class="material-icons icon-align delete-forever-icon-color">delete_forever</i></button>
+                                </form>
+                            </div>  
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3">
+            {% if basketElements|length != 0 %}
+                <div class="card card-body">
+                    <p>Do zapłaty <b>{{ productsPrize }} zł</b> + dostawa</p>
+
+                    <button type="button" class="btn btn-danger no-border-radius width-100">Dostawa i Płatność</button>
+                    <button type="button" class="btn mt-2 no-border-radius width-100 bg-inherit text-black">Kontynuuj zakupy</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

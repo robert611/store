@@ -98,11 +98,17 @@ class Product
      */
     protected $created_at;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Basket::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $baskets;
+
     public function __construct()
     {
         $this->productPhysicalProperties = new ArrayCollection();
         $this->deliveryTypes = new ArrayCollection();
         $this->productPictures = new ArrayCollection();
+        $this->baskets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -334,5 +340,36 @@ class Product
         }
 
         return $min;
+    }
+
+    /**
+     * @return Collection|Basket[]
+     */
+    public function getBaskets(): Collection
+    {
+        return $this->baskets;
+    }
+
+    public function addBasket(Basket $basket): self
+    {
+        if (!$this->baskets->contains($basket)) {
+            $this->baskets[] = $basket;
+            $basket->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBasket(Basket $basket): self
+    {
+        if ($this->baskets->contains($basket)) {
+            $this->baskets->removeElement($basket);
+            // set the owning side to null (unless already changed)
+            if ($basket->getProduct() === $this) {
+                $basket->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }
