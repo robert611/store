@@ -11,8 +11,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="Istnieje już konto z takim adresem email")
- * @UniqueEntity(fields={"username"}, message="Istnieje już konto z taką nazwę użytkownika")
+ * @UniqueEntity(fields={"email"}, message="Istnieje już konto z takim adresem email.")
+ * @UniqueEntity(fields={"username"}, message="Istnieje już konto z taką nazwą użytkownika.")
  */
 class User implements UserInterface
 {
@@ -54,10 +54,21 @@ class User implements UserInterface
      */
     private $baskets;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Purchase::class, mappedBy="user")
+     */
+    private $purchases;
+
+    /**
+     * @ORM\OneToOne(targetEntity=UserAddress::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $userAddress;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->baskets = new ArrayCollection();
+        $this->purchases = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -203,6 +214,57 @@ class User implements UserInterface
                 $basket->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Purchase[]
+     */
+    public function getPurchases(): Collection
+    {
+        return $this->purchases;
+    }
+
+    public function addPurchase(Purchase $purchase): self
+    {
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases[] = $purchase;
+            $purchase->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchase(Purchase $purchase): self
+    {
+        if ($this->purchases->contains($purchase)) {
+            $this->purchases->removeElement($purchase);
+            // set the owning side to null (unless already changed)
+            if ($purchase->getUser() === $this) {
+                $purchase->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of userAddress
+     */ 
+    public function getUserAddress(): ?UserAddress
+    {
+        return $this->userAddress;
+    }
+
+    /**
+     * Set the value of userAddress
+     *
+     * @return  self
+     */ 
+    public function setUserAddress(UserAddress $userAddress): self
+    {
+        $this->userAddress = $userAddress;
 
         return $this;
     }

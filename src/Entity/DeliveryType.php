@@ -34,6 +34,11 @@ class DeliveryType
      */
     public $default_price;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $payment;
+
     public function __construct()
     {
         $this->product = new ArrayCollection();
@@ -90,6 +95,18 @@ class DeliveryType
     public function setDefaultPrice(float $default_price): self
     {
         $this->default_price = $default_price;
+
+        return $this;
+    }
+
+    public function getPayment(): ?string
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(string $payment): self
+    {
+        $this->payment = $payment;
 
         return $this;
     }

@@ -211,6 +211,10 @@ m.pagination li i {
     float: left;
 }
 
+.float-right {
+    float: right;
+}
+
 .auction-listing-img {
     width: 80px;
     height: 50px;
@@ -245,6 +249,28 @@ m.pagination li i {
 
 .bg-inherit:focus {
     box-shadow: none;
+}
+
+.user-address-data {
+    border: 2px solid green;
+    padding: 10px;
+}
+
+.link-button {
+    color: #00a790;
+    letter-spacing: 2px;
+}
+
+.link-button:hover {
+    color: #00a790;
+}
+
+.z-index-0 {
+    z-index: 0;
+}
+
+#update-user-address-form > div > label {
+    font-weight: bolder;
 }
 
 @media(min-width: 1510px) {

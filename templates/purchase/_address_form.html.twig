@@ -1,0 +1,60 @@
+{{ form_start(form, {'attr': { 'id': 'user-address-form' }}) }}
+    <div class="mb-3">
+        <b>{{ form_label(form.name, 'Imię', {'label_attr': { 'class' : 'mb-2' }}) }}</b>
+        {{ form_widget(form.name, {'attr': {'class' : 'form-control' }}) }}
+        <div class="error-msg form-error mt-1">
+            {{ form_errors(form.name) }}
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <b>{{ form_label(form.surname, 'Nazwisko', {'label_attr': { 'class' : 'mb-2' }}) }}</b>
+        {{ form_widget(form.surname, {'attr': {'class' : 'form-control' }}) }}
+        <div class="error-msg form-error mt-1">
+            {{ form_errors(form.surname) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <b>{{ form_label(form.address, 'Adres', {'label_attr': { 'class' : 'mb-2' }}) }}</b>
+        {{ form_widget(form.address, {'attr': {'class' : 'form-control' }}) }}
+        <small class="text-muted">Podaj nazwę ulicy wraz z numerem domu.</small>
+        <div class="error-msg form-error mt-1">
+            {{ form_errors(form.address) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <b>{{ form_label(form.zip_code, 'Kod pocztowy', {'label_attr': { 'class' : 'mb-2' }}) }}</b>
+        {{ form_widget(form.zip_code, {'attr': {'class' : 'form-control', 'pattern' : '[0-9]{2}-[0-9]{3}' }}) }}
+        <div class="error-msg form-error mt-1">
+            {{ form_errors(form.zip_code) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <b>{{ form_label(form.city, 'Miasto', {'label_attr': { 'class' : 'mb-2' }}) }}</b>
+        {{ form_widget(form.city, {'attr': {'class' : 'form-control'}}) }}
+        <div class="error-msg form-error mt-1">
+            {{ form_errors(form.city) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <b>{{ form_label(form.country, 'Państwo', {'label_attr': { 'class' : 'mb-2' }}) }}</b>
+        {{ form_widget(form.country, {'attr': {'class' : 'form-control'}}) }}
+        <div class="error-msg form-error mt-1">
+            {{ form_errors(form.country) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <b>{{ form_label(form.phone_number, 'Numer telefonu', {'label_attr': { 'class' : 'mb-2' }}) }}</b>
+        {{ form_widget(form.phone_number, {'attr': {'class' : 'form-control'}}) }}
+        <div class="error-msg form-error mt-1">
+            {{ form_errors(form.phone_number) }}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-outline-secondary no-border-radius">Zapisz</button>
+{{ form_end(form) }}
