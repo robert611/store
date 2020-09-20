@@ -1,7 +1,7 @@
 {% extends 'account/account_template.html.twig' %}
 
 {% block account_body %}
-    {% if products is iterable %}
+    {% if products|length > 0 %}
 
         {% for product in products %}
             <div class="card card-body mb-3">
@@ -29,6 +29,8 @@
             </div>
         {% endfor %}
 
+    {% else %}
+        <p class="h4 mt-2">Nie masz obecnie żadnych wystawionych ofert.</p>
     {% endif %}
     
 {% endblock %}
