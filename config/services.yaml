@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     pictures_directory: '%kernel.project_dir%/public/uploads/pictures'
+    stripe_public_key: pk_test_ZYDGLYL5xhuq5y2Aa8Rudxgg
+    stripe_secret_key: sk_test_rbOVJScMgwbS1e4Q34kZ7CnR
 services:
     # default configuration for services in *this* file
     _defaults:

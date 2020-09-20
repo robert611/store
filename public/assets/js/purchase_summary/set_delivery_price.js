@@ -8,13 +8,13 @@ Array.from(deliveryTypes).forEach((element) => {
 
         let productId = document.getElementById('product-id-input').value;
 
-        /* If user choose to use cash-on delivery type of delivery, then there is no need to go to payment controller */
+        let path = `/purchase/${productId}/${element.getAttribute('data-deliveryTypeId')}/buy`;
+
+        /* Adjust foward button text and progress bar */
         if (element.getAttribute('data-paymentType') == "cash-on-delivery") {
-            let path = `/purchase/${productId}/${element.getAttribute('data-deliveryTypeId')}/buy`;
-            setPurchasePaymentPath(path, 'Kupuję', '100');
+            adjustForwardButtonText(path, 'Kupuję', '100');
         } else {
-            let path = `/purchase/${productId}/payment`;
-            setPurchasePaymentPath(path, 'Płatność', '0');
+            adjustForwardButtonText(path, 'Płatność', '0');
         }
     });
 })

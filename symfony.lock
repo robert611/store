@@ -183,6 +183,9 @@
             "ref": "6c1ceb662f8997085f739cd089bfbef67f245983"
         }
     },
+    "stripe/stripe-php": {
+        "version": "v7.52.0"
+    },
     "symfony/asset": {
         "version": "v5.1.3"
     },

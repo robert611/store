@@ -14,7 +14,6 @@ use App\Form\UserAddressType;
 
 class PurchaseController extends AbstractController
 {
-
     /**
      * @Route("purchase/{id}/summary", name="purchase_summary")
      * @IsGranted("ROLE_USER")
@@ -25,16 +24,6 @@ class PurchaseController extends AbstractController
 
         return $this->render('purchase/summary.html.twig',
             ['product' => $product, 'form' => $form->createView()]);
-    }
-
-    /**
-     * @Route("purchase/{id}/payment", name="purchase_payment")
-     * @IsGranted("ROLE_USER")
-     */
-    public function purchasePayment(Product $product)
-    {
-        return $this->render('purchase/payment.html.twig',
-            ['product' => $product]);
     }
 
     /**
@@ -52,11 +41,12 @@ class PurchaseController extends AbstractController
         $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
         $purchase->setPrice($product->getPrice() + $deliveryType->getDefaultPrice());
+        $purchase->setIsPaid(0);
 
         $purchaseProduct = new PurchaseProduct();
 
         $purchaseProduct->setPurchase($purchase);
-        $purchaseProduct->setPaymentMethod('default');
+        $purchaseProduct->setPaymentMethod($deliveryType->getPayment());
         $purchaseProduct->setDeliveryType($deliveryType);
         $purchaseProduct->setProduct($product);
         $purchaseProduct->setQuantity(1);
@@ -66,6 +56,10 @@ class PurchaseController extends AbstractController
         $entityManager->persist($purchase);
         $entityManager->persist($purchaseProduct);
         $entityManager->flush();
+
+        if ($deliveryType->getPayment() == "prepayment") {
+            return $this->redirectToRoute('purchase_payment_view', ['id' => $purchase->getId()]);
+        }
 
         return $this->redirectToRoute('purchase_after_buy_message');
     }
@@ -98,5 +92,14 @@ class PurchaseController extends AbstractController
     public function showMessageAfterBuying()
     {
         return $this->render('purchase/message_after_buying_product.html.twig', []);
+    }
+
+    /**
+     * @Route("purchase/payment/fail/message", name="purchase_payment_fail_message")
+     * @IsGranted("ROLE_USER")
+     */
+    public function showMessageAfterFailedPayment()
+    {
+        return $this->render('purchase/failed_payment_message.html.twig', []);
     }
 }

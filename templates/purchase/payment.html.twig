@@ -2,6 +2,69 @@
 
 {% block body %}
     <div class="container mt-5">
-        <div class="row"></div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <p class="mb-1"><b>Podsumowanie i dostawa</b></p>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <p class="mb-1"><b>Płatność</b></p>
+                <div class="progress">
+                    <div class="progress-bar bg-success" id="payment-progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="offset-md-3 col-md-6 mt-5">
+                <section class="stripe-section">
+                    <div class="stripe-product">
+                        <img
+                            src="{{ asset('uploads/pictures/'~purchase.purchaseProducts[0].product.productPictures[0].name) }}"
+                            alt="The cover of Stubborn Attachments"
+                        />
+                        <div class="stripe-product-description">
+                            <h3>{{ purchase.purchaseProducts[0].product.name }}</h3>
+                            <h5>{{ purchase.purchaseProducts[0].product.price + purchase.purchaseProducts[0].deliveryType.defaultPrice }} zł</h5>
+                        </div>
+                    </div>
+                    <button id="checkout-button" data-purchaseId="{{ purchase.id }}">Checkout</button>
+                </section>
+            </div>
+        </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script type="text/javascript">
+        var stripe = Stripe("pk_test_ZYDGLYL5xhuq5y2Aa8Rudxgg");
+        var checkoutButton = document.getElementById("checkout-button");
+        checkoutButton.addEventListener("click", function () {
+            fetch(`/purchase/${checkoutButton.getAttribute('data-purchaseId')}/payment`, {
+                method: "POST",
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (session) {
+                return stripe.redirectToCheckout({ sessionId: session.id });
+            })
+            .then(function (result) {
+                // If redirectToCheckout fails due to a browser or network
+                // error, you should display the localized error message to your
+                // customer using error.message.
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+        });
+  </script>
 {% endblock %}
