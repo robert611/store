@@ -294,7 +294,7 @@ m.pagination li i {
     justify-content: center;
 }
 
-.stripe-product-description h3, h5 {
+.stripe-product-description h3, .stripe-product-description h5 {
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
