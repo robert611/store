@@ -11,8 +11,7 @@
     <script src="{{ asset('assets/js/purchase_summary/show_user_address_form.js') }}"></script>
     <script src="{{ asset('assets/js/purchase_summary/index.js') }}"></script>
     <script src="{{ asset('assets/js/create_spinner_widget.js') }}"></script>
-    <script src="{{ asset('assets/js/purchase_summary/cash_on_delivery_payment.js') }}"></script>
-    <script src="{{ asset('assets/js/purchase_summary/prepayment.js') }}"></script>
+    <script src="{{ asset('assets/js/purchase_summary/set_purchase_payment_path.js') }}"></script>
     <script src="{{ asset('assets/js/purchase_summary/set_delivery_price.js') }}"></script>
 {% endblock %}
 
@@ -82,9 +81,9 @@
                     </div>
 
                     <h5 class="mt-3 mb-3">Wybierz sposób dostawy</h5>
-                    {% for i, deliveryType in product.getDeliveryTypes %}
+                    {% for deliveryType in product.getDeliveryTypes %}
                         <div class="form-check mb-3">
-                            <input class="form-check-input purchase-summary-product-delivery-type" name="delivery_type" {{ i == 0 ? 'checked' : null }} type="radio" data-deliveryPrice="{{ deliveryType.default_price }}" data-paymentType="{{ deliveryType.payment }}" data-deliveryTypeId="{{ deliveryType.id }}">
+                            <input class="form-check-input purchase-summary-product-delivery-type" name="delivery_type" type="radio" data-deliveryPrice="{{ deliveryType.default_price }}" data-paymentType="{{ deliveryType.payment }}" data-deliveryTypeId="{{ deliveryType.id }}">
                             <label class="form-check-label">
                                 {{ deliveryType.name }} - {{ deliveryType.default_price }} zł
                             </label>
@@ -109,7 +108,7 @@
 
                         <p class="text-right mt-2">Do zapłaty <b>{{ product.price }} zł</b> + dostawa</p>
 
-                        <a href="" class="btn btn-success no-border-radius width-100" id="forward-to-payment-link">Płatność</a>
+                        <a id="forward-to-payment-link"><button class="btn btn-success no-border-radius width-100" disabled>Płatność</button></a>
                         <small class="text-muted mt-1">Klikając w ten przycisk potwierdzasz zakup. Sprzedawca otrzyma twoje zamówienie.</small>
                     </div>
                 </div>

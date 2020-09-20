@@ -39,6 +39,12 @@ class PurchaseProduct
      */
     private $product;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=DeliveryType::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $delivery_type;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,6 +94,18 @@ class PurchaseProduct
     public function setProduct(?Product $product): self
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function getDeliveryType(): ?DeliveryType
+    {
+        return $this->delivery_type;
+    }
+
+    public function setDeliveryType(?DeliveryType $delivery_type): self
+    {
+        $this->delivery_type = $delivery_type;
 
         return $this;
     }

@@ -38,22 +38,26 @@ class PurchaseController extends AbstractController
     }
 
     /**
-     * @Route("purchase/{id}/{delivery_type}/buy", name="purchase_buy")
+     * @Route("purchase/{id}/{deliveryTypeId}/buy", name="purchase_buy")
      * @IsGranted("ROLE_USER")
      */
-    public function buy(Request $request, Product $product, $deliveryType)
+    public function buy(Request $request, Product $product, $deliveryTypeId)
     {
         $this->denyAccessUnlessGranted('PURCHASE_BUY', $product);
 
+        $deliveryType = $this->getDoctrine()->getRepository(DeliveryType::class)->find($deliveryTypeId);
+
         $purchase = new Purchase();
 
-        $purchase->setOwner($this->getUser());
+        $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
+        $purchase->setPrice($product->getPrice() + $deliveryType->getDefaultPrice());
 
         $purchaseProduct = new PurchaseProduct();
 
         $purchaseProduct->setPurchase($purchase);
         $purchaseProduct->setPaymentMethod('default');
+        $purchaseProduct->setDeliveryType($deliveryType);
         $purchaseProduct->setProduct($product);
         $purchaseProduct->setQuantity(1);
 
@@ -76,7 +80,7 @@ class PurchaseController extends AbstractController
 
         $purchase = new Purchase();
 
-        $purchase->setOwner($this->getUser());
+        $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -91,7 +95,7 @@ class PurchaseController extends AbstractController
      * @Route("purchase/after/buy/message", name="purchase_after_buy_message")
      * @IsGranted("ROLE_USER")
      */
-    private function showMessageAfterBuying()
+    public function showMessageAfterBuying()
     {
         return $this->render('purchase/message_after_buying_product.html.twig', []);
     }

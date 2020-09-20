@@ -25,15 +25,15 @@ class PurchaseVoter extends Voter
         }
   
         switch ($attribute) {
-            case 'PURCHASE_NEW':
-                return $this->canPurchase($product, $user);
+            case 'PURCHASE_BUY': 
+                return $this->canBuy($product, $user);
                 break;
         }
 
         return false;
     }
 
-    private function canPurchase($product, $user)
+    private function canBuy($product, $user)
     {
         if ($user->getId() === $product->getOwner()->getId()) {
             (new Session)->getFlashBag()->add('warning', 'Nie możesz kupić własnego przedmiotu.');

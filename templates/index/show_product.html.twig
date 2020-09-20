@@ -42,11 +42,11 @@
                     <hr>
 
                     <form method="post" action="{{ path('account_basket_add_product', {'id': product.id}) }}">
-                        <button type="submit" class="btn btn-danger no-border-radius width-100 mb-2">Dodaj do koszyka</button>
+                        <button type="submit" {{ product.owner == app.user ? 'disabled' }}  class="btn btn-danger no-border-radius width-100 mb-2">Dodaj do koszyka</button>
                     </form>
 
                     <a href="{{ path('purchase_summary', {'id' : product.id }) }} ">
-                        <button type="button" class="btn btn-danger no-border-radius width-100">Kup teraz</button>
+                        <button type="button" {{ product.owner == app.user ? 'disabled' }} class="btn btn-danger no-border-radius width-100">Kup teraz</button>
                     </a>
                 </div>
             </div>
