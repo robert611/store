@@ -195,7 +195,7 @@ function createProductWidget(product)
 
     let img = document.createElement('img');
     img.setAttribute('class', 'img-fluid');
-    img.setAttribute('src', `/uploads/pictures/${product.productPictures[0].name}`);
+    img.setAttribute('src', `/uploads/pictures/${product.productPictures[0] ? product.productPictures[0].name : ''}`);
 
     leftSide.appendChild(img);
 
