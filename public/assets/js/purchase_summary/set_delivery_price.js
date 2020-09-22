@@ -4,7 +4,7 @@ Array.from(deliveryTypes).forEach((element) => {
     element.addEventListener('click', () => {
         let currentPrice = element.getAttribute('data-deliveryPrice');
 
-        document.getElementById('item-delivery-price').textContent = currentPrice + " zł";
+        document.getElementById('item-delivery-price').textContent = currentPrice;
 
         let productId = document.getElementById('product-id-input').value;
 
