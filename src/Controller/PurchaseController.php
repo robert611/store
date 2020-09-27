@@ -130,10 +130,13 @@ class PurchaseController extends AbstractController
             $purchaseProduct->setQuantity($basketProduct->getQuantity());
     
             $entityManager->persist($purchaseProduct);
+            $entityManager->remove($basketProduct);
         }
 
         $entityManager->persist($purchase);
         $entityManager->flush();
+
+
 
         return new JsonResponse(['purchase_id' => $purchase->getId()]);
     }
