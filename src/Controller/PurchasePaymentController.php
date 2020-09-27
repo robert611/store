@@ -40,13 +40,13 @@ class PurchasePaymentController extends AbstractController
 				[
               		'price_data' => [
 						'currency' => 'pln',
-						'unit_amount' => $product->getPrice() + $purchaseProduct->getDeliveryType()->getDefaultPrice() * 100,
+						'unit_amount' => (($product->getPrice() * $purchaseProduct->getQuantity()) + $purchaseProduct->getDeliveryType()->getDefaultPrice()) * 100,
 						'product_data' => [
 						'name' => $product->getName(),
 						'images' => ['http://localhost:8000/' . $product->getProductPictures()[0]->getName()],
 						],
               		],
-            		'quantity' => $purchase->getPurchaseProducts()->first()->getQuantity(),
+            		'quantity' => $purchaseProduct->getQuantity(),
 				]
 			],
             'mode' => 'payment',

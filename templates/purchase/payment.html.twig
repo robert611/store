@@ -28,7 +28,7 @@
                             />
                             <div class="stripe-product-description">
                                 <h3>{{ purchaseProduct.product.name }}</h3>
-                                <h5>{{ purchaseProduct.product.price + purchaseProduct.deliveryType.defaultPrice }} zł</h5>
+                                <h5>{{ (purchaseProduct.product.price * purchaseProduct.quantity) + purchaseProduct.deliveryType.defaultPrice }} zł</h5>
                             </div>
                         </div>
                         <button class="checkout-button" data-purchaseId="{{ purchase.id }}" data-productId="{{ purchaseProduct.product.id }}">Zapłać</button>
