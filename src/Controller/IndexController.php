@@ -35,15 +35,15 @@ class IndexController extends AbstractController
         $productName = $request->query->get('product');
         $productCategory = $request->query->get('category');
 
-        $page = $request->query->get('page') ? $request->query->get('page') : 1;
+        $currentPage = $request->query->get('page') ? $request->query->get('page') : 1;
 
         $products = $this->getDoctrine()->getRepository(Product::class)->findProductByNameAndCategory($productName, $productCategory);
 
-        $paginator = new Paginator(15, $products, $page);
+        $paginator = new Paginator(2, $products, $currentPage);
 
-        $products = $paginator->paginator();
+        $products = $paginator->getUnitsForThisPage();
 
-        $pages = $paginator->getPages();
+        $pages = $paginator->getNumberOfPages();
 
         $deliveryTypes = $this->getDoctrine()->getRepository(DeliveryType::class)->findAll();
 
@@ -51,7 +51,7 @@ class IndexController extends AbstractController
             'productName' => $productName, 
             'products' => $products, 
             'pages' => $pages,
-            'page' => $page,
+            'currentPage' => $currentPage,
             'deliveryTypes' => $deliveryTypes
         ]);
     }

@@ -15,7 +15,7 @@ class Paginator
         $this->pageId = $pageId;
     }
 
-    public function paginator()
+    public function getUnitsForThisPage()
     {
         $itemsToReturn = [];
 
@@ -33,36 +33,12 @@ class Paginator
         return $itemsToReturn;
     }
 
-    public function getPages()
+    public function getNumberOfPages()
     {
         $episodeCount = count($this->items);
         $pages = $episodeCount / $this->thOnPage;
         $pages = (int) ceil($pages);
 
         return $pages;
-    }
-
-    public function getNextPage()
-    {
-        if($this->pageId != count($this->getPages()) && $this->pageId < count($this->getPages()) && $this->pageId != count($this->getPages()))
-        {
-            return $next = $this->pageId + 1;
-        }
-        else
-        {
-            return $next = NULL;
-        }
-    }
-
-    public function getPreviousPage()
-    {
-        if($this->pageId != 1 )
-        {
-            return $previous = $this->pageId - 1;
-        }
-        else
-        {
-            return $previous = NULL;
-        }
     }
 }

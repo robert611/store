@@ -1,20 +1,20 @@
  <div class="text-center mt-8 mb-8">
     {% if pages is defined and pages > 1 %}
         <ul class="m-pagination">
-            {% if page - 1 != 0 %}
-                <li class="waves-effect"><a href="{{ path('product_listing', {'page': page - 1}) }}"><i class="material-icons icon-align">chevron_left</i></a></li>
+            {% if currentPage - 1 != 0 %}
+                <li class="waves-effect"><a href="{{ path('product_listing', {'page': currentPage - 1}) }}"><i class="material-icons icon-align">chevron_left</i></a></li>
             {% else %}
                 <li class="waves-effect"><a disabled><i class="material-icons icon-align">chevron_left</i></a></li>
             {% endif %}
             {% for i in range(1, pages) %}
-                {% if  i == page %}
+                {% if  i == currentPage %}
                     <li class="waves-effect active"><a href="{{ path('product_listing', {'page': i }) }}">{{ i }}</a></li>
                 {% else %}
                     <li class="waves-effect"><a href="{{ path('product_listing', {'page': i }) }}">{{ i }}</a></li>
                 {% endif %}
             {% endfor %}
-            {% if page + 1 <= pages %}
-                <li class="waves-effect"><a href="{{ path('product_listing', {'page': page + 1}) }}"><i class="material-icons icon-align">chevron_right</i></a></li>
+            {% if currentPage + 1 <= pages %}
+                <li class="waves-effect"><a href="{{ path('product_listing', {'page': currentPage + 1}) }}"><i class="material-icons icon-align">chevron_right</i></a></li>
                 {% else %}
                 <li class="waves-effect"><a disabled><i class="material-icons icon-align">chevron_right</i></a></li>
             {% endif %}
