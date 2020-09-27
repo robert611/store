@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Basket;
+use App\Entity\Product;
 
 class BasketController extends AbstractController
 {
