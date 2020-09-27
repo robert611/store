@@ -308,7 +308,7 @@ m.pagination li i {
     opacity: 0.5;
 }
 
-#checkout-button {
+.checkout-button {
     height: 36px;
     background: #556cd6;
     color: white;

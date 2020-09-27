@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-sm-3 col-lg-2 center-div-verticaly xs-mt-1">
                                 <span><h4 class="display-inline">{{ element.product.price }} zł</h4></span>
-                                <form method="post" class="display-inline" action="{{ path('account_basket_delete_product', {'id': element.id}) }}">
+                                <form method="post" class="display-inline" action="{{ path('basket_delete_product', {'id': element.id}) }}">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="_token" value="{{ csrf_token('basket_delete' ~ element.id) }}">
                                     <button class="btn bg-inherit no-border-radius"><i class="material-icons icon-align delete-forever-icon-color">delete_forever</i></button>
@@ -39,8 +39,8 @@
                 <div class="card card-body">
                     <p>Do zapłaty <b>{{ productsPrize }} zł</b> + dostawa</p>
 
-                    <button type="button" class="btn btn-danger no-border-radius width-100">Dostawa i Płatność</button>
-                    <button type="button" class="btn mt-2 no-border-radius width-100 bg-inherit text-black">Kontynuuj zakupy</button>
+                    <a href="{{ path('purchase_basket_summary') }}" class="btn btn-danger no-border-radius width-100">Dostawa i Płatność</a>
+                    <a href="{{ path('index') }}" class="btn mt-2 no-border-radius width-100 bg-inherit text-black">Kontynuuj zakupy</a>
                 </div>
             {% endif %}
         </div>

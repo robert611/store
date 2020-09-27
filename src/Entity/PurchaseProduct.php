@@ -29,11 +29,6 @@ class PurchaseProduct
     private $quantity;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $payment_method;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Product::class)
      * @ORM\JoinColumn(nullable=false)
      */
@@ -70,18 +65,6 @@ class PurchaseProduct
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function getPaymentMethod(): ?string
-    {
-        return $this->payment_method;
-    }
-
-    public function setPaymentMethod(string $payment_method): self
-    {
-        $this->payment_method = $payment_method;
 
         return $this;
     }

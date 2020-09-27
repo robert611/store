@@ -21,28 +21,34 @@ class PurchasePaymentController extends AbstractController
     }
 
     /**
-     * @Route("purchase/{id}/payment", name="purchase_payment")
+     * @Route("purchase/{id}/payment/{productId}", name="purchase_payment")
      * @IsGranted("ROLE_USER")
      */
-    public function purchasePayment(Purchase $purchase)
+    public function purchasePayment(Purchase $purchase, $productId)
     {
-        $product = $purchase->getPurchaseProducts()->first()->getProduct();
+        $purchaseProduct = $purchase->getPurchaseProducts()->filter(function ($item) use ($productId) {
+			return $item->getProduct()->getId() == $productId;
+		})->first();
+
+		$product = $purchaseProduct->getProduct();
 
         \Stripe\Stripe::setApiKey($this->getParameter('stripe_secret_key'));
 
         $checkoutSession = \Stripe\Checkout\Session::create([
             'payment_method_types' => ['card'],
-            'line_items' => [[
-              'price_data' => [
-                'currency' => 'pln',
-                'unit_amount' => ($purchase->getPrice() * 100) + ($purchase->getPurchaseProducts()->first()->getDeliveryType()->getDefaultPrice() * 100),
-                'product_data' => [
-                  'name' => $product->getName(),
-                  'images' => ['http://localhost:8000/' . $product->getProductPictures()[0]->getName()],
-                ],
-              ],
-              'quantity' => $purchase->getPurchaseProducts()->first()->getQuantity(),
-            ]],
+            'line_items' => [
+				[
+              		'price_data' => [
+						'currency' => 'pln',
+						'unit_amount' => $product->getPrice() + $purchaseProduct->getDeliveryType()->getDefaultPrice() * 100,
+						'product_data' => [
+						'name' => $product->getName(),
+						'images' => ['http://localhost:8000/' . $product->getProductPictures()[0]->getName()],
+						],
+              		],
+            		'quantity' => $purchase->getPurchaseProducts()->first()->getQuantity(),
+				]
+			],
             'mode' => 'payment',
             'success_url' => 'http://localhost:8000' . '/set/purchase/payment/status/' . $purchase->getId(),
             'cancel_url' => 'http://localhost:8000' . '/purchase/payment/fail/message',

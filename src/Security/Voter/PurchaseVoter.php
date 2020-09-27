@@ -12,7 +12,7 @@ class PurchaseVoter extends Voter
     protected function supports($attribute, $product)
     {
         return in_array($attribute, ['PURCHASE_BUY', 'PURCHASE_BUY_WITH_BASKET'])
-            && $product instanceof \App\Entity\Product;
+            && ($product instanceof \App\Entity\Product or $product instanceof \Doctrine\Common\Collections\ArrayCollection);
     }
 
     protected function voteOnAttribute($attribute, $product, TokenInterface $token)
@@ -28,6 +28,8 @@ class PurchaseVoter extends Voter
             case 'PURCHASE_BUY': 
                 return $this->canBuy($product, $user);
                 break;
+            case 'PURCHASE_BUY_WITH_BASKET': 
+                return $this->canBuyWithBasket($product, $user); /* In this case $product is an array of products */
         }
 
         return false;
@@ -40,6 +42,21 @@ class PurchaseVoter extends Voter
 
             return false;
         }
+
+        return true;
+    }
+
+    public function canBuyWithBasket($products, $user)
+    {
+        $products->map(function($product) use ($user) {
+            if ($user->getId() === $product->getOwner()->getId()) {
+                (new Session)->getFlashBag()->add('warning', 'Nie możesz kupić własnego przedmiotu.');
+    
+                return false;
+            }
+        });
+
+        if (count($products) == 0) return false;
 
         return true;
     }

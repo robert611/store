@@ -12,7 +12,10 @@
     <script src="{{ asset('assets/js/purchase_summary/index.js') }}"></script>
     <script src="{{ asset('assets/js/create_spinner_widget.js') }}"></script>
     <script src="{{ asset('assets/js/purchase_summary/adjust_forward_button_text.js') }}"></script>
-    <script src="{{ asset('assets/js/purchase_summary/set_delivery_price.js') }}"></script>
+    <script src="{{ asset('assets/js/basket_purchase_summary/disable_forward_button.js') }}"></script>
+    <script src="{{ asset('assets/js/basket_purchase_summary/set_delivery_price.js') }}"></script>
+    <script src="{{ asset('assets/js/basket_purchase_summary/send_purchase_form.js') }}"></script>
+
 {% endblock %}
 
 {% block body %}
@@ -62,34 +65,36 @@
                     </div>
                 </div>
 
-                <div class="card card-body">
-                    <div class="row">
-                        <div class="col-sm-3 col-lg-2">
-                            {% if product.productPictures[0] is defined %}
-                                <img class="img-fluid" src="{{ asset('uploads/pictures/'~product.productPictures[0].name ) }}">
-                            {% endif %}
-                        </div>
-                        <div class="col-sm-6 col-lg-8 xs-mt-2">
-                            <span><a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a></span> <br>
-                            <small>1x {{ product.price }} zł</small>
-                        </div>
-                        <div class="col-sm-3 col-lg-2 center-div-verticaly xs-mt-1">
-                            <span><h4 class="display-inline">{{ product.price }} zł</h4></span>
-                        </div>  
+                {% for basketProduct in basket %}
+                    <div class="card card-body mb-3">
+                        <div class="row">
+                            <div class="col-sm-3 col-lg-2">
+                                {% if basketProduct.product.productPictures[0] is defined %}
+                                    <img class="img-fluid" src="{{ asset('uploads/pictures/'~basketProduct.product.productPictures[0].name ) }}">
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-6 col-lg-8 xs-mt-2">
+                                <span><a href="{{ path('product_show', {'id': basketProduct.product.id}) }}" class="no-anchor-styles">{{ basketProduct.product.name }}</a></span> <br>
+                                <small>1x {{ basketProduct.product.price }} zł</small>
+                            </div>
+                            <div class="col-sm-3 col-lg-2 center-div-verticaly xs-mt-1">
+                                <span><h4 class="display-inline">{{ basketProduct.product.price }} zł</h4></span>
+                            </div>  
 
-                        <input type="hidden" id="product-id-input" value="{{ product.id }}">
+                            <input type="hidden" id="product-id-input" value="{{ basketProduct.product.id }}">
+                        </div>
+
+                        <h5 class="mt-3 mb-3">Wybierz sposób dostawy</h5>
+                        {% for deliveryType in basketProduct.product.getDeliveryTypes %}
+                            <div class="form-check mb-3">
+                                <input class="form-check-input purchase-summary-product-delivery-type" name="delivery_type_{{ basketProduct.product.id}}" type="radio" data-deliveryPrice="{{ deliveryType.default_price }}" data-paymentType="{{ deliveryType.payment }}" data-deliveryTypeId ="{{ deliveryType.id}}" data-productId="{{ basketProduct.product.id }}">
+                                <label class="form-check-label">
+                                    {{ deliveryType.name }} - {{ deliveryType.default_price }} zł
+                                </label>
+                            </div>
+                        {% endfor %}
                     </div>
-
-                    <h5 class="mt-3 mb-3">Wybierz sposób dostawy</h5>
-                    {% for deliveryType in product.getDeliveryTypes %}
-                        <div class="form-check mb-3">
-                            <input class="form-check-input purchase-summary-product-delivery-type" name="delivery_type" type="radio" data-deliveryPrice="{{ deliveryType.default_price }}" data-paymentType="{{ deliveryType.payment }}" data-deliveryTypeId="{{ deliveryType.id }}">
-                            <label class="form-check-label">
-                                {{ deliveryType.name }} - {{ deliveryType.default_price }} zł
-                            </label>
-                        </div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
             <div class="col-md-4 col-lg-3">
                 <div class="sticky-top pt-2 z-index-0">
@@ -97,7 +102,7 @@
                         <h4>Podsumowanie</h4>
                         <p class="mb-1">
                             <span class="float-left">Wartość przedmiotów:</span>
-                            <span class="float-right">{{ product.price }} zł</span>
+                            <span class="float-right">{{ productsPrice }} zł</span>
                         </p>
                         <p class="mb-1">
                             <span class="float-left">Dostawa:</span> 
@@ -106,9 +111,12 @@
 
                         <hr>
 
-                        <p class="text-right mt-2">Do zapłaty <b>{{ product.price }} zł</b> + dostawa</p>
+                        <p class="text-right mt-2">Do zapłaty <b>{{ productsPrice }} zł</b> + dostawa</p>
 
-                        <a id="forward-to-payment-link"><button class="btn btn-success no-border-radius width-100" disabled>Płatność</button></a>
+                        <form method="post" action="{{ path('purchase_basket_buy') }}">
+                            <a id="forward-to-payment-link"><button class="btn btn-success no-border-radius width-100" disabled>Płatność</button></a>
+                        </form>
+                        
                         <small class="text-muted mt-1">Klikając w ten przycisk potwierdzasz zakup. Sprzedawca otrzyma twoje zamówienie.</small>
                     </div>
                 </div>

@@ -18,20 +18,22 @@
             </div>
         </div>
         <div class="row mt-5">
-            <div class="offset-md-3 col-md-6 mt-5">
-                <section class="stripe-section">
-                    <div class="stripe-product">
-                        <img
-                            src="{{ asset('uploads/pictures/'~purchase.purchaseProducts[0].product.productPictures[0].name) }}"
-                            alt="The cover of Stubborn Attachments"
-                        />
-                        <div class="stripe-product-description">
-                            <h3>{{ purchase.purchaseProducts[0].product.name }}</h3>
-                            <h5>{{ purchase.purchaseProducts[0].product.price + purchase.purchaseProducts[0].deliveryType.defaultPrice }} zł</h5>
+            <div class="col-md-6">
+                {% for purchaseProduct in purchase.purchaseProducts %}
+                    <section class="stripe-section mb-5">
+                        <div class="stripe-product">
+                            <img
+                                src="{{ asset('uploads/pictures/'~purchaseProduct.product.productPictures[0].name) }}"
+                                alt="The cover of Stubborn Attachments"
+                            />
+                            <div class="stripe-product-description">
+                                <h3>{{ purchaseProduct.product.name }}</h3>
+                                <h5>{{ purchaseProduct.product.price + purchaseProduct.deliveryType.defaultPrice }} zł</h5>
+                            </div>
                         </div>
-                    </div>
-                    <button id="checkout-button" data-purchaseId="{{ purchase.id }}">Checkout</button>
-                </section>
+                        <button class="checkout-button" data-purchaseId="{{ purchase.id }}" data-productId="{{ purchaseProduct.product.id }}">Zapłać</button>
+                    </section>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -43,28 +45,31 @@
     <script src="https://js.stripe.com/v3/"></script>
     <script type="text/javascript">
         var stripe = Stripe("pk_test_ZYDGLYL5xhuq5y2Aa8Rudxgg");
-        var checkoutButton = document.getElementById("checkout-button");
-        checkoutButton.addEventListener("click", function () {
-            fetch(`/purchase/${checkoutButton.getAttribute('data-purchaseId')}/payment`, {
-                method: "POST",
+        var checkoutButtons = document.getElementsByClassName("checkout-button");
+
+        Array.from(checkoutButtons).forEach(checkoutButton => 
+            checkoutButton.addEventListener("click", function () {
+                fetch(`/purchase/${checkoutButton.getAttribute('data-purchaseId')}/payment/${checkoutButton.getAttribute('data-productId')}`, {
+                    method: "POST",
+                })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (session) {
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                })
+                .then(function (result) {
+                    // If redirectToCheckout fails due to a browser or network
+                    // error, you should display the localized error message to your
+                    // customer using error.message.
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                })
+                .catch(function (error) {
+                    console.error("Error:", error);
+                });
             })
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (session) {
-                return stripe.redirectToCheckout({ sessionId: session.id });
-            })
-            .then(function (result) {
-                // If redirectToCheckout fails due to a browser or network
-                // error, you should display the localized error message to your
-                // customer using error.message.
-                if (result.error) {
-                    alert(result.error.message);
-                }
-            })
-            .catch(function (error) {
-                console.error("Error:", error);
-            });
-        });
+        );
   </script>
 {% endblock %}

@@ -41,7 +41,7 @@
                         </ul>
                     <hr>
 
-                    <form method="post" action="{{ path('account_basket_add_product', {'id': product.id}) }}">
+                    <form method="post" action="{{ path('basket_add_product', {'id': product.id}) }}">
                         <button type="submit" {{ product.owner == app.user ? 'disabled' }}  class="btn btn-danger no-border-radius width-100 mb-2">Dodaj do koszyka</button>
                     </form>
 

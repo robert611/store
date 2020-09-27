@@ -6,14 +6,35 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Purchase;
 use App\Entity\Product;
 use App\Entity\DeliveryType;
 use App\Entity\PurchaseProduct;
+use App\Entity\Basket;
 use App\Form\UserAddressType;
 
 class PurchaseController extends AbstractController
 {
+    /**
+     * @Route("purchase/basket/summary", name="purchase_basket_summary")
+     * @IsGranted("ROLE_USER")
+     */
+    public function basketPurchaseSummary()
+    {
+        $form = $this->createForm(UserAddressType::class);
+
+        $basket = $this->getDoctrine()->getRepository(Basket::class)->findBy(['user' => $this->getUser()]);
+
+        $productsPrice = array_sum((new ArrayCollection($basket))->map(function($basketElement) {
+            return $basketElement->getProduct()->getPrice();
+        })->toArray());
+
+        return $this->render('purchase/basket_summary.html.twig',
+            ['basket' => $basket, 'productsPrice' => $productsPrice, 'form' => $form->createView()]);
+    }
+
     /**
      * @Route("purchase/{id}/summary", name="purchase_summary")
      * @IsGranted("ROLE_USER")
@@ -46,7 +67,6 @@ class PurchaseController extends AbstractController
         $purchaseProduct = new PurchaseProduct();
 
         $purchaseProduct->setPurchase($purchase);
-        $purchaseProduct->setPaymentMethod($deliveryType->getPayment());
         $purchaseProduct->setDeliveryType($deliveryType);
         $purchaseProduct->setProduct($product);
         $purchaseProduct->setQuantity(1);
@@ -70,19 +90,52 @@ class PurchaseController extends AbstractController
      */
     public function buyWithBasket(Request $request)
     {
-        $this->denyAccessUnlessGranted('PURCHASE_BUY_WITH_BASKET', $season);
+        $basketProducts = $this->getDoctrine()->getRepository(Basket::class)->findBy(['user' => $this->getUser()]);
+
+        $products = (new ArrayCollection($basketProducts))->map(function($element) {
+            return $element->getProduct();
+        });
+
+        $this->denyAccessUnlessGranted('PURCHASE_BUY_WITH_BASKET', $products);
+
+        $productsPrice = array_sum($products->map(function($product) {
+            return $product->getPrice();
+        })->toArray());
+
+        $productsDeliveryTypes = array();
+
+        $deliveriesPrice = 0;
+
+        foreach($request->request->get('productDeliveryType') as $key => $delivery) {
+            $productsDeliveryTypes[$key] = $this->getDoctrine()->getRepository(DeliveryType::class)->find($delivery);
+            $deliveriesPrice += $productsDeliveryTypes[$key]->getDefaultPrice();
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
 
         $purchase = new Purchase();
 
         $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
+        $purchase->setPrice($productsPrice + $deliveriesPrice);
+        $purchase->setIsPaid(0);
 
-        $entityManager = $this->getDoctrine()->getManager();
+        foreach ($basketProducts as $basketProduct)
+        {
+            $purchaseProduct = new PurchaseProduct();
+
+            $purchaseProduct->setPurchase($purchase);
+            $purchaseProduct->setDeliveryType($productsDeliveryTypes[$basketProduct->getProduct()->getId()]);
+            $purchaseProduct->setProduct($basketProduct->getProduct());
+            $purchaseProduct->setQuantity($basketProduct->getQuantity());
+    
+            $entityManager->persist($purchaseProduct);
+        }
 
         $entityManager->persist($purchase);
         $entityManager->flush();
 
-        return $this->redirectToRoute('purchase_after_buy_message');
+        return new JsonResponse(['purchase_id' => $purchase->getId()]);
     }
 
     /**
