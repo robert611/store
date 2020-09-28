@@ -18,3 +18,5 @@ framework:
     
     validation:
         email_validation_mode: 'html5'
+    
+    serializer: { enable_annotations: true }

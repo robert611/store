@@ -3,14 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @ApiResource(
+ *     collectionOperations={"get"={"normalization_context"={"groups"="product:list"}}},
+ *     itemOperations={"get"={"normalization_context"={"groups"="product:item"}}},
+ *     paginationEnabled=false,
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"category": "exact", "name": "partial"})
  */
 class Product
 {
@@ -18,11 +29,13 @@ class Product
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"product:list", "product:item"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"product:list", "product:item"})
      */
     private $name;
 
@@ -33,6 +46,7 @@ class Product
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"product:list", "product:item"})
      */
     private $price;
 
@@ -45,6 +59,7 @@ class Product
     /**
      * @ORM\OneToMany(targetEntity=ProductBasicProperty::class, mappedBy="product", orphanRemoval=true)
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"product:list", "product:item"})
      */
     private $productBasicProperties;
 
@@ -56,28 +71,34 @@ class Product
 
     /**
      * @ORM\OneToMany(targetEntity=ProductSpecificProperty::class, mappedBy="product", orphanRemoval=true)
+     * @Groups({"product:list", "product:item"})
      */
     private $productSpecificProperties;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull(message="Wybierz którąś z opcji")
+     * @Groups({"product:list", "product:item"})
      */
     private $state;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotNull(message="Wybierz którąś z opcji")
+     * @Groups({"product:list", "product:item"})
      */
     private $auction_type;
 
     /**
      * @ORM\ManyToMany(targetEntity=DeliveryType::class, mappedBy="product")
+     * @Groups({"product:list", "product:item"})
+     * @ApiSubresource
      */
     private $deliveryTypes;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductPicture::class, mappedBy="product", orphanRemoval=true)
+     * @Groups({"product:list", "product:item"})
      */
     private $productPictures;
 

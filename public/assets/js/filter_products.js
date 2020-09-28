@@ -10,14 +10,21 @@ let maximumPrice = document.getElementById('maximum-price');
 
 let deliveryOptions = document.getElementsByClassName('delivery-type-checkbox');
 
-fetch(`/get/products/api/${getUrlVars()['product'] ? getUrlVars()['product'] : 'error_793_12_922'}/${getUrlVars()['category']}`)
+/* "Kategorie" is a default value of category parameter */
+let categoryId = getUrlVars()['category'] !== 'Kategorie' && getUrlVars()['category'] !== null ? '?category=' + getUrlVars()['category'] : '';
+let productName = getUrlVars()['product'] ? '?name=' + getUrlVars()['product'] : '';
+
+fetch(`/api/products${categoryId}${productName}`)
     .then((response) => {
         return response.json();
     })
+    .then(json => {
+        return json['hydra:member'];
+    })
     .then((products) => {
-
+        console.log(products);
         products.length > 0 ? activateFilters(products) : null;
-    });
+    });   
 
 function activateFilters(products)
 {
@@ -137,7 +144,7 @@ function filterProducts(products)
         }
 
         if (activeOptions.auctionType) {
-            if (product.auctionType !== activeOptions.auctionType) flag = false;
+            if (product.auction_type !== activeOptions.auctionType) flag = false;
         }
 
         if (activeOptions.minPrice) {
@@ -195,6 +202,7 @@ function createProductWidget(product)
 
     let img = document.createElement('img');
     img.setAttribute('class', 'img-fluid');
+    
     img.setAttribute('src', `/uploads/pictures/${product.productPictures[0] ? product.productPictures[0].name : ''}`);
 
     leftSide.appendChild(img);

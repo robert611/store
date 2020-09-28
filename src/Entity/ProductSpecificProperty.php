@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductSpecificPropertyRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Product;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductSpecificPropertyRepository::class)
@@ -20,11 +21,13 @@ class ProductSpecificProperty
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"product:list", "product:item"})
      */
     private $property;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"product:list", "product:item"})
      */
     private $value;
 

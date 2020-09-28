@@ -1,4 +1,60 @@
 {
+    "amphp/amp": {
+        "version": "v2.5.0"
+    },
+    "amphp/byte-stream": {
+        "version": "v1.8.0"
+    },
+    "amphp/cache": {
+        "version": "v1.4.0"
+    },
+    "amphp/dns": {
+        "version": "v1.2.3"
+    },
+    "amphp/hpack": {
+        "version": "v3.1.0"
+    },
+    "amphp/http": {
+        "version": "v1.6.1"
+    },
+    "amphp/http-client": {
+        "version": "v4.5.0"
+    },
+    "amphp/parser": {
+        "version": "v1.0.0"
+    },
+    "amphp/process": {
+        "version": "v1.1.0"
+    },
+    "amphp/serialization": {
+        "version": "v1.0.0"
+    },
+    "amphp/socket": {
+        "version": "v1.1.3"
+    },
+    "amphp/sync": {
+        "version": "v1.4.0"
+    },
+    "amphp/windows-registry": {
+        "version": "v0.3.3"
+    },
+    "api-platform/api-pack": {
+        "version": "v1.3.0"
+    },
+    "api-platform/core": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "a93061567140e386f107be75340ac2aee3f86cbf"
+        },
+        "files": [
+            "./config/packages/api_platform.yaml",
+            "./config/routes/api_platform.yaml",
+            "./src/Entity/.gitignore"
+        ]
+    },
     "behat/transliterator": {
         "version": "v1.3.0"
     },
@@ -16,6 +72,9 @@
         "files": [
             "./config/packages/test/dama_doctrine_test_bundle.yaml"
         ]
+    },
+    "daverandom/libdns": {
+        "version": "v2.0.2"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -114,8 +173,14 @@
     "egulias/email-validator": {
         "version": "2.1.18"
     },
+    "fig/link-util": {
+        "version": "1.1.1"
+    },
     "gedmo/doctrine-extensions": {
         "version": "v2.4.42"
+    },
+    "kelunik/certificate": {
+        "version": "v1.1.2"
     },
     "laminas/laminas-code": {
         "version": "3.4.1"
@@ -126,8 +191,29 @@
     "laminas/laminas-zendframework-bridge": {
         "version": "1.0.4"
     },
+    "league/uri": {
+        "version": "6.3.0"
+    },
+    "league/uri-interfaces": {
+        "version": "2.1.0"
+    },
+    "league/uri-parser": {
+        "version": "1.4.1"
+    },
     "monolog/monolog": {
         "version": "2.1.1"
+    },
+    "nelmio/cors-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "6388de23860284db9acce0a7a5d9d13153bcb571"
+        },
+        "files": [
+            "./config/packages/nelmio_cors.yaml"
+        ]
     },
     "nikic/php-parser": {
         "version": "v4.7.0"
@@ -155,6 +241,9 @@
     },
     "psr/event-dispatcher": {
         "version": "1.0.0"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
     },
     "psr/link": {
         "version": "1.0.0"
@@ -566,5 +655,8 @@
     },
     "webmozart/assert": {
         "version": "1.9.1"
+    },
+    "willdurand/negotiation": {
+        "version": "v2.3.1"
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ProductPictureRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductPictureRepository::class)
@@ -19,6 +21,7 @@ class ProductPicture
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"product:list", "product:item"})
      */
     private $name;
 
