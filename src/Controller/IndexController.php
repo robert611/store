@@ -39,7 +39,7 @@ class IndexController extends AbstractController
 
         $products = $this->getDoctrine()->getRepository(Product::class)->findProductByNameAndCategory($productName, $productCategory);
 
-        $paginator = new Paginator(2, $products, $currentPage);
+        $paginator = new Paginator(15, $products, $currentPage);
 
         $products = $paginator->getUnitsForThisPage();
 
