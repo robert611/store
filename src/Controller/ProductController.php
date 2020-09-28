@@ -108,7 +108,7 @@ class ProductController extends AbstractController
 
         $picturesToRemove = $request->request->get('product')['pictures_to_remove'] ?? [] ;
 
-        if (count($picturesToRemove) >= $product->getProductPictures()->count()) {
+        if (count($picturesToRemove) !== 0 && count($picturesToRemove) >= $product->getProductPictures()->count()) {
             $this->addFlash('product_form_picture_error', 'Musisz zostawić przynajmniej jedno zdjęcie');
         }
         else if ($form->isSubmitted() && $form->isValid()) {
@@ -137,6 +137,10 @@ class ProductController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('product_edit', ['id' => $product->getId()]);
+        }
+
+        if ($product->getProductPictures()->count() == 0) {
+            $this->addFlash('product_form_picture_error', 'Każdy produkt powinien mieć przynajmniej jedno zdjęcie');
         }
 
         return $this->render('product/edit.html.twig', [
