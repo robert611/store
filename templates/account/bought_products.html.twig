@@ -1,0 +1,57 @@
+{% extends 'account/account_template.html.twig' %}
+
+{% block account_body %}
+    {% if purchases|length > 0 %}
+        {% for purchase in purchases %}
+            {% for purchaseProduct in purchase.purchaseProducts %}
+            <div class="card card-body mb-3">
+                <div class="row mb-4 ml-2 mr-2">
+                    <div class="col-12 col-sm-4 text-sm-left mb-1 mb-sm-0">
+                        <a class="link-color">{{ purchaseProduct.product.owner.username }}</a>
+                    </div>
+
+                    <div class="col-12 col-sm-4 text-sm-center mb-1 mb-sm-0">
+                        <span>{{ purchase.createdAt.format('Y-m-d H:i') }}</span>
+                    </div>
+
+                    <div class="col-12 col-sm-4 text-sm-right">
+                        {% if purchaseProduct.deliveryType.payment == "prepayment" %}
+                            <span>{{ purchase.isPaid ? "Produkt: opłacony" : "Produkt: nieopłacony" }}</span>
+                        {% else %}
+                            <span>Płatność przy odbiorze</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row ml-2 mr-2">
+                    <div class="col-md-10 center-div-verticaly">
+                        <div>
+                            {% if purchaseProduct.product.productPictures[0] is defined %}
+                                <img class="bought-product-listing-img" src="{{ asset('uploads/pictures/'~purchaseProduct.product.productPictures[0].name ) }}">
+                            {% endif %}
+                        </div>
+
+                        <span class="ml-3"><a href="{{ path('product_show', {'id': purchaseProduct.product.id}) }}" class="no-anchor-styles">{{ purchaseProduct.product.name }}</a></span> <br><br>
+                    </div>
+
+                    <div class="col-md-2 center-div-verticaly mt-2 mt-sm-0">
+                        {{ purchaseProduct.product.price }} zł
+                    </div>
+
+                    <hr class="mt-4">
+                    
+                    <div class="col-6">
+                        {{ purchase.createdAt.format('Y-m-d H:i') }}
+                    </div>
+                    <div class="col-6 text-right">
+                        <span class="ml-3">Razem z dostawą <b>{{ purchaseProduct.product.price + purchaseProduct.deliveryType.default_price}} zł</b></span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endfor %}
+
+    {% else %}
+        <p class="h4 mt-2">Nie kupiłeś żadnych przedmiotów.</p>
+    {% endif %}
+
+{% endblock %}

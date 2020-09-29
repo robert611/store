@@ -39,7 +39,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
                                 twoje konto
                             </a>
-                            <ul class="dropdown-menu max-width-100" aria-labelledby="navbarDropdown">
+                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                 {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <li>
                                     <a class="dropdown-item no-background-on-active" href="{{ path('app_login') }}">
@@ -53,6 +53,7 @@
                                 </li>
                                 {% else %}
                                     <li><a class="dropdown-item" href="{{ path('product_new') }}">Wystaw przedmiot</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('account_user_bought_products') }}">Kupione Przedmioty</a></li>
                                     <li><a class="dropdown-item" href="{{ path('account_user_auction_list') }}">Twoje oferty</a></li>
                                     <li><a class="dropdown-item" href="{{ path('account') }}">Twoje Konto</a></li>
                                     <li><hr class="dropdown-divider"></li>

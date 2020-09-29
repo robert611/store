@@ -265,6 +265,15 @@ m.pagination li i {
     color: #00a790;
 }
 
+.link-color {
+    color: #00a790;
+}
+
+.bought-product-listing-img {
+    height: 100%;
+    width: 70px;
+}
+
 .z-index-0 {
     z-index: 0;
 }
