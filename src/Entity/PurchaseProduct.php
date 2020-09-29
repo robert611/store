@@ -40,6 +40,12 @@ class PurchaseProduct
      */
     private $delivery_type;
 
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $is_paid;
+
+   
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +95,18 @@ class PurchaseProduct
     public function setDeliveryType(?DeliveryType $delivery_type): self
     {
         $this->delivery_type = $delivery_type;
+
+        return $this;
+    }
+
+    public function getIsPaid(): ?int
+    {
+        return $this->is_paid;
+    }
+
+    public function setIsPaid(int $is_paid): self
+    {
+        $this->is_paid = $is_paid;
 
         return $this;
     }

@@ -41,11 +41,6 @@ class Purchase
      */
     private $purchaseProducts;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $is_paid;
-
     public function __construct()
     {
         $this->purchaseProducts = new ArrayCollection();
@@ -119,18 +114,6 @@ class Purchase
                 $purchaseProduct->setPurchase(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getIsPaid(): ?bool
-    {
-        return $this->is_paid;
-    }
-
-    public function setIsPaid(bool $is_paid): self
-    {
-        $this->is_paid = $is_paid;
 
         return $this;
     }

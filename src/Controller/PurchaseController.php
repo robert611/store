@@ -62,7 +62,6 @@ class PurchaseController extends AbstractController
         $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
         $purchase->setPrice($product->getPrice() + $deliveryType->getDefaultPrice());
-        $purchase->setIsPaid(0);
 
         $purchaseProduct = new PurchaseProduct();
 
@@ -72,6 +71,12 @@ class PurchaseController extends AbstractController
         $purchaseProduct->setQuantity(1);
 
         $entityManager = $this->getDoctrine()->getManager();
+
+        if ($deliveryType->getPayment() == "cash-on-delivery") {
+            $purchaseProduct->setIsPaid(2);
+        } else {
+            $purchaseProduct->setIsPaid(0);
+        }
 
         $entityManager->persist($purchase);
         $entityManager->persist($purchaseProduct);
@@ -118,16 +123,23 @@ class PurchaseController extends AbstractController
         $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
         $purchase->setPrice($productsPrice + $deliveriesPrice);
-        $purchase->setIsPaid(0);
 
         foreach ($basketProducts as $basketProduct)
         {
             $purchaseProduct = new PurchaseProduct();
 
+            $productDeliveryType = $productsDeliveryTypes[$basketProduct->getProduct()->getId()];
+
             $purchaseProduct->setPurchase($purchase);
-            $purchaseProduct->setDeliveryType($productsDeliveryTypes[$basketProduct->getProduct()->getId()]);
+            $purchaseProduct->setDeliveryType($productDeliveryType);
             $purchaseProduct->setProduct($basketProduct->getProduct());
             $purchaseProduct->setQuantity($basketProduct->getQuantity());
+
+            if ($productDeliveryType->getPayment() == "cash-on-delivery") {
+                $purchaseProduct->setIsPaid(2);
+            } else {
+                $purchaseProduct->setIsPaid(0);
+            }
     
             $entityManager->persist($purchaseProduct);
             $entityManager->remove($basketProduct);
@@ -135,8 +147,6 @@ class PurchaseController extends AbstractController
 
         $entityManager->persist($purchase);
         $entityManager->flush();
-
-
 
         return new JsonResponse(['purchase_id' => $purchase->getId()]);
     }
