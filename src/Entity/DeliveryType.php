@@ -11,7 +11,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DeliveryTypeRepository::class)
- * @ApiResource
  */
 class DeliveryType
 {
