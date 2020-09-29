@@ -21,7 +21,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *     itemOperations={"get"={"normalization_context"={"groups"="product:item"}}},
  *     paginationEnabled=false,
  * )
- * @ApiFilter(SearchFilter::class, properties={"category": "exact", "name": "partial"})
+ * @ApiFilter(SearchFilter::class, properties={"category": "exact", "name": "partial", "owner" : "exact"})
  */
 class Product
 {
@@ -92,7 +92,6 @@ class Product
     /**
      * @ORM\ManyToMany(targetEntity=DeliveryType::class, mappedBy="product")
      * @Groups({"product:list", "product:item"})
-     * @ApiSubresource
      */
     private $deliveryTypes;
 

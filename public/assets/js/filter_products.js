@@ -13,8 +13,9 @@ let deliveryOptions = document.getElementsByClassName('delivery-type-checkbox');
 /* "Kategorie" is a default value of category parameter */
 let categoryId = getUrlVars()['category'] !== 'Kategorie' && getUrlVars()['category'] !== null ? '?category=' + getUrlVars()['category'] : '';
 let productName = getUrlVars()['product'] ? '?name=' + getUrlVars()['product'] : '';
+let owner = getUrlVars()['owner'] ? '?owner=' + getUrlVars()['owner'] : '';
 
-fetch(`/api/products${categoryId}${productName}`)
+fetch(`/api/products${categoryId}${productName}${owner}`)
     .then((response) => {
         return response.json();
     })
@@ -22,7 +23,6 @@ fetch(`/api/products${categoryId}${productName}`)
         return json['hydra:member'];
     })
     .then((products) => {
-        console.log(products);
         products.length > 0 ? activateFilters(products) : null;
     });   
 
