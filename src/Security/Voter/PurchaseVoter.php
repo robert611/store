@@ -43,10 +43,12 @@ class PurchaseVoter extends Voter
             return false;
         }
 
+        if (!$this->isUserAddressFilled($user)) return false;
+
         return true;
     }
 
-    public function canBuyWithBasket($products, $user)
+    private function canBuyWithBasket($products, $user)
     {
         $products->map(function($product) use ($user) {
             if ($user->getId() === $product->getOwner()->getId()) {
@@ -57,6 +59,19 @@ class PurchaseVoter extends Voter
         });
 
         if (count($products) == 0) return false;
+
+        if (!$this->isUserAddressFilled($user)) return false;
+
+        return true;
+    }
+
+    private function isUserAddressFilled($user)
+    {
+        if (!$user->getUserAddress()) {
+            (new Session)->getFlashBag()->add('warning', 'Nie możesz kupić przemiotu nie podając najpierw adresu dostawy.');
+
+            return false;
+        }
 
         return true;
     }

@@ -53,7 +53,7 @@ class UserAddressController extends AbstractController
         return new JsonResponse($serializer->serialize($userAddress, 'json'));
     }
 
-     /**
+    /**
      * @Route("/user/address/edit", name="user_address_edit")
      */
     public function edit()
@@ -85,5 +85,19 @@ class UserAddressController extends AbstractController
         $serializer = new Serializer($normalizers, $encoders);
 
         return new JsonResponse($serializer->serialize($userAddress, 'json'));
+    }
+
+    /**
+     * @Route("api/user/address/get", name="user_address_get")
+     */
+    public function doesUserAddressExist()
+    {
+        $userAddress = $this->getDoctrine()->getRepository(UserAddress::class)->findOneBy(['user' => $this->getUser()]);
+
+        if ($userAddress) {
+            return new JsonResponse(['answer' => true]);
+        }
+
+        return new JsonResponse(['answer' => false]);
     }
 }

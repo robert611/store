@@ -4,6 +4,13 @@ function sendPurchaseForm()
 
     forwardLink ? forwardLink.addEventListener('click',  (e) => {
         e.preventDefault();
+        if (!forwardLink.getAttribute('data-userAddressFilled')) {
+            let noUserAddressErrorDiv = document.getElementById('no-user-address-error-div');
+
+            noUserAddressErrorDiv.textContent = "Nie możesz dokonać zakupu bez podania adresu dostawy."
+
+            return false;
+        }
     
         let deliveryMethodsData = new FormData();
 

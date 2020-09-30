@@ -3,6 +3,8 @@ function disableForwardButton()
     let forwardToPaymentLink = document.getElementById('forward-to-payment-link');
     let linkButton = forwardToPaymentLink.firstChild;
     
+    if (linkButton.nodeName == '#text') linkButton = linkButton.nextSibling;
+
     linkButton.textContent = "";
     linkButton.appendChild(createSpinnerWidget('dark'));
 

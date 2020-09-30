@@ -13,6 +13,7 @@
     <script src="{{ asset('assets/js/create_spinner_widget.js') }}"></script>
     <script src="{{ asset('assets/js/purchase_summary/adjust_forward_button_text.js') }}"></script>
     <script src="{{ asset('assets/js/purchase_summary/set_delivery_price.js') }}"></script>
+    <script src="{{ asset('assets/js/purchase_summary/check_if_user_address_is_filled.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -108,7 +109,10 @@
 
                         <p class="text-right mt-2">Do zapłaty <b>{{ product.price }} zł</b> + dostawa</p>
 
-                        <a id="forward-to-payment-link"><button class="btn btn-success no-border-radius width-100" disabled>Płatność</button></a>
+                        <a id="forward-to-payment-link" {{ app.user.userAddress ? 'data-userAddressFilled=true' : null }}>
+                            <button class="btn btn-success no-border-radius width-100" disabled>Płatność</button>
+                        </a>
+                        <div id="no-user-address-error-div" class="error-msg mt-2"></div>
                         <small class="text-muted mt-1">Klikając w ten przycisk potwierdzasz zakup. Sprzedawca otrzyma twoje zamówienie.</small>
                     </div>
                 </div>
