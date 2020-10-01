@@ -34,20 +34,48 @@
 
                     <h3 class="mt-4 mb-4">{{ product.price }} zł</h3>
 
-                    <hr>
-                        <ul class="list-style-type-none pl-1">
-                            <li><i class="material-icons icon-align">directions_car</i>Dostawa od {{ product.getCheapestDeliveryPrice() }} zł <br> <small>Czas wysyłki zwykle w ciągu {{ product.deliveryTime }} godzin</small></li>
-                            <li class="mt-2"><i class="material-icons icon-align">remove_shopping_cart</i> 14 dni na odstąpienie od umowy</li>
-                        </ul>
-                    <hr>
+                    {% if product.auctionType is not same as("free_advertisment") %}
+                        <hr>
+                            <ul class="list-style-type-none pl-1">
+                                <li><i class="material-icons icon-align">directions_car</i>Dostawa od {{ product.getCheapestDeliveryPrice() }} zł <br> <small>Czas wysyłki zwykle w ciągu {{ product.deliveryTime }} godzin</small></li>
+                                <li class="mt-2"><i class="material-icons icon-align">remove_shopping_cart</i> 14 dni na odstąpienie od umowy</li>
+                            </ul>
+                        <hr>
+                   
+                        <form method="post" action="{{ path('basket_add_product', {'id': product.id}) }}">
+                            <button type="submit" {{ product.owner == app.user ? 'disabled' }}  class="btn btn-danger no-border-radius width-100 mb-2">Dodaj do koszyka</button>
+                        </form>
 
-                    <form method="post" action="{{ path('basket_add_product', {'id': product.id}) }}">
-                        <button type="submit" {{ product.owner == app.user ? 'disabled' }}  class="btn btn-danger no-border-radius width-100 mb-2">Dodaj do koszyka</button>
-                    </form>
+                        <a href="{{ path('purchase_summary', {'id' : product.id }) }} ">
+                            <button type="button" {{ product.owner == app.user ? 'disabled' }} class="btn btn-danger no-border-radius width-100">Kup teraz</button>
+                        </a>
+                    {% else %}
+                        <hr class="mb-1">
+                        <div class="mb-2">
+                            <small class="text-muted">21 dni do końca ogłoszenia</small>
+                        </div>
 
-                    <a href="{{ path('purchase_summary', {'id' : product.id }) }} ">
-                        <button type="button" {{ product.owner == app.user ? 'disabled' }} class="btn btn-danger no-border-radius width-100">Kup teraz</button>
-                    </a>
+                        <button type="button" disabled class="btn btn-danger no-border-radius width-100 opacity-100">{{ product.owner.email }}</button>
+                        <button class="btn mt-2 no-border-radius width-100 bg-inherit link-button" data-toggle="modal" data-target="#ask-question-modal">Zadaj pytanie</button>
+
+                        <div class="modal" tabindex="-1" id="ask-question-modal">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title text-center">Twoja wiadomość</h4>
+                                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="form-control"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                                        <button type="button" class="btn btn-primary">Wyślij</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

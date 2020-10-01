@@ -140,6 +140,7 @@
             <div class="mb-3">
                 <b>{{ form_label(form.delivery_time, 'Przewidywany czas wysyłki(w godzinach)', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                 {{ form_widget(form.delivery_time, {'attr': { 'class' : 'form-control' }}) }}
+                <small class="text-muted">Podaj zero jeśli wystawiasz ogłoszenie.</small>
                 <div class="error-msg form-error mt-1">
                     {{ form_errors(form.delivery_time) }}
                 </div>
