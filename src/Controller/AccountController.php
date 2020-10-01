@@ -5,8 +5,12 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Product;
 use App\Entity\Purchase;
+use App\Entity\Conversation;
+use App\Entity\Message;
+use App\Form\MessageType;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -39,6 +43,52 @@ class AccountController extends AbstractController
         $purchases = $this->getDoctrine()->getRepository(Purchase::class)->findBy(['user' => $this->getUser()]);
 
         return $this->render('account/bought_products.html.twig', ['purchases' => $purchases]);
+    }
+
+    /**
+     * @Route("/account/user/conversations", name="account_user_conversations")
+     */
+    public function userConversations()
+    {
+        $conversations = array_merge(
+            $this->getDoctrine()->getRepository(Conversation::class)->findBy(['author' => $this->getUser()]),
+            $this->getDoctrine()->getRepository(Conversation::class)->findBy(['recipient' => $this->getUser()])
+        );
+
+        return $this->render('account/user_conversations.html.twig', ['conversations' => $conversations]);
+    }
+
+    /**
+     * @Route("/account/user/conversation/{id}", name="account_user_conversation")
+     */
+    public function showConversation(Request $request, Conversation $conversation)
+    {
+        $message = new Message();
+
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $message->setAuthor($this->getUser());
+            $message->setCreatedAt(new \DateTime());
+            $message->setConversation($conversation);
+
+            $conversation->addMessage($message);
+
+            $entityManager->persist($conversation);
+            $entityManager->persist($message);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('account_user_conversation', ['id' => $conversation->getId()]);
+        }
+
+        return $this->render('account/show_conversation.html.twig', [
+            'conversation' => $conversation,
+            'form' => $form->createView()
+        ]);
     }
 
     /**

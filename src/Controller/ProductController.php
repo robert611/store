@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Entity\DeliveryType;
+use App\Entity\Conversation;
+use App\Entity\Message;
 use App\Form\ProductType;
+use App\Form\MessageType;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,12 +92,51 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("product/{id}", name="product_show", methods={"GET"})
+     * @Route("product/{id}", name="product_show", methods={"GET", "POST"})
      */
-    public function show(Product $product): Response
-    {
+    public function show(Request $request, Product $product): Response
+    {   
+        $message = new Message();
+
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && !$this->getUser()) {
+            $this->addFlash('warning', 'Musisz być zalogowany żeby wysłać wiadomość.');
+        }
+        if($form->isSubmitted() && $this->getUser() == $product->getOwner()) {
+            $this->addFlash('warning', 'Nie możesz wysłać wiadomości sam do siebie.');
+        }
+        else if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            
+            $conversation = $this->getDoctrine()->getRepository(Conversation::class)->findOneBy(['product' => $product]);
+
+            if (!$conversation) {
+                $conversation = new Conversation();
+
+                $conversation->setAuthor($this->getUser());
+                $conversation->setRecipient($product->getOwner());
+                $conversation->setProduct($product);
+            }
+
+            $message->setAuthor($this->getUser());
+            $message->setCreatedAt(new \DateTime());
+            $message->setConversation($conversation);
+
+            $conversation->addMessage($message);
+
+            $entityManager->persist($conversation);
+            $entityManager->persist($message);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+        }
+
         return $this->render('index/show_product.html.twig', [
             'product' => $product,
+            'form' => $form->createView()
         ]);
     }
 

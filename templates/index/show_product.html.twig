@@ -65,13 +65,28 @@
                                         <h4 class="modal-title text-center">Twoja wiadomość</h4>
                                         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                                     </div>
+                                    {{ form_start(form) }}
                                     <div class="modal-body">
-                                        <textarea class="form-control"></textarea>
+                                        {{ form_widget(form.text, {'attr': { 'class' : 'form-control' }}) }}
+                                        <div class="error-msg form-error mt-1">
+                                            {{ form_errors(form.text) }}
+                                        </div>
+
+                                        {% if app.user is same as(null) %}
+                                            <div class="error-msg">
+                                                Musisz być zalogowany żeby wysłać wiadomość.
+                                            </div>
+                                        {% elseif app.user is same as(product.owner) %}
+                                            <div class="error-msg">
+                                                Nie możesz wysłać wiadomości sam do siebie.
+                                            </div>
+                                        {% endif %}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
-                                        <button type="button" class="btn btn-primary">Wyślij</button>
+                                        <button type="submit" class="btn btn-primary" {{ app.user is same as(null) or app.user is same as(product.owner) ? 'disabled' : null }}>Wyślij</button>
                                     </div>
+                                    {{ form_end(form) }}
                                 </div>
                             </div>
                         </div>

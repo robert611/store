@@ -349,6 +349,14 @@ m.pagination li i {
     opacity: .5;
 }
 
+.no-underline {
+    text-decoration: none;
+}
+
+.user-message-window-background {
+    background-color: #1877F2;
+}
+
 #checkout-button:hover {
     opacity: 0.8;
 }  

@@ -1,0 +1,24 @@
+{% extends 'account/account_template.html.twig' %}
+
+{% block account_body %}
+    {% if conversations|length > 0 %}
+        <h3 class="mb-4">Twoje Konwersacje</h3>
+        {% for conversation in conversations %}
+            <div class="card card-body">
+                <p class="mb-0">
+                    <a href="{{ path('account_user_conversation', {id: conversation.id }) }}" class="no-underline">Rozmowa</a>
+                    {% if conversation.author is same as(app.user) %}
+                        rozpoczęta przez ciebie
+                    {% else %}
+                        rozpoczęta przez użytkownika {{ conversation.author.username }} 
+                    {% endif %}
+
+                    dnia {{ conversation.messages.first.getFormattedDate() }} roku. Na temat przedmiotu o nazwie <a href="{{ path('product_show', {id: conversation.product.id}) }}" class="no-underline">{{ conversation.product.name }}</a>.
+                </p>
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <p class="h4 mt-2">Nie masz żadnych wiadomości.</p>
+    {% endif %}
+{% endblock %}

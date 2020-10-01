@@ -64,11 +64,23 @@ class User implements UserInterface
      */
     private $userAddress;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="recipient")
+     */
+    private $conversations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="author")
+     */
+    private $messages;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->baskets = new ArrayCollection();
         $this->purchases = new ArrayCollection();
+        $this->conversations = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -265,6 +277,68 @@ class User implements UserInterface
     public function setUserAddress(UserAddress $userAddress): self
     {
         $this->userAddress = $userAddress;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Conversation[]
+     */
+    public function getConversations(): Collection
+    {
+        return $this->conversations;
+    }
+
+    public function addConversation(Conversation $conversation): self
+    {
+        if (!$this->conversations->contains($conversation)) {
+            $this->conversations[] = $conversation;
+            $conversation->setRecipient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversation(Conversation $conversation): self
+    {
+        if ($this->conversations->contains($conversation)) {
+            $this->conversations->removeElement($conversation);
+            // set the owning side to null (unless already changed)
+            if ($conversation->getRecipient() === $this) {
+                $conversation->setRecipient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+            // set the owning side to null (unless already changed)
+            if ($message->getAuthor() === $this) {
+                $message->setAuthor(null);
+            }
+        }
 
         return $this;
     }
