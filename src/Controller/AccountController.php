@@ -59,10 +59,12 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/account/user/conversation/{id}", name="account_user_conversation")
+     * @Route("/account/user/conversation/{id}", name="account_show_user_conversation")
      */
     public function showConversation(Request $request, Conversation $conversation)
     {
+        $this->denyAccessUnlessGranted('CONVERSATION_VIEW', $conversation);
+
         $message = new Message();
 
         $form = $this->createForm(MessageType::class, $message);
@@ -82,7 +84,7 @@ class AccountController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('account_user_conversation', ['id' => $conversation->getId()]);
+            return $this->redirectToRoute('account_show_user_conversation', ['id' => $conversation->getId()]);
         }
 
         return $this->render('account/show_conversation.html.twig', [
@@ -92,10 +94,12 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/account/product/posting/message/{productId}", name="account_new_product_message")
+     * @Route("/account/product/posting/message/{id}", name="account_new_product_message")
      */
-    public function showMessageAfterPostingProduct($productId)
+    public function showMessageAfterPostingProduct(Product $product)
     {
-        return $this->render('account/product_posting_message.html.twig', ['productId' => $productId]);
+        $this->denyAccessUnlessGranted('PRODUCT_SHOW_POST_MESSAGE', $product);
+
+        return $this->render('account/product_posting_message.html.twig', ['productId' => $product->getId()]);
     }
 }

@@ -6,7 +6,7 @@
         {% for conversation in conversations %}
             <div class="card card-body">
                 <p class="mb-0">
-                    <a href="{{ path('account_user_conversation', {id: conversation.id }) }}" class="no-underline">Rozmowa</a>
+                    <a href="{{ path('account_show_user_conversation', {id: conversation.id }) }}" class="no-underline">Rozmowa</a>
                     {% if conversation.author is same as(app.user) %}
                         rozpoczęta przez ciebie
                     {% else %}
