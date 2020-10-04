@@ -159,6 +159,14 @@
                 </div>
             </div>
 
+            <div class="mb-3">
+                <b>{{ form_label(form.duration, 'Czas trwania aukcji(w dniach)', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {{ form_widget(form.duration, {'attr': { 'class' : 'form-control' }}) }}
+                <small class="text-muted">Jeśli nie podasz żadnej wartości, produkt będzie dostępny do kupna aż do momentu zakupu bądź usunięcia go przez ciebie.</small>
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.duration) }}
+                </div>
+            </div>
 
             <button type="submit" class="btn btn-success no-border-radius mt-3 put-up-product">{{ button_label|default('Wystaw') }}</button>
         {{ form_end(form) }}

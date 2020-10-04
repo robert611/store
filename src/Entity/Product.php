@@ -122,6 +122,11 @@ class Product
      */
     private $baskets;
 
+    /**
+     * @ORM\Column(type="string", length=64, nullable=true)
+     */
+    private $duration;
+    
     public function __construct()
     {
         $this->productPhysicalProperties = new ArrayCollection();
@@ -361,6 +366,19 @@ class Product
         return $min;
     }
 
+    public function getTimeToTheEndOfAnAuction(): ?\DateTime
+    {
+        if ($this->created_at->format('Y') == "-0001") {
+            return null;
+        }
+
+        $timeToTheEnd = new \DateTime($this->created_at->format('d-m-Y'));
+
+        $timeToTheEnd->add(date_interval_create_from_date_string($this->duration . "days"));
+
+        return $timeToTheEnd;
+    }
+
     /**
      * @return Collection|Basket[]
      */
@@ -388,6 +406,18 @@ class Product
                 $basket->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDuration(): ?string
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?string $duration): self
+    {
+        $this->duration = $duration;
 
         return $this;
     }

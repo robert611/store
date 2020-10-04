@@ -97,6 +97,9 @@ class ProductType extends AbstractType
                     ])
                 ]
             ])
+            ->add('duration', TextType::class, [
+                'required' => false
+            ])
         ;
     }
 

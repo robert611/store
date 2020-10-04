@@ -83,7 +83,7 @@ class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
 
-            return $this->redirectToRoute('account_new_product_message', ['productId' => $product->getId()]);
+            return $this->redirectToRoute('account_new_product_message', ['id' => $product->getId()]);
         }
 
         return $this->render('product/new.html.twig', [

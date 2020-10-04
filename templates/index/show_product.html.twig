@@ -37,11 +37,18 @@
                     {% if product.auctionType is not same as("free_advertisment") %}
                         <hr>
                             <ul class="list-style-type-none pl-1">
-                                <li><i class="material-icons icon-align">directions_car</i>Dostawa od {{ product.getCheapestDeliveryPrice() }} zł <br> <small>Czas wysyłki zwykle w ciągu {{ product.deliveryTime }} godzin</small></li>
+                                <li><i class="material-icons icon-align">directions_car</i> Dostawa od {{ product.getCheapestDeliveryPrice() }} zł <br> <small>Czas wysyłki zwykle w ciągu {{ product.deliveryTime }} godzin</small></li>
                                 <li class="mt-2"><i class="material-icons icon-align">remove_shopping_cart</i> 14 dni na odstąpienie od umowy</li>
+                                {% if product.duration is not same as(null) and product.duration is not same as("0") %}
+                                    {% if product.getTimeToTheEndOfAnAuction() is not same as(null) %}
+                                        <li class="mt-2"><i class="material-icons icon-align">access_time</i> 
+                                            Czas do końca aukcji: {{ product.getTimeToTheEndOfAnAuction().format('d') }} dni 
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
                             </ul>
                         <hr>
-                   
+
                         <form method="post" action="{{ path('basket_add_product', {'id': product.id}) }}">
                             <button type="submit" {{ product.owner == app.user ? 'disabled' }}  class="btn btn-danger no-border-radius width-100 mb-2">Dodaj do koszyka</button>
                         </form>
