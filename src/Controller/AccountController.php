@@ -6,11 +6,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Product;
 use App\Entity\Purchase;
 use App\Entity\Conversation;
 use App\Entity\Message;
+use App\Entity\UserAddress;
+use App\Entity\PurchaseProduct;
 use App\Form\MessageType;
+use App\Form\UserAddressType;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -20,9 +25,46 @@ class AccountController extends AbstractController
     /**
      * @Route("/account", name="account")
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->render('account/index.html.twig', []);
+        $userAddress = new UserAddress();
+
+        $form = $this->createForm(UserAddressType::class, $userAddress);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $userAddress->setUser($this->getUser());
+
+            $entityManager->persist($userAddress);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('account');
+        }
+
+        $announcements = count($this->getDoctrine()->getRepository(Product::class)->findBy(['owner' => $this->getUser(), 'auction_type' => 'free_advertisment']));
+        $auctions = count($this->getDoctrine()->getRepository(Product::class)->findBy(['owner' => $this->getUser()])) - $announcements;
+
+        $soldProducts = (new ArrayCollection($this->getDoctrine()->getRepository(PurchaseProduct::class)->findAll()))->filter(function($purchaseProduct) {
+            return $purchaseProduct->getProduct()->getOwner()->getId() === $this->getUser()->getId();
+        });
+
+        $income = 0;
+        
+        $soldProducts->map(function($purchaseProduct) use (&$income) {
+            $income += $purchaseProduct->getProduct()->getPrice();
+        });
+
+        return $this->render('account/index.html.twig',
+            [
+                'form' => $form->createView(),
+                'auctions' => $auctions,
+                'announcements' => $announcements, 
+                'soldProducts' => count($soldProducts),
+                'income' => $income
+            ]
+        );
     }
 
     /**
@@ -101,5 +143,88 @@ class AccountController extends AbstractController
         $this->denyAccessUnlessGranted('PRODUCT_SHOW_POST_MESSAGE', $product);
 
         return $this->render('account/product_posting_message.html.twig', ['productId' => $product->getId()]);
+    }
+
+    /**
+     * @Route("/account/change/email", name="account_change_email")
+     */
+    public function changeEmail(Request $request)
+    {
+        $newEmail = $request->request->get('new-email');
+        $newEmailRepeat = $request->request->get('new-email-repeat');
+
+        $password = $request->request->get('password');
+
+        if ($newEmail !== $newEmailRepeat) {
+            $this->addFlash('warning', 'Musisz podać dwa takie same adresy email.');
+
+            return $this->redirectToRoute('account');
+        }
+
+        $verification = password_verify($password, $this->getUser()->getPassword());
+
+        if (!$verification) {
+            $this->addFlash('warning', 'Podano nieprawidłowe hasło.');
+
+            return $this->redirectToRoute('account');
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $this->getUser()->setEmail($newEmail);
+
+        $entityManager->persist($this->getUser());
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Twój adres email został zmieniony.');
+
+        return $this->redirectToRoute('account');
+    }
+
+    /**
+     * @Route("/account/change/password", name="account_change_password")
+     */
+    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $password = $request->request->get('new-password');
+        $passwordRepeat = $request->request->get('new-password-repeat');
+
+        $verification = password_verify($request->request->get('current-password'), $this->getUser()->getPassword());
+
+        if (!$verification) {
+            $this->addFlash('warning', 'Podano nieprawidłowe hasło.');
+
+            return $this->redirectToRoute('account');
+        }
+
+        
+        if ($password !== $passwordRepeat) {
+            $this->addFlash('warning', 'Podane hasła nie są takie same.');
+
+            return $this->redirectToRoute('account');
+        }
+
+        if (strlen($password) < 6 || strlen($password) > 32) {
+            $this->addFlash('warning', 'Twoje hasło musi mieć przynajmniej 6 i nie więcej niż 32 znaki.');
+
+            return $this->redirectToRoute('account');
+        }
+
+        /* Encode password */
+        $this->getUser()->setPassword(
+            $passwordEncoder->encodePassword(
+                $this->getUser(),
+                $password
+            )
+        );
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $entityManager->persist($this->getUser());
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Twoje hasło zostało zmienione.');
+
+        return $this->redirectToRoute('account');
     }
 }

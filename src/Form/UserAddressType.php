@@ -58,11 +58,11 @@ class UserAddressType extends AbstractType
             ])
             ->add('zip_code', TextType::class, [
                 'constraints' => [
-                    'Regex' => [
-                        'pattern' => '[0-9]{2}-[0-9]{3}',
+                    new Regex([
+                        'pattern' => '/^[0-9]{2}-^[0-9]{3}/',
                         'match' => false,
                         'message'=> 'Kod pocztowy nie jest poprawny'
-                    ]
+                    ])
                 ]
             ])
             ->add('city', TextType::class, [

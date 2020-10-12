@@ -7,7 +7,7 @@ function attachEventToUpdateUserAddressInDatabase()
     
         let formData = new FormData(form);
     
-        fetch('/user/address/edit', {
+        fetch('api/user/address/edit', {
             method: 'POST',
             body: formData
         }).then(response => {

@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use App\Entity\UserAddress;
+use App\Form\UserAddressType;
 
 /**
  * @IsGranted("ROLE_USER")
@@ -19,9 +20,9 @@ use App\Entity\UserAddress;
 class UserAddressController extends AbstractController
 {
     /**
-     * @Route("/user/address/new", name="user_address_new")
+     * @Route("api/user/address/new", name="api_user_address_new")
      */
-    public function new()
+    public function apiNew()
     {
         $request = Request::createFromGlobals();
 
@@ -54,9 +55,9 @@ class UserAddressController extends AbstractController
     }
 
     /**
-     * @Route("/user/address/edit", name="user_address_edit")
+     * @Route("api/user/address/edit", name="api_user_address_edit")
      */
-    public function edit()
+    public function apiEdit()
     {
         $request = Request::createFromGlobals();
 
@@ -85,6 +86,27 @@ class UserAddressController extends AbstractController
         $serializer = new Serializer($normalizers, $encoders);
 
         return new JsonResponse($serializer->serialize($userAddress, 'json'));
+    }
+
+    /**
+     * @Route("user/address/{id}/edit", name="user_address_edit")
+     */
+    public function edit(Request $request, UserAddress $userAddress)
+    {
+        $form = $this->createForm(UserAddressType::class, $userAddress);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $entityManager->persist($userAddress);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('user_address_edit', ['id' => $userAddress->getId()]);
+        }
+
+        return $this->render('account/edit_user_address.html.twig',
+            ['form' => $form->createView()]);
     }
 
     /**

@@ -1,6 +1,147 @@
 {% extends 'account/account_template.html.twig' %}
 
 {% block account_body %}
+    <div class="row">
+        <div class="col-12 col-md-6 sm-mb-3">
+            <div class="card card-body">
+                {% if app.user.userAddress %}
+                    <h4 class="mt-2 mb-3 text-center">Twój adres dostawy</h4>
 
+                    <div class="user-address-data mt-1">
+                        {{ app.user.userAddress.name }} {{ app.user.userAddress.surname }} <br>
+                        {{ app.user.userAddress.address }} <br>
+                        {{ app.user.userAddress.zipCode }} {{ app.user.userAddress.city }} <br>
+                        {{ app.user.userAddress.phoneNumber }} <br>
+                    </div>
 
+                    <a href="{{ path('user_address_edit', { id: app.user.userAddress.id }) }}"><button class="mt-2 btn bg-inherit link-button">ZMIEŃ ADRES</button></a>
+                {% else %}
+                    <div id="add-user-delivery-data-section">
+                        <h4 class="mt-4 mb-3">Uzupełnij dane na temat adresu</h4>
+                        
+                        {% include 'purchase/_address_form.html.twig' %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card card-body">
+                <h4 class="mt-2 mb-3 text-center">Twoje dane</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <td>Nazwa użytkownika:</td> 
+                            <td>{{ app.user.username }}</td>
+                            <td><button class="btn btn-outline-secondary" disabled>Zmień</button></td>
+                        </tr>
+                        <tr> 
+                            <td>Adres email:</td> 
+                            <td>{{ app.user.email }}</td>
+                            <td><button class="btn btn-info" type="button" data-toggle="collapse" data-target="#change-email" aria-expanded="false">Zmień</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border-bottom-width: 0px; padding: 0px;">
+                                <div class="collapse pt-2 pb-1" id="change-email">
+                                    <div class="card card-body">
+                                        <form id="change-email-form" method="POST" action="{{ path('account_change_email') }}">
+                                            <div class="mb-3">
+                                                <label for="email-input" class="form-label">Nowy adres email</label>
+                                                <input type="email" class="form-control" name="new-email" id="email-input">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="email-repeat-input" class="form-label">Powtórz email</label>
+                                                <input type="email" class="form-control" name="new-email-repeat" id="email-repeat-input">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="password-input" class="form-label">Hasło</label>
+                                                <input type="password" class="form-control" name="password" id="password-input">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Zmień</button>
+                                        </form>
+                                    </div>
+
+                                    <hr style="border-color: #dee2e6">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Hasło:</td> 
+                            <td>***************</td>
+                            <td><button class="btn btn-info" type="button" data-toggle="collapse" data-target="#change-password" aria-expanded="false">Zmień</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="border-bottom-width: 0px; padding: 0px;">
+                                <div class="collapse pt-2 pb-1" id="change-password">
+                                    <div class="card card-body">
+                                        <form id="change-password-form" method="POST" action="{{ path('account_change_password') }}">
+                                            <div class="mb-3">
+                                                <label for="new-password-input" class="form-label">Nowe hasło</label>
+                                                <input type="password" class="form-control" name="new-password" id="new-password-input">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="new-password-repeat-input" class="form-label">Powtórz hasło</label>
+                                                <input type="password" class="form-control" name="new-password-repeat" id="new-password-repeat-input">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="current-password-input" class="form-label">Bieżące hasło</label>
+                                                <input type="password" class="form-control" name="current-password" id="current-password-input">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Zmień</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 mt-3">
+            <div class="card card-body">
+                <h4 class="mt-2 mb-3 text-center">Informacje na temat twojego konta</h4>
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="card card-body text-center mb-4">
+                            <i class="material-icons admin-icon">shop</i>
+                            <h4 class="mt-2">Aukcje: {{ auctions }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="card card-body text-center mb-4">
+                            <i class="material-icons admin-icon">shopping_cart</i>
+                            <h4 class="mt-2">Sprzedaże: {{ soldProducts }} </h4>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="card card-body text-center mb-4">
+                            <i class="material-icons admin-icon">attach_money</i>
+                            <h4 class="mt-2">Przychód: {{ income }} zł</h4>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="card card-body text-center mb-4">
+                            <i class="material-icons admin-icon">score</i>
+                            <h4 class="mt-2">Opinie: 4</h4>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <div class="card card-body text-center mb-4">
+                            <i class="material-icons admin-icon">announcement</i>
+                            <h4 class="mt-2">Ogłoszenia: {{ announcements }}</h4>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
 {% endblock %}
