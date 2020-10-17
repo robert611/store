@@ -5,7 +5,7 @@ userAddressForm ? userAddressForm.addEventListener('submit', (e) => {
 
     let formData = new FormData(document.getElementById('user-address-form'));
 
-    fetch('api/user/address/new', {
+    fetch('/api/user/address/new', {
         method: 'POST',
         body: formData
     }).then(response => {
