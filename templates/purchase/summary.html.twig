@@ -72,10 +72,10 @@
                         </div>
                         <div class="col-sm-6 col-lg-8 xs-mt-2">
                             <span><a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a></span> <br>
-                            <small>1x {{ product.price }} zł</small>
+                            <small>{{ itemsQuantity }} x {{ product.price }} zł</small>
                         </div>
                         <div class="col-sm-3 col-lg-2 center-div-verticaly xs-mt-1">
-                            <span><h4 class="display-inline">{{ product.price }} zł</h4></span>
+                            <span><h4 class="display-inline">{{ product.price * itemsQuantity }} zł</h4></span>
                         </div>  
 
                         <input type="hidden" id="product-id-input" value="{{ product.id }}">
@@ -98,7 +98,7 @@
                         <h4>Podsumowanie</h4>
                         <p class="mb-1">
                             <span class="float-left">Wartość przedmiotów:</span>
-                            <span class="float-right">{{ product.price }} zł</span>
+                            <span class="float-right">{{ product.price * itemsQuantity }} zł</span>
                         </p>
                         <p class="mb-1">
                             <span class="float-left">Dostawa:</span> 
@@ -107,8 +107,10 @@
 
                         <hr>
 
-                        <p class="text-right mt-2">Do zapłaty <b>{{ product.price }} zł</b> + dostawa</p>
+                        <p class="text-right mt-2">Do zapłaty <b>{{ product.price * itemsQuantity }} zł</b> + dostawa</p>
 
+                        <input type="hidden" id="items-quantity" value="{{ itemsQuantity }}">
+                        
                         <a id="forward-to-payment-link" {{ app.user.userAddress ? 'data-userAddressFilled=true' : null }}>
                             <button class="btn btn-success no-border-radius width-100" disabled>Płatność</button>
                         </a>

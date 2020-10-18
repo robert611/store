@@ -70,6 +70,14 @@
                 </div>
             </div>
 
+            <div class="mb-3">
+                <b>{{ form_label(form.quantity, 'Ilość sztuk danego przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
+                {{ form_widget(form.quantity, {'attr': { 'class' : 'form-control', 'min' : '0' }}) }}
+                <div class="error-msg form-error mt-1">
+                    {{ form_errors(form.quantity) }}
+                </div>
+            </div>
+
             <div class="mb-3" id="basic-parameters-div">
                 <b><label class="mb-3">Podstawowe Parametry</label></b>
                 <div class="row">

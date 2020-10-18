@@ -8,7 +8,9 @@ Array.from(deliveryTypes).forEach((element) => {
 
         let productId = document.getElementById('product-id-input').value;
 
-        let path = `/purchase/${productId}/${element.getAttribute('data-deliveryTypeId')}/buy`;
+        let itemsQuantity = document.getElementById('items-quantity').value;
+
+        let path = `/purchase/${productId}/${element.getAttribute('data-deliveryTypeId')}/${itemsQuantity}/buy`;
 
         /* Adjust foward button text and progress bar */
         if (element.getAttribute('data-paymentType') == "cash-on-delivery") {

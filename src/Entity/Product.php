@@ -126,6 +126,16 @@ class Product
      * @ORM\Column(type="string", length=64, nullable=true)
      */
     private $duration;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $quantity;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_sold_out;
     
     public function __construct()
     {
@@ -418,6 +428,30 @@ class Product
     public function setDuration(?string $duration): self
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): self
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getIsSoldOut(): ?bool
+    {
+        return $this->is_sold_out;
+    }
+
+    public function setIsSoldOut(bool $is_sold_out): self
+    {
+        $this->is_sold_out = $is_sold_out;
 
         return $this;
     }

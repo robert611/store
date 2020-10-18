@@ -19,26 +19,26 @@ class BasketRepository extends ServiceEntityRepository
         parent::__construct($registry, Basket::class);
     }
 
-    public function addProductToBasket(int $userId, int $productId)
+    public function addProductToBasket(int $userId, int $productId, int $quantity)
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "INSERT INTO basket VALUES (null, :productId, :userId, 1)";
+        $sql = "INSERT INTO basket VALUES (null, :productId, :userId, :quantity)";
 
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['productId' => $productId, 'userId' => $userId]);
+        $stmt->execute(['productId' => $productId, 'userId' => $userId, 'quantity' => $quantity]);
 
         return true;
     }
 
-    public function increaseProductQuantity(int $userId, int $productId)
+    public function increaseProductQuantity(int $userId, int $productId, int $quantity)
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "UPDATE basket SET quantity = quantity + 1 WHERE user_id = :userId AND product_id = :productId";
+        $sql = "UPDATE basket SET quantity = quantity + :quantity WHERE user_id = :userId AND product_id = :productId";
 
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['productId' => $productId, 'userId' => $userId]);
+        $stmt->execute(['productId' => $productId, 'userId' => $userId, 'quantity' => $quantity]);
 
         return true;
     }

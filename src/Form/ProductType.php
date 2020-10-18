@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Range;
 
 class ProductType extends AbstractType
 {
@@ -40,7 +41,7 @@ class ProductType extends AbstractType
             ])
             ->add('description', TextareaType::class)
             ->add('price', NumberType::class, [
-                'scale' => 3
+                'scale' => 2
             ])
             ->add('state', ChoiceType::class, [
                 'choices' => [
@@ -99,6 +100,16 @@ class ProductType extends AbstractType
             ])
             ->add('duration', TextType::class, [
                 'required' => false
+            ])
+            ->add('quantity', NumberType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Range([
+                        'min' => 1,
+                        'max' => 1000,
+                        'notInRangeMessage' => 'Musisz wystawić przynajmniej jedną sztukę tego przedmiotu i nie więcej niż tysiąc',
+                    ])
+                ]
             ])
         ;
     }

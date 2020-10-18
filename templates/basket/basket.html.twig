@@ -20,9 +20,10 @@
                             </div>
                             <div class="col-sm-6 col-lg-8 xs-mt-2">
                                 <span><a href="{{ path('product_show', {'id': element.product.id}) }}" class="no-anchor-styles">{{ element.product.name }}</a></span> <br>
+                                <small class="text-muted">{{ element.quantity }} x {{ element.product.price }} zł</small>
                             </div>
                             <div class="col-sm-3 col-lg-2 center-div-verticaly xs-mt-1">
-                                <span><h4 class="display-inline">{{ element.product.price }} zł</h4></span>
+                                <span><h4 class="display-inline">{{ element.quantity * element.product.price }} zł</h4></span>
                                 <form method="post" class="display-inline" action="{{ path('basket_delete_product', {'id': element.id}) }}">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="_token" value="{{ csrf_token('basket_delete' ~ element.id) }}">

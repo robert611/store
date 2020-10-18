@@ -21,26 +21,30 @@ class BasketController extends AbstractController
         $productsPrize = 0;
 
         (new ArrayCollection($basketElements))->map(function($element) use (&$productsPrize) {
-            return $productsPrize += $element->getProduct()->getPrice();
+            return $productsPrize += $element->getProduct()->getPrice() * $element->getQuantity();
         });
 
         return $this->render('basket/basket.html.twig', ['basketElements' => $basketElements, 'productsPrize' => $productsPrize]);
     }
 
-        /**
+    /**
      * @Route("/account/basket/add/product/{id}", name="basket_add_product", methods={"POST"})
      */
-    public function addProductToBasket(Product $product)
+    public function addProductToBasket(Request $request, Product $product)
     {
-        $basketRepository = $this->getDoctrine()->getRepository(Basket::class);
+        if ($this->isCsrfTokenValid('basket_add_product'.$product->getId(), $request->request->get('_token'))) {
+            $basketRepository = $this->getDoctrine()->getRepository(Basket::class);
 
-        if ($basketRepository->findOneBy(['user' => $this->getUser(), 'product' => $product])) {
-            $basketRepository->increaseProductQuantity($this->getUser()->getId(), $product->getId());
-        } else {
-            $basketRepository->addProductToBasket($this->getUser()->getId(), $product->getId());
+            $quantity = $request->request->get('items-quantity');
+
+            if ($basketRepository->findOneBy(['user' => $this->getUser(), 'product' => $product])) {
+                $basketRepository->increaseProductQuantity($this->getUser()->getId(), $product->getId(), $quantity);
+            } else {
+                $basketRepository->addProductToBasket($this->getUser()->getId(), $product->getId(), $quantity);
+            }
+
+            $this->addFlash('success', 'Przedmiot został doddany do koszyka.');
         }
-
-        $this->addFlash('success', 'Przedmiot został doddany do koszyka.');
 
         return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
     }

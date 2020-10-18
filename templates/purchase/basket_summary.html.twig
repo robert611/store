@@ -74,10 +74,10 @@
                             </div>
                             <div class="col-sm-6 col-lg-8 xs-mt-2">
                                 <span><a href="{{ path('product_show', {'id': basketProduct.product.id}) }}" class="no-anchor-styles">{{ basketProduct.product.name }}</a></span> <br>
-                                <small>1x {{ basketProduct.product.price }} zł</small>
+                                <small>{{ basketProduct.quantity }}x {{ basketProduct.product.price }} zł</small>
                             </div>
                             <div class="col-sm-3 col-lg-2 center-div-verticaly xs-mt-1">
-                                <span><h4 class="display-inline">{{ basketProduct.product.price }} zł</h4></span>
+                                <span><h4 class="display-inline">{{ basketProduct.product.price * basketProduct.quantity}} zł</h4></span>
                             </div>  
 
                             <input type="hidden" id="product-id-input" value="{{ basketProduct.product.id }}">

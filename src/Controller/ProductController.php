@@ -56,6 +56,7 @@ class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
+            $product->setIsSoldOut(false);
             $product->setOwner($this->getUser());
             $product->setCreatedAt(new \DateTime());
             
@@ -64,7 +65,7 @@ class ProductController extends AbstractController
             /* Make sure there is at least 1 picture and less than 24, It can be done in ProductType with constraints because it would affect also editting */
             if (!$this->validatePictures($pictures))
             {
-                return $this->render('product/product.html.twig', [
+                return $this->render('product/new.html.twig', [
                     'form' => $form->createView()
                 ]);
             }

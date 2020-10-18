@@ -21,37 +21,38 @@ class PurchaseController extends AbstractController
      * @Route("purchase/basket/summary", name="purchase_basket_summary")
      * @IsGranted("ROLE_USER")
      */
-    public function basketPurchaseSummary()
+    public function basketPurchaseSummary(Request $request)
     {
         $form = $this->createForm(UserAddressType::class);
 
         $basket = $this->getDoctrine()->getRepository(Basket::class)->findBy(['user' => $this->getUser()]);
 
         $productsPrice = array_sum((new ArrayCollection($basket))->map(function($basketElement) {
-            return $basketElement->getProduct()->getPrice();
+            return $basketElement->getProduct()->getPrice() * $basketElement->getQuantity();
         })->toArray());
 
         return $this->render('purchase/basket_summary.html.twig',
-            ['basket' => $basket, 'productsPrice' => $productsPrice, 'form' => $form->createView()]);
+            ['basket' => $basket, 'productsPrice' => $productsPrice, 'form' => $form->createView(), 
+                'itemsQuantity' => $request->request->get('items-quantity')]);
     }
 
     /**
      * @Route("purchase/{id}/summary", name="purchase_summary")
      * @IsGranted("ROLE_USER")
      */
-    public function purchaseSummary(Product $product)
+    public function purchaseSummary(Request $request, Product $product)
     {
         $form = $this->createForm(UserAddressType::class);
 
         return $this->render('purchase/summary.html.twig',
-            ['product' => $product, 'form' => $form->createView()]);
+            ['product' => $product, 'form' => $form->createView(), 'itemsQuantity' => $request->request->get('items-quantity')]);
     }
 
     /**
-     * @Route("purchase/{id}/{deliveryTypeId}/buy", name="purchase_buy")
+     * @Route("purchase/{id}/{deliveryTypeId}/{itemsQuantity}/buy", name="purchase_buy")
      * @IsGranted("ROLE_USER")
      */
-    public function buy(Request $request, Product $product, $deliveryTypeId)
+    public function buy(Request $request, Product $product, $deliveryTypeId, $itemsQuantity)
     {
         $this->denyAccessUnlessGranted('PURCHASE_BUY', $product);
 
@@ -61,14 +62,14 @@ class PurchaseController extends AbstractController
 
         $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
-        $purchase->setPrice($product->getPrice() + $deliveryType->getDefaultPrice());
+        $purchase->setPrice(($product->getPrice() * $itemsQuantity) + $deliveryType->getDefaultPrice());
 
         $purchaseProduct = new PurchaseProduct();
 
         $purchaseProduct->setPurchase($purchase);
         $purchaseProduct->setDeliveryType($deliveryType);
         $purchaseProduct->setProduct($product);
-        $purchaseProduct->setQuantity(1);
+        $purchaseProduct->setQuantity($itemsQuantity);
 
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -78,6 +79,15 @@ class PurchaseController extends AbstractController
             $purchaseProduct->setIsPaid(0);
         }
 
+        $newProductQuantity = $product->getQuantity() - $itemsQuantity;
+
+        if ($newProductQuantity < 1) {
+            $product->setIsSoldOut(true);
+        }
+
+        $product->setQuantity($newProductQuantity);
+
+        $entityManager->persist($product);
         $entityManager->persist($purchase);
         $entityManager->persist($purchaseProduct);
         $entityManager->flush();
@@ -97,15 +107,14 @@ class PurchaseController extends AbstractController
     {
         $basketProducts = $this->getDoctrine()->getRepository(Basket::class)->findBy(['user' => $this->getUser()]);
 
-        $products = (new ArrayCollection($basketProducts))->map(function($element) {
+        $productsPrice = 0;
+
+        $products = (new ArrayCollection($basketProducts))->map(function($element) use (&$productsPrice) {
+            $productsPrice += $element->getProduct()->getPrice() * $element->getQuantity();
             return $element->getProduct();
         });
 
         $this->denyAccessUnlessGranted('PURCHASE_BUY_WITH_BASKET', $products);
-
-        $productsPrice = array_sum($products->map(function($product) {
-            return $product->getPrice();
-        })->toArray());
 
         $productsDeliveryTypes = array();
 
@@ -130,9 +139,11 @@ class PurchaseController extends AbstractController
 
             $productDeliveryType = $productsDeliveryTypes[$basketProduct->getProduct()->getId()];
 
+            $product = $basketProduct->getProduct();
+
             $purchaseProduct->setPurchase($purchase);
             $purchaseProduct->setDeliveryType($productDeliveryType);
-            $purchaseProduct->setProduct($basketProduct->getProduct());
+            $purchaseProduct->setProduct($product);
             $purchaseProduct->setQuantity($basketProduct->getQuantity());
 
             if ($productDeliveryType->getPayment() == "cash-on-delivery") {
@@ -143,6 +154,17 @@ class PurchaseController extends AbstractController
     
             $entityManager->persist($purchaseProduct);
             $entityManager->remove($basketProduct);
+
+            $newProductQuantity = $product->getQuantity() - $basketProduct->getQuantity();
+
+            if ($newProductQuantity < 1) {
+                $product->setIsSoldOut(true);
+            }
+
+            $product->setQuantity($newProductQuantity);
+
+            /* Persist changes in product quantity, and it being sold out */
+            $entityManager->persist($product);
         }
 
         $entityManager->persist($purchase);

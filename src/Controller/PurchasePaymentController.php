@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Entity\PurchaseProduct;
 use App\Entity\Purchase;
 
 class PurchasePaymentController extends AbstractController
@@ -40,17 +41,27 @@ class PurchasePaymentController extends AbstractController
 				[
               		'price_data' => [
 						'currency' => 'pln',
-						'unit_amount' => (($product->getPrice() * $purchaseProduct->getQuantity()) + $purchaseProduct->getDeliveryType()->getDefaultPrice()) * 100,
+						'unit_amount' => $product->getPrice() * 100,
 						'product_data' => [
-						'name' => $product->getName(),
-						'images' => ['http://localhost:8000/' . $product->getProductPictures()[0]->getName()],
+						    'name' => $product->getName(),
+						    'images' => ['http://localhost:8000/' . $product->getProductPictures()[0]->getName()],
 						],
               		],
             		'quantity' => $purchaseProduct->getQuantity(),
-				]
-			],
+                ],
+                [
+                    'price_data' => [
+                        'currency' => 'pln',
+                        'unit_amount' => $purchaseProduct->getDeliveryType()->getDefaultPrice() * 100,
+                        'product_data' => [
+                            'name' => 'Przesyłka'
+                        ]
+                    ],
+                    'quantity' => 1
+                ]
+            ],
             'mode' => 'payment',
-            'success_url' => 'http://localhost:8000' . '/set/purchase/payment/status/' . $purchase->getId(),
+            'success_url' => 'http://localhost:8000' . '/set/purchase/product/payment/status/' . $purchaseProduct->getId(),
             'cancel_url' => 'http://localhost:8000' . '/purchase/payment/fail/message',
         ]);
 
@@ -58,16 +69,16 @@ class PurchasePaymentController extends AbstractController
     }
 
     /**
-     * @Route("set/purchase/payment/status/{id}", name="set_purchase_payment_status")
+     * @Route("set/purchase/product/payment/status/{id}", name="set_purchase_product_payment_status")
      * @IsGranted("ROLE_USER")
      */
-    public function setPurchasePaymentStatus(Purchase $purchase)
+    public function setPurchasePaymentStatus(PurchaseProduct $purchaseProduct)
     {
-        $purchase->setIsPaid(true);
+        $purchaseProduct->setIsPaid(true);
 
         $entityManager = $this->getDoctrine()->getManager();
 
-        $entityManager->persist($purchase);
+        $entityManager->persist($purchaseProduct);
         $entityManager->flush();
 
         return $this->redirectToRoute('purchase_after_buy_message');

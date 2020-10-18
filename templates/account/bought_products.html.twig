@@ -16,7 +16,7 @@
 
                     <div class="col-12 col-sm-4 text-sm-right">
                         {% if purchaseProduct.deliveryType.payment == "prepayment" %}
-                            <span>{{ purchase.isPaid ? "Produkt: opłacony" : "Produkt: nieopłacony" }}</span>
+                            {{ purchaseProduct.isPaid ? "<span style='color: #43a047'>Produkt: opłacony</span>" : "<span style='color: #b71c1c'>Produkt: nieopłacony<span>" }}</span>
                         {% else %}
                             <span>Płatność przy odbiorze</span>
                         {% endif %}
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="col-md-2 center-div-verticaly mt-2 mt-sm-0">
-                        {{ purchaseProduct.product.price }} zł
+                        {{ purchaseProduct.quantity }} x {{ purchaseProduct.product.price }} zł
                     </div>
 
                     <hr class="mt-4">
@@ -43,7 +43,7 @@
                         {{ purchase.createdAt.format('Y-m-d H:i') }}
                     </div>
                     <div class="col-6 text-right">
-                        <span class="ml-3">Razem z dostawą <b>{{ purchaseProduct.product.price + purchaseProduct.deliveryType.default_price}} zł</b></span>
+                        <span class="ml-3">Razem z dostawą <b>{{ (purchaseProduct.product.price * purchaseProduct.quantity) + purchaseProduct.deliveryType.default_price}} zł</b></span>
                     </div>
                 </div>
             </div>
