@@ -29,7 +29,11 @@ class PurchasePaymentController extends AbstractController
     {
         $purchaseProduct = $purchase->getPurchaseProducts()->filter(function ($item) use ($productId) {
 			return $item->getProduct()->getId() == $productId;
-		})->first();
+        })->first();
+        
+        if ($purchaseProduct->getDeliveryType()->getPayment() == "cash-on-delivery") {
+            return new JsonResponse(['error' => "Nie możesz zapłacić za przedmiot z dostawą za pobraniem. Jeśli wyświetla ci się informacja o wcześniejszej płatności, proszę ją pominąć."]);
+        }
 
 		$product = $purchaseProduct->getProduct();
 
