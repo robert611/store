@@ -19,6 +19,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Model\UploadProductPictures;
 use App\Model\SaveProductDeliveryTypes;
 use App\Model\SaveProductProperties;
+use App\Entity\Basket;
 
 class ProductController extends AbstractController
 {
@@ -135,9 +136,14 @@ class ProductController extends AbstractController
             return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
         }
 
+        $productInTheBasket = $this->getDoctrine()->getRepository(Basket::class)->findOneBy(['product' => $product, 'user' => $this->getUser()]);
+
+        $productQuantityToBuyForUser = $product->getQuantity() - ($productInTheBasket ? $productInTheBasket->getQuantity() : 0);
+
         return $this->render('index/show_product.html.twig', [
             'product' => $product,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'productQuantityToBuyForUser' => $productQuantityToBuyForUser
         ]);
     }
 

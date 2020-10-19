@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Basket;
 use App\Entity\Product;
+use App\Model\AddProductToBasket;
 
 class BasketController extends AbstractController
 {
@@ -30,20 +31,18 @@ class BasketController extends AbstractController
     /**
      * @Route("/account/basket/add/product/{id}", name="basket_add_product", methods={"POST"})
      */
-    public function addProductToBasket(Request $request, Product $product)
+    public function addProductToBasket(Request $request, Product $product, AddProductToBasket $addProductToBasketModel)
     {
         if ($this->isCsrfTokenValid('basket_add_product'.$product->getId(), $request->request->get('_token'))) {
-            $basketRepository = $this->getDoctrine()->getRepository(Basket::class);
-
             $quantity = $request->request->get('items-quantity');
 
-            if ($basketRepository->findOneBy(['user' => $this->getUser(), 'product' => $product])) {
-                $basketRepository->increaseProductQuantity($this->getUser()->getId(), $product->getId(), $quantity);
-            } else {
-                $basketRepository->addProductToBasket($this->getUser()->getId(), $product->getId(), $quantity);
-            }
+            $addProductToBasketModel->addProductToBasket($quantity, $product, $this->getUser());
 
-            $this->addFlash('success', 'Przedmiot został doddany do koszyka.');
+            if ($addProductToBasketModel->isQuantityToBig()) {
+                $this->addFlash('warning', "Nie możesz mieć w koszyku większej ilości tego produktu niż jest go w sprzedaży. Zamiast {$quantity} sztuk zostanie dodane {$addProductToBasketModel->getQuantityPossibleToAdd()} sztuk.");
+            } else {
+                $this->addFlash('success', 'Przedmiot został doddany do koszyka.');
+            }
         }
 
         return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
