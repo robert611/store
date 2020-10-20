@@ -44,8 +44,16 @@ class PurchaseController extends AbstractController
     {
         $form = $this->createForm(UserAddressType::class);
 
+        $itemsQuantity = $request->request->get('items-quantity');
+
+        if ($itemsQuantity > $product->getQuantity()) {
+            $this->addFlash('warning', "Wystawione jest {$product->getQuantity()} sztuk tego przedmiotu, a ty próbujesz kupić {$itemsQuantity} sztuk.");
+
+            return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+        }
+
         return $this->render('purchase/summary.html.twig',
-            ['product' => $product, 'form' => $form->createView(), 'itemsQuantity' => $request->request->get('items-quantity')]);
+            ['product' => $product, 'form' => $form->createView(), 'itemsQuantity' => $itemsQuantity]);
     }
 
     /**
