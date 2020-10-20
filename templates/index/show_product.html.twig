@@ -76,7 +76,7 @@
 
                         <form method="post" action="{{ path('purchase_summary', {'id' : product.id }) }}">
                             <input type="hidden" name="items-quantity" id="buy-now-form" value="1">
-                            <button type="submit" {{ product.owner == app.user ? 'disabled' }} class="btn btn-danger no-border-radius width-100">Kup teraz</button>
+                            <button type="submit" {{ product.owner == app.user or productQuantityToBuyForUser is same as (0) ? 'disabled' }} class="btn btn-danger no-border-radius width-100">Kup teraz</button>
                         </form>
                     {% else %}
                         <hr class="mb-1">
