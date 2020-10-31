@@ -6,24 +6,57 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\BasketRepository;
 use App\Entity\Basket;
 use App\Entity\Product;
 use App\Model\AddProductToBasket;
 
 class BasketController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("basket", name="basket")
      */
-    public function basket()
+    public function basket(BasketRepository $basketRepository)
     {
-        $basketElements = $this->getDoctrine()->getRepository(Basket::class)->findBy(['user' => $this->getUser()]);
+        $basketElements = $basketRepository->findBy(['user' => $this->getUser()]);
 
-        $productsPrize = 0;
+        /* Check if products wchich are in user basket, were alraady bought by somebody */
+        (new ArrayCollection($basketElements))->map(function($basketElement) {
+            $product = $basketElement->getProduct();
 
-        (new ArrayCollection($basketElements))->map(function($element) use (&$productsPrize) {
-            return $productsPrize += $element->getProduct()->getPrice() * $element->getQuantity();
+            if ($basketElement->getQuantity() > $product->getQuantity()) {
+
+                if ($product->getQuantity() > 0) {
+                    $message = "Kilka sztuk produktu o tytule {$product->getName()} zostało sprzedanych, w wyniku czego liczba jego sztuk w twoim koszyku uległa zmianie.";
+
+                    $basketElement->setQuantity($product->getQuantity());
+
+                    $this->entityManager->persist($basketElement);
+                } else {
+                    $message = "Produkt o tytule {$product->getName()} został wyprzedany, w wyniku czego został usunięty z twojego koszyka.";
+
+                    $this->entityManager->remove($basketElement);
+                }
+
+                $this->addFlash('warning', $message);
+            }
         });
+
+        $this->entityManager->flush();
+
+        $basketElements = $basketRepository->findBy(['user' => $this->getUser()]);
+
+        $productsPrize = array_sum((new ArrayCollection($basketElements))->map(function($basketElement) {
+            return $basketElement->getProduct()->getPrice() * $basketElement->getQuantity();
+        })->toArray());
 
         return $this->render('basket/basket.html.twig', ['basketElements' => $basketElements, 'productsPrize' => $productsPrize]);
     }
