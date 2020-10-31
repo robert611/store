@@ -12,10 +12,11 @@ let deliveryOptions = document.getElementsByClassName('delivery-type-checkbox');
 
 /* "Kategorie" is a default value of category parameter */
 let categoryId = getUrlVars()['category'] !== 'Kategorie' && getUrlVars()['category'] !== null ? '?category=' + getUrlVars()['category'] : '';
-let productName = getUrlVars()['product'] ? '?name=' + getUrlVars()['product'] : '';
-let owner = getUrlVars()['owner'] ? '?owner=' + getUrlVars()['owner'] : '';
+let productName = getUrlVars()['product'] ? (categoryId ? '&' : '?' ) + 'name=' + getUrlVars()['product'] : '';
+let quantity = (categoryId || productName ? '&' : '?' ) + 'quantity[gt]=0'
+let owner = getUrlVars()['owner'] ? '&owner=' + getUrlVars()['owner'] : '';
 
-fetch(`/api/products${categoryId}${productName}${owner}`)
+fetch(`/api/products${categoryId}${productName}${quantity}${owner}`)
     .then((response) => {
         return response.json();
     })
@@ -28,6 +29,7 @@ fetch(`/api/products${categoryId}${productName}${owner}`)
 
 function activateFilters(products)
 {
+    console.log(products)
     stateOptions.forEach((option) => {
         option.addEventListener('click', () => {  
 

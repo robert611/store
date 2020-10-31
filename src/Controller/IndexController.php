@@ -34,10 +34,11 @@ class IndexController extends AbstractController
     {
         $productName = $request->query->get('product');
         $productCategory = $request->query->get('category');
+        $owner = $request->query->get('owner');
 
         $currentPage = $request->query->get('page') ? $request->query->get('page') : 1;
 
-        $products = $this->getDoctrine()->getRepository(Product::class)->findProductByNameAndCategory($productName, $productCategory);
+        $products = $this->getDoctrine()->getRepository(Product::class)->findProductByNameAndCategory($productName, $productCategory, $owner);
 
         $paginator = new Paginator(15, $products, $currentPage);
 

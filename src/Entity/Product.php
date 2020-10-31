@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,6 +22,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *     paginationEnabled=false,
  * )
  * @ApiFilter(SearchFilter::class, properties={"category": "exact", "name": "partial", "owner" : "exact"})
+ * @ApiFilter(RangeFilter::class, properties={"quantity"})
  */
 class Product
 {
@@ -129,6 +131,7 @@ class Product
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"product:list", "product:item"})
      */
     private $quantity;
 

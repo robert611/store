@@ -22,11 +22,13 @@ class ProductRepository extends ServiceEntityRepository
     /**
      * @return Product[]
      */
-    public function findProductByNameAndCategory(?string $name, ?string $category): array
+    public function findProductByNameAndCategory(?string $name, ?string $category, ?string $owner): array
     {
         $entityManager = $this->getEntityManager();
 
         $categoryClause = 'p.category = :category';
+
+        $ownerClause = 'p.owner = :owner';
 
         /* If category is a string like for instance "Category" it will set it to 0 otherwise if it is proper number string like "1" to its number of type int */
         $category = (int) $category;
@@ -36,13 +38,24 @@ class ProductRepository extends ServiceEntityRepository
             $categoryClause = 'p.category != :category ';
         }
 
+        $owner = (int) $owner;
+
+        if (is_null($owner) or $owner < 1) {
+            $owner = 0;
+            $ownerClause = 'p.owner != :owner ';
+        }
+
         $name = (string) $name;
 
         $query = $entityManager->createQuery(
             'SELECT p FROM App\Entity\Product p
             WHERE ' . $categoryClause . '
-            AND p.name LIKE :name'
-        )->setParameter('category', $category)->setParameter('name', "%$name%");
+            AND p.name LIKE :name AND p.quantity > 0
+            AND ' . $ownerClause
+        )
+        ->setParameter('category', $category)
+        ->setParameter('name', "%$name%")
+        ->setParameter('owner', $owner);
 
         return $query->getResult();
     }
