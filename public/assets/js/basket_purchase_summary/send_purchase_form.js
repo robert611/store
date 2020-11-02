@@ -24,7 +24,11 @@ function sendPurchaseForm()
         }).then(response => {
             return response.json();
         }).then(response => {
-            window.location.replace(`/purchase/${response.purchase_id}/payment/view`);
+            if (response.prepayment) {
+                window.location.replace(`/purchase/${response.purchase_id}/payment/view`);
+            } else {
+                window.location.replace(`/purchase/after/buy/message`);
+            }
         })
     }) : null;
 }

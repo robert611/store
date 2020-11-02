@@ -141,6 +141,8 @@ class PurchaseController extends AbstractController
         $purchase->setCreatedAt(new \DateTime());
         $purchase->setPrice($productsPrice + $deliveriesPrice);
 
+        $isProductWithPrepayment = false;
+
         foreach ($basketProducts as $basketProduct)
         {
             $purchaseProduct = new PurchaseProduct();
@@ -157,6 +159,7 @@ class PurchaseController extends AbstractController
             if ($productDeliveryType->getPayment() == "cash-on-delivery") {
                 $purchaseProduct->setIsPaid(2);
             } else {
+                $isProductWithPrepayment = true;
                 $purchaseProduct->setIsPaid(0);
             }
     
@@ -178,7 +181,7 @@ class PurchaseController extends AbstractController
         $entityManager->persist($purchase);
         $entityManager->flush();
 
-        return new JsonResponse(['purchase_id' => $purchase->getId()]);
+        return new JsonResponse(['purchase_id' => $purchase->getId(), 'prepayment' => $isProductWithPrepayment]);
     }
 
     /**
