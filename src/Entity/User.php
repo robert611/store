@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -40,7 +41,39 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @Assert\Length(
+     *      min = 6,
+     *      max = 32,
+     *      minMessage = "Twoje hasło musi mieć przynajmniej {{ limit }} znaków",
+     *      maxMessage = "Twoje hasło może mieć maksymalnie {{ limit }} znaków",
+     *      allowEmptyString = false
+     * )
+     */
+    private $plainPassword;
+
+    /**
+     * @Assert\IsTrue(    
+     *      message = "Musisz zaakceptować nasz regulamin",
+     * )
+     */
+    private $agreeTerms;
+
+    /**
+     * @Assert\IsTrue(    
+     *      message = "Musisz zaakceptować ten warunek",
+     * )
+     */
+    private $agreeDataUsing;
+
+    /**
      * @ORM\Column(type="string", length=128, unique=true)
+     * @Assert\Length(
+     *      min = 6,
+     *      max = 32,
+     *      minMessage = "Twoja nazwa użytkownika musi mieć przynajmniej {{ limit }} znaków",
+     *      maxMessage = "Twoja nazwa użytkownika może mieć maksymalnie {{ limit }} znaków",
+     *      allowEmptyString = false
+     * )
      */
     private $username;
 
@@ -339,6 +372,66 @@ class User implements UserInterface
                 $message->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get message = "Musisz zaakceptować nasz regulamin",
+     */ 
+    public function getAgreeTerms()
+    {
+        return $this->agreeTerms;
+    }
+
+    /**
+     * Set message = "Musisz zaakceptować nasz regulamin",
+     *
+     * @return  self
+     */ 
+    public function setAgreeTerms($agreeTerms)
+    {
+        $this->agreeTerms = $agreeTerms;
+
+        return $this;
+    }
+
+    /**
+     * Get message = "Musisz zaakceptować ten warunek",
+     */ 
+    public function getAgreeDataUsing()
+    {
+        return $this->agreeDataUsing;
+    }
+
+    /**
+     * Set message = "Musisz zaakceptować ten warunek",
+     *
+     * @return  self
+     */ 
+    public function setAgreeDataUsing($agreeDataUsing)
+    {
+        $this->agreeDataUsing = $agreeDataUsing;
+
+        return $this;
+    }
+
+    /**
+     * Get min = 6,
+     */ 
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set min = 6,
+     *
+     * @return  self
+     */ 
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
