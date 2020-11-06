@@ -6,9 +6,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use App\Entity\DeliveryType;
-use App\DataFixtures\ProductFixtures;
 
-class DeliveryTypeFixtures extends Fixture implements DependentFixtureInterface
+class DeliveryTypeFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
@@ -18,7 +17,7 @@ class DeliveryTypeFixtures extends Fixture implements DependentFixtureInterface
             $deliveryType = new DeliveryType();
             $deliveryType->setName($data['name']);
             $deliveryType->setDefaultPrice($data['default_price']);
-            $deliveryType->addProduct($this->getReference("product"));
+            $deliveryType->setPayment($data['payment']);
 
             $manager->persist($deliveryType);
 
@@ -31,19 +30,12 @@ class DeliveryTypeFixtures extends Fixture implements DependentFixtureInterface
     public function getDeliveryTypes()
     {
         return [
-            ['name' => 'List polecony priorytetowy', 'default_price' => '9.4'],
-            ['name' => 'Dostawa przez sprzedającego - przedpłata', 'default_price' => '10'],
-            ['name' => 'Paczka pocztowa priorytetowa', 'default_price' => '14'],
-            ['name' => 'Odbiór w punkcie: Paczkomaty 24/7 InPost - przedpłata', 'default_price' => '11.99'],
-            ['name' => 'Przesyłka kurierska - przedłpata', 'default_price' => '11.5'],
-            ['name' => 'Przesyłka kurierska - pobranie', 'default_price' => '15.5'],
+            ['name' => 'List polecony priorytetowy', 'default_price' => '9.4', 'payment' => 'prepayment'],
+            ['name' => 'Dostawa przez sprzedającego - przedpłata', 'default_price' => '10', 'payment' => 'prepayment'],
+            ['name' => 'Paczka pocztowa priorytetowa', 'default_price' => '14', 'payment' => 'prepayment'],
+            ['name' => 'Odbiór w punkcie: Paczkomaty 24/7 InPost - przedpłata', 'default_price' => '11.99', 'payment' => 'prepayment'],
+            ['name' => 'Przesyłka kurierska - przedłpata', 'default_price' => '11.5', 'payment' => 'prepayment'],
+            ['name' => 'Przesyłka kurierska - pobranie', 'default_price' => '15.5', 'payment' => 'cash-on-delivery'],
         ];
-    }
-
-    public function getDependencies()
-    {
-        return array(
-            ProductFixtures::class,
-        );
     }
 }
