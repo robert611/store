@@ -8,36 +8,36 @@
             <div class="col-md-6">
                 <div class="card no-border-radius">
                     <div class="card-body">
-                        <form method="post">
-                            {% if error %}
-                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                            {% endif %}
+                        {% if error %}
+                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
 
-                            {% if app.user %}
-                                <div class="mb-3">
-                                    You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-                                </div>
-                            {% endif %}
+                        {% if app.user %}
+                            <div class="mb-3">
+                                You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                            </div>
+                        {% endif %}
 
-                            <h1 class="h3 mb-3 font-weight-normal">Logowanie</h1>
+                        <h1 class="h3 mb-3 font-weight-normal">Logowanie</h1>
+
+                        <form name="login_form" method="post" action="/login">
 
                             <div class="mb-3">
                                 <label for="inputEmail">Email</label>
-                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
+                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus/>
                             </div>
 
                             <div class="mb-3">
                                 <label for="inputPassword">Password</label>
-                                <input type="password" name="password" id="inputPassword" class="form-control" required>
+                                <input type="password" name="password" id="inputPassword" class="form-control" required/>
                             </div>
 
                             <input type="hidden" name="_csrf_token"
                                 value="{{ csrf_token('authenticate') }}"
-                            >
+                            />
 
-                            <button class="btn btn-lg btn-primary no-border-radius" type="submit">
-                                Zaloguj się
-                            </button>
+                            <button type="submit" class="btn btn-lg btn-primary no-border-radius">Login</button>
+
                         </form>
                     </div>
                 </div>
