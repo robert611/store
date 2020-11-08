@@ -138,6 +138,19 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                     2
                 ]
             ],
+            [
+                'name' => 'Słuchawki', 
+                'description' => 'Super nowe i świetne słuchawki', 
+                'price' => '100',
+                'category' => 1,
+                'state' => "nowy",
+                'auction_type' => 'free_advertisment',
+                'delivery_time' => '48h',
+                'duration' => '0',
+                'quantity' => '0',
+                'is_sold_out' => '0',
+                'delivery_type' => []
+            ]
         ];
     }
 
