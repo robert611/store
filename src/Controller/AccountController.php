@@ -68,7 +68,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/account/user/acutions/list", name="account_user_auction_list")
+     * @Route("/account/user/auctions/list", name="account_user_auction_list")
      */
     public function userAuctionsList()
     {
