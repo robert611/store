@@ -42,6 +42,8 @@ class UserFixtures extends Fixture
         return [
             ['username' => 'administrator', 'roles' => ['ROLE_USER', 'ROLE_ADMIN'], 'password' => 'password', 'email' => 'admin@interia.pl'],
             ['username' => 'Tomy', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'casual_user@interia.pl'],
+            ['username' => 'mario11', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'mario11@interia.pl'],
+            ['username' => 'Vhegar', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'vhegar@interia.pl'],
         ];
     }
 }
