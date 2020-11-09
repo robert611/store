@@ -42,38 +42,6 @@ class AccountControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->isSuccessful());
     }
 
-    public function testIfUserEmailCanBeChanged()
-    {
-        $this->client->loginUser($this->testCasualUser);
-
-        $this->client->request('POST', '/account/change/email', ['new-email' => 'new_test_email@interia.pl', 'new-email-repeat' => 'new_test_email@interia.pl', 'password' => 'password']);
-        
-        $this->assertResponseRedirects('/account');
-
-        $editedEmail = static::$container->get(UserRepository::class)->find($this->testCasualUser->getId())->getEmail();
-
-        $this->assertEquals($editedEmail, 'new_test_email@interia.pl');
-
-        $crawler = $this->client->request('GET', '/account');
-        $this->assertSelectorTextContains('html', 'Twój adres email został zmieniony.');
-    }
-
-    public function testIfUserPasswordCanBeChanged()
-    {
-        $this->client->loginUser($this->testCasualUser);
-
-        $this->client->request('POST', '/account/change/password', ['new-password' => 'test_password', 'new-password-repeat' => 'test_password', 'current-password' => 'password']);
-        
-        $this->assertResponseRedirects('/account');
-
-        $editedPassword = static::$container->get(UserRepository::class)->find($this->testCasualUser->getId())->getPassword();
-
-        $this->assertTrue(password_verify('test_password', $editedPassword));
-
-        $crawler = $this->client->request('GET', '/account');
-        $this->assertSelectorTextContains('html', 'Twoje hasło zostało zmienione.');
-    }
-
     /**
      * @dataProvider provideUrls
      */
