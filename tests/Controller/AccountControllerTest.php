@@ -32,6 +32,32 @@ class AccountControllerTest extends WebTestCase
         $this->assertEquals(200, $this->client->getResponse()->isSuccessful());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testIfThirdPersonCannotSeeConversation()
+    {
+        $conversation = static::$container->get(ConversationRepository::class)->findAll()[0];
+
+        $authorId = $conversation->getAuthor()->getId();
+        $recipientId = $conversation->getRecipient()->getId();
+
+        $users = static::$container->get(UserRepository::class)->findAll();
+
+        $i = 1;
+        do {
+            $user = $users[$i];
+
+            $i++;
+        } while(is_object($user) && ($user->getId() == $authorId || $user->getId() == $recipientId));
+
+        $this->client->loginUser($user);
+
+        $this->client->request('GET', "/account/user/conversation/{$conversation->getId()}");
+        
+        $this->assertResponseRedirects('/');
+    }
+
     public function testIfMessageAfterPostingProductPageIsSuccessfull()
     {
         $this->client->loginUser($this->testAdminUser);
@@ -54,13 +80,40 @@ class AccountControllerTest extends WebTestCase
         $this->assertTrue($this->client->getResponse()->isSuccessful());
     }
 
+    /**
+     * @dataProvider provideUrlsForAnonymousUser
+     */
+    public function testIfAnonymousUserCannotSeePage($url)
+    {
+        $this->client->request('GET', $url);
+
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testIfAnonymousUserCannotSeeMessageAfterPosting()
+    {
+        $productId = static::$container->get(ProductRepository::class)->findAll()[0]->getId();
+
+        $this->client->request('GET', "/account/product/posting/message/{$productId}");
+
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+    }
+
     public function provideUrls()
     {
         return [
             ['/account'],
             ['/account/user/auctions/list'],
             ['/account/user/products/bought'],
-            ['/account/user/conversations'],
+            ['/account/user/conversations']
         ];
+    }
+
+    public function provideUrlsForAnonymousUser()
+    {
+        return array_merge($this->provideUrls(), [
+            ['/account/change/email'],
+            ['/account/change/password']
+        ]);
     }
 }
