@@ -6,12 +6,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\BasketRepository;
 use App\Entity\Basket;
 use App\Entity\Product;
 use App\Model\AddProductToBasket;
 
+/**
+ * @IsGranted("ROLE_USER")
+ */
 class BasketController extends AbstractController
 {
     private $entityManager;
@@ -74,7 +78,7 @@ class BasketController extends AbstractController
             if ($addProductToBasketModel->isQuantityToBig()) {
                 $this->addFlash('warning', "Nie możesz mieć w koszyku większej ilości tego produktu niż jest go w sprzedaży. Zamiast {$quantity} sztuk zostanie dodane {$addProductToBasketModel->getQuantityPossibleToAdd()} sztuk.");
             } else {
-                $this->addFlash('success', 'Przedmiot został doddany do koszyka.');
+                $this->addFlash('success', 'Przedmiot został dodany do koszyka.');
             }
         }
 
@@ -86,6 +90,10 @@ class BasketController extends AbstractController
      */
     public function deleteBasketProduct(Request $request, Basket $basket)
     {
+        if($basket->getUser() !== $this->getUser()) {
+            return $this->redirectToRoute('basket');
+        }
+        
         if ($this->isCsrfTokenValid('basket_delete'.$basket->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($basket);
