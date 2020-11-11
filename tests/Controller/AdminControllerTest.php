@@ -5,7 +5,7 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Repository\UserRepository;
 
-class AdminControlletTest extends WebTestCase
+class AdminControllerTest extends WebTestCase
 {
     public $client = null;
 
