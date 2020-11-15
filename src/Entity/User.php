@@ -307,7 +307,7 @@ class User implements UserInterface
      *
      * @return  self
      */ 
-    public function setUserAddress(UserAddress $userAddress): self
+    public function setUserAddress(?UserAddress $userAddress): self
     {
         $this->userAddress = $userAddress;
 
