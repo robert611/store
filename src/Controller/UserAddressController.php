@@ -22,10 +22,8 @@ class UserAddressController extends AbstractController
     /**
      * @Route("api/user/address/new", name="api_user_address_new")
      */
-    public function apiNew()
+    public function apiNew(Request $request)
     {
-        $request = Request::createFromGlobals();
-
         $userAddress = new UserAddress();
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -57,10 +55,8 @@ class UserAddressController extends AbstractController
     /**
      * @Route("api/user/address/edit", name="api_user_address_edit")
      */
-    public function apiEdit()
+    public function apiEdit(Request $request)
     {
-        $request = Request::createFromGlobals();
-
         $userAddress = $this->getDoctrine()->getRepository(UserAddress::class)->findOneBy(['user' => $this->getUser()]);
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -89,10 +85,12 @@ class UserAddressController extends AbstractController
     }
 
     /**
-     * @Route("user/address/{id}/edit", name="user_address_edit")
+     * @Route("user/address/edit", name="user_address_edit")
      */
-    public function edit(Request $request, UserAddress $userAddress)
+    public function edit(Request $request)
     {
+        $userAddress = $this->getDoctrine()->getRepository(UserAddress::class)->findOneBy(['user' => $this->getUser()]);
+        
         $form = $this->createForm(UserAddressType::class, $userAddress);
         $form->handleRequest($request);
 
@@ -102,7 +100,7 @@ class UserAddressController extends AbstractController
             $entityManager->persist($userAddress);
             $entityManager->flush();
 
-            return $this->redirectToRoute('user_address_edit', ['id' => $userAddress->getId()]);
+            return $this->redirectToRoute('user_address_edit');
         }
 
         return $this->render('account/edit_user_address.html.twig',

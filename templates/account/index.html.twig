@@ -14,7 +14,7 @@
                         {{ app.user.userAddress.phoneNumber }} <br>
                     </div>
 
-                    <a href="{{ path('user_address_edit', { id: app.user.userAddress.id }) }}"><button class="mt-2 btn bg-inherit link-button">ZMIEŃ ADRES</button></a>
+                    <a href="{{ path('user_address_edit') }}"><button class="mt-2 btn bg-inherit link-button">ZMIEŃ ADRES</button></a>
                 {% else %}
                     <div id="add-user-delivery-data-section">
                         <h4 class="mt-4 mb-3">Uzupełnij dane na temat adresu</h4>
