@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Repository\UserRepository;
 use App\Repository\UserAddressRepository;
 
-class ProductControllerTest extends WebTestCase
+class UserAddressControllerTest extends WebTestCase
 {
     public $client = null;
 
@@ -16,7 +16,6 @@ class ProductControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->testCasualUser = static::$container->get(UserRepository::class)->findOneBy(['email' => 'casual_user@interia.pl']);
-        $this->testAdminUser = static::$container->get(UserRepository::class)->findOneBy(['email' => 'admin@interia.pl']);
     }
 
     public function testIfUserAddressCanBeAddedThroughApi()
