@@ -113,8 +113,6 @@ class ProductControllerTest extends WebTestCase
     {
         $this->client->loginUser($this->testCasualUser);
 
-        $productsNumber = count(static::$container->get(ProductRepository::class)->findAll());
-
         $crawler = $this->client->request('GET', "product/{$this->product->getId()}/edit");
 
         $buttonCrawlerNode = $crawler->selectButton('Usuń');
@@ -126,17 +124,15 @@ class ProductControllerTest extends WebTestCase
         $this->assertResponseRedirects('/account/user/auctions/list');
 
         $deletedProduct = static::$container->get(ProductRepository::class)->find($this->product->getId());
-        $newProductsNumber = count(static::$container->get(ProductRepository::class)->findAll());
 
-        $this->assertEquals($deletedProduct, NULL);
-        $this->assertEquals($productsNumber - 1, $newProductsNumber);
+        $this->assertTrue($deletedProduct->getIsDeleted());
     }
 
     public function testIfProductCanBeDeletedInListingPage()
     {
         $this->client->loginUser($this->testAdminUser);
 
-        $productsNumber = count(static::$container->get(ProductRepository::class)->findAll());
+        $deletedProductsNumber = count(static::$container->get(ProductRepository::class)->findBy(['is_deleted' => true]));
 
         $crawler = $this->client->request('GET', "/account/user/auctions/list");
 
@@ -148,9 +144,9 @@ class ProductControllerTest extends WebTestCase
 
         $this->assertResponseRedirects('/account/user/auctions/list');
 
-        $newProductsNumber = count(static::$container->get(ProductRepository::class)->findAll());
+        $newDeletedProductsNumber = count(static::$container->get(ProductRepository::class)->findBy(['is_deleted' => true]));
 
-        $this->assertEquals($productsNumber - 1, $newProductsNumber);
+        $this->assertEquals($deletedProductsNumber + 1, $newDeletedProductsNumber);
     }
 
     public function testIfUserCanAddPictureToProduct()

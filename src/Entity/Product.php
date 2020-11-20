@@ -139,6 +139,11 @@ class Product
      * @ORM\Column(type="boolean")
      */
     private $is_sold_out;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $is_deleted;
     
     public function __construct()
     {
@@ -455,6 +460,18 @@ class Product
     public function setIsSoldOut(bool $is_sold_out): self
     {
         $this->is_sold_out = $is_sold_out;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->is_deleted;
+    }
+
+    public function setIsDeleted(?bool $is_deleted): self
+    {
+        $this->is_deleted = $is_deleted;
 
         return $this;
     }

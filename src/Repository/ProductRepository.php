@@ -50,7 +50,9 @@ class ProductRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             'SELECT p FROM App\Entity\Product p
             WHERE ' . $categoryClause . '
-            AND p.name LIKE :name AND p.quantity > 0
+            AND p.name LIKE :name 
+            AND p.quantity > 0 
+            AND p.is_deleted is null or p.is_deleted = false
             AND ' . $ownerClause
         )
         ->setParameter('category', $category)

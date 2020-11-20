@@ -29,6 +29,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             $product->setDuration($data['duration']);
             $product->setQuantity($data['quantity']);
             $product->setIsSoldOut($data['is_sold_out']);
+            $product->setIsDeleted($data['is_deleted']);
             $product->setCreatedAt(new \DateTime());
 
             foreach ($data['delivery_type'] as $deliveryType) 
@@ -61,7 +62,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'is_sold_out' => '0',
                 'delivery_type' => [
                     1, 2, 4
-                ]
+                ],
+                'is_deleted' => false
             ],
             [
                 'name' => 'Odkurzacz',
@@ -76,7 +78,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'is_sold_out' => '0',
                 'delivery_type' => [
                     2, 3, 6
-                ]
+                ],
+                'is_deleted' => false
             ],
             [
                 'name' => 'Telefon', 
@@ -91,7 +94,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'is_sold_out' => '1',
                 'delivery_type' => [
                     4, 5, 6
-                ]
+                ],
+                'is_deleted' => false
             ],
             [
                 'name' => 'Obraz na płótnie',
@@ -106,7 +110,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'is_sold_out' => '0',
                 'delivery_type' => [
                     3, 5, 6
-                ]
+                ],
+                'is_deleted' => false
             ],
             [
                 'name' => 'Paczka Gwoździ x500', 
@@ -121,7 +126,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'is_sold_out' => '0',
                 'delivery_type' => [
                     1
-                ]
+                ],
+                'is_deleted' => false
             ],
             [
                 'name' => 'Kabel usb', 
@@ -136,7 +142,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'is_sold_out' => '1',
                 'delivery_type' => [
                     2
-                ]
+                ],
+                'is_deleted' => false
             ],
             [
                 'name' => 'Słuchawki', 
@@ -149,7 +156,8 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'duration' => '0',
                 'quantity' => '0',
                 'is_sold_out' => '0',
-                'delivery_type' => []
+                'delivery_type' => [],
+                'is_deleted' => false
             ]
         ];
     }

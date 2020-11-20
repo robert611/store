@@ -58,6 +58,7 @@ class ProductController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
 
             $product->setIsSoldOut(false);
+            $product->setIsDeleted(false);
             $product->setOwner($this->getUser());
             $product->setCreatedAt(new \DateTime());
             
@@ -98,6 +99,8 @@ class ProductController extends AbstractController
      */
     public function show(Request $request, Product $product): Response
     {   
+        $this->denyAccessUnlessGranted('CAN_SEE_PRODUCT', $product);
+
         $message = new Message();
 
         $form = $this->createForm(MessageType::class, $message);
@@ -205,11 +208,11 @@ class ProductController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($product);
+            
+            $product->setIsDeleted(true);
+            
+            $entityManager->persist($product);
             $entityManager->flush();
-
-            $uploadProductPictures = new UploadProductPictures($entityManager, $this->getParameter('pictures_directory'), $product);
-            $uploadProductPictures->removeAllProductPictures();
         }
 
         return $this->redirectToRoute('account_user_auction_list');

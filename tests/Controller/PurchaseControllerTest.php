@@ -170,6 +170,9 @@ class PurchaseControllerTest extends WebTestCase
 
         $product = static::$container->get(ProductRepository::class)->findOneBy(['owner' => $this->testAdminUser]);
 
+        $existingPurchases = static::$container->get(PurchaseRepository::class)->findAll();
+        $existingPurchaseProducts = static::$container->get(PurchaseProductRepository::class)->findBy(['product' => $product]);
+
         $crawler = $this->client->request('GET', "/product/{$product->getId()}");
 
         $buttonCrawlerNode = $crawler->selectButton('Kup teraz');
@@ -189,10 +192,10 @@ class PurchaseControllerTest extends WebTestCase
         $this->assertResponseRedirects("/");
 
         $purchases = static::$container->get(PurchaseRepository::class)->findAll();
-        $purchaseProduct = static::$container->get(PurchaseProductRepository::class)->findOneBy(['product' => $product]);
+        $purchaseProducts = static::$container->get(PurchaseProductRepository::class)->findBy(['product' => $product]);
 
-        $this->assertTrue(count($purchases) == 0);
-        $this->assertTrue($purchaseProduct == null);
+        $this->assertTrue(count($purchases) == count($existingPurchases));
+        $this->assertTrue(count($purchaseProducts) == count($existingPurchaseProducts));
     }
 
     /**
@@ -255,7 +258,7 @@ class PurchaseControllerTest extends WebTestCase
 
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $purchase = static::$container->get(PurchaseRepository::class)->findOneBy(['user' => $this->testCasualUser]);
+        $purchase = static::$container->get(PurchaseRepository::class)->find($response->purchase_id);
         $purchaseProducts = static::$container->get(PurchaseProductRepository::class)->findBy(['purchase' => $purchase]);
 
         $this->assertEquals($response->purchase_id, $purchase->getId());
