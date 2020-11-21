@@ -66,7 +66,7 @@ class PurchasePaymentController extends AbstractController
             ],
             'mode' => 'payment',
             'success_url' => 'http://localhost:8000' . '/set/purchase/product/payment/status/' . $purchaseProduct->getId(),
-            'cancel_url' => 'http://localhost:8000' . '/account/user/products/bought',
+            'cancel_url' => 'http://localhost:8000' . '/purchase/payment/fail/message',
         ]);
 
         return new JsonResponse(['id' => $checkoutSession->id]);

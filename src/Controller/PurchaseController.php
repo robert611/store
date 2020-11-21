@@ -192,4 +192,13 @@ class PurchaseController extends AbstractController
     {
         return $this->render('purchase/message_after_buying_product.html.twig', []);
     }
+
+    /**
+     * @Route("purchase/payment/fail/message", name="purchase_payment_fail_message")
+     * @IsGranted("ROLE_USER")
+     */
+    public function showMessageAfterFailedPayment()
+    {
+        return $this->render('purchase/failed_payment_message.html.twig', []);
+    }
 }
