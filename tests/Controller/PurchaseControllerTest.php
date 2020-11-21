@@ -341,7 +341,6 @@ class PurchaseControllerTest extends WebTestCase
         return [
             ['purchase/basket/summary'],
             ['purchase/after/buy/message'],
-            ['purchase/payment/fail/message']
         ];
     }
 }
