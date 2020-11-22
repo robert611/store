@@ -42,9 +42,9 @@ class PurchasePaymentControllerTest extends WebTestCase
 
         $purchase = static::$container->get(PurchaseRepository::class)->findOneBy(['user' => $this->testCasualUser]);
 
-        $productId = $purchase->getPurchaseProducts()[0]->getProduct()->getId();
+        $purchaseProductId = $purchase->getPurchaseProducts()[0]->getId();
 
-        $this->client->request('GET', "purchase/{$purchase->getId()}/payment/{$productId}");
+        $this->client->request('GET', "purchase/{$purchase->getId()}/payment/{$purchaseProductId}");
 
         $response = $this->client->getResponse()->getContent();
 
@@ -60,9 +60,9 @@ class PurchasePaymentControllerTest extends WebTestCase
 
         $purchase = static::$container->get(PurchaseRepository::class)->findOneBy(['user' => $this->testCasualUser]);
 
-        $productId = $purchase->getPurchaseProducts()[1]->getProduct()->getId();
+        $purchaseProductId = $purchase->getPurchaseProducts()[1]->getId();
 
-        $this->client->request('GET', "purchase/{$purchase->getId()}/payment/{$productId}");
+        $this->client->request('GET', "purchase/{$purchase->getId()}/payment/{$purchaseProductId}");
 
         $response = $this->client->getResponse()->getContent();
 

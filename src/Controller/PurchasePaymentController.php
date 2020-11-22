@@ -22,13 +22,13 @@ class PurchasePaymentController extends AbstractController
     }
 
     /**
-     * @Route("purchase/{id}/payment/{productId}", name="purchase_payment")
+     * @Route("purchase/{id}/payment/{purchaseProductId}", name="purchase_payment")
      * @IsGranted("ROLE_USER")
      */
-    public function purchasePayment(Purchase $purchase, $productId)
+    public function purchasePayment(Purchase $purchase, $purchaseProductId)
     {
-        $purchaseProduct = $purchase->getPurchaseProducts()->filter(function ($item) use ($productId) {
-			return $item->getProduct()->getId() == $productId;
+        $purchaseProduct = $purchase->getPurchaseProducts()->filter(function ($item) use ($purchaseProductId) {
+			return $item->getId() == $purchaseProductId;
         })->first();
         
         if ($purchaseProduct->getDeliveryType()->getPayment() == "cash-on-delivery") {

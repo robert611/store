@@ -32,7 +32,7 @@
                                     <h5>{{ (purchaseProduct.product.price * purchaseProduct.quantity) + purchaseProduct.deliveryType.defaultPrice }} zł</h5>
                                 </div>
                             </div>
-                            <button class="checkout-button" data-purchaseId="{{ purchase.id }}" data-productId="{{ purchaseProduct.product.id }}">Zapłać</button>
+                            <button class="checkout-button" data-purchaseId="{{ purchase.id }}" data-purchaseProductId="{{ purchaseProduct.id }}">Zapłać</button>
                         </section>
                     {% endif %}
                 {% endfor %}
@@ -51,7 +51,7 @@
 
         Array.from(checkoutButtons).forEach(checkoutButton => 
             checkoutButton.addEventListener("click", function () {
-                fetch(`/purchase/${checkoutButton.getAttribute('data-purchaseId')}/payment/${checkoutButton.getAttribute('data-productId')}`, {
+                fetch(`/purchase/${checkoutButton.getAttribute('data-purchaseId')}/payment/${checkoutButton.getAttribute('data-purchaseProductId')}`, {
                     method: "POST",
                 })
                 .then(function (response) {
