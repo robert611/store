@@ -7,7 +7,7 @@
             <div class="card card-body mb-3">
                 <div class="row mb-4 ml-2 mr-2">
                     <div class="col-12 col-sm-4 text-sm-left mb-1 mb-sm-0">
-                        <a href="{{ path('product_listing', { owner: purchaseProduct.product.owner.id }) }}" class="link-color">{{ purchaseProduct.product.owner.username }}</a>
+                        <a href="{{ path('product_listing', { owner: purchaseProduct.product.owner.id }) }}" class="link-color no-underline">{{ purchaseProduct.product.owner.username }}</a>
                     </div>
 
                     <div class="col-12 col-sm-4 text-sm-center mb-1 mb-sm-0">
@@ -40,7 +40,11 @@
                     <hr class="mt-4">
                     
                     <div class="col-6">
-                        {{ purchase.createdAt.format('Y-m-d H:i') }}
+                        {%  if purchaseProduct.isPaid %}
+                            {{ purchase.createdAt.format('Y-m-d H:i') }}
+                        {% else %} 
+                            <a href="{{ path('purchase_product_payment_view', {id: purchaseProduct.getId() }) }}" class="link-color no-underline cursor-pointer">Zapłać</a>
+                        {% endif %}
                     </div>
                     <div class="col-6 text-right">
                         <span class="ml-3">Razem z dostawą <b>{{ (purchaseProduct.product.price * purchaseProduct.quantity) + purchaseProduct.deliveryType.default_price}} zł</b></span>

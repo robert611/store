@@ -36,6 +36,24 @@ class PurchasePaymentControllerTest extends WebTestCase
         $this->assertSelectorTextContains('h5', ($product->getPrice() * $purchaseProduct->getQuantity()) + $deliveryType->getDefaultPrice());
     }
 
+    public function testIfPurchaseProductPaymentViewIsSuccessfull()
+    {
+        $this->client->loginUser($this->testCasualUser);
+
+        $purchase = static::$container->get(PurchaseRepository::class)->findOneBy(['user' => $this->testCasualUser]);
+
+        $purchaseProduct = $purchase->getPurchaseProducts()[0];
+
+        $product = $purchaseProduct->getProduct();
+        $deliveryType = $purchaseProduct->getDeliveryType();
+
+        $this->client->request('GET', "purchase/product/{$purchaseProduct->getId()}/payment/view");
+        $this->assertEquals(200, $this->client->getResponse()->isSuccessful());
+        $this->assertSelectorTextContains('html', 'Zapłać');
+        $this->assertSelectorTextContains('h3', $product->getName());
+        $this->assertSelectorTextContains('h5', ($product->getPrice() * $purchaseProduct->getQuantity()) + $deliveryType->getDefaultPrice());
+    }
+
     public function testIfDataForPaymentCanBeFetched()
     {
         $this->client->loginUser($this->testCasualUser);

@@ -17,8 +17,27 @@ class PurchasePaymentController extends AbstractController
      */
     public function purchasePaymentView(Purchase $purchase)
     {
+        $purchaseProductsForPayment = $purchase->getPurchaseProducts()->filter(function($purchaseProduct) {
+            return $purchaseProduct->getIsPaid() == 0;
+        });
+
       	return $this->render('purchase/payment.html.twig',
-            ['purchase' => $purchase]);
+            ['purchase' => $purchase, 'purchaseProductsForPayment' => $purchaseProductsForPayment]);
+    }
+
+    /**
+     * @Route("purchase/product/{id}/payment/view", name="purchase_product_payment_view")
+     * @IsGranted("ROLE_USER")
+     */
+    public function purchaseProductPaymentView(PurchaseProduct $purchaseProduct)
+    {
+        if ($purchaseProduct->getIsPaid() !== 0) {
+            $this->addFlash('warning', 'Ten produkt jest już opłacony');
+
+            return $this->redirectToRoute('index');
+        }
+
+        return $this->render('purchase/purchase_product_payment.html.twig', ['purchaseProduct' => $purchaseProduct]);
     }
 
     /**

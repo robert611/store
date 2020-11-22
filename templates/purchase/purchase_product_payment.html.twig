@@ -2,38 +2,21 @@
 
 {% block body %}
     <div class="container mt-5">
-        <div class="row mb-2">
-            <div class="col-md-6">
-                <p class="mb-1"><b>Podsumowanie i dostawa</b></p>
-                <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <p class="mb-1"><b>Płatność</b></p>
-                <div class="progress">
-                    <div class="progress-bar bg-success" id="payment-progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </div>
-        </div>
         <div class="row mt-5">
             <div class="col-md-6">
-                {% for purchaseProduct in purchaseProductsForPayment %}
-                    <section class="stripe-section mb-5">
-                        <div class="stripe-product">
-                            <img
-                                src="{{ asset('uploads/pictures/'~purchaseProduct.product.productPictures[0].name) }}"
-                                alt="The cover of Stubborn Attachments"
-                            />
-                            <div class="stripe-product-description">
-                                <h3>{{ purchaseProduct.product.name }}</h3>
-                                <h5>{{ (purchaseProduct.product.price * purchaseProduct.quantity) + purchaseProduct.deliveryType.defaultPrice }} zł</h5>
-                            </div>
+                <section class="stripe-section mb-5">
+                    <div class="stripe-product">
+                        <img
+                            src="{{ asset('uploads/pictures/'~purchaseProduct.product.productPictures[0].name) }}"
+                            alt="The cover of Stubborn Attachments"
+                        />
+                        <div class="stripe-product-description">
+                            <h3>{{ purchaseProduct.product.name }}</h3>
+                            <h5>{{ (purchaseProduct.product.price * purchaseProduct.quantity) + purchaseProduct.deliveryType.defaultPrice }} zł</h5>
                         </div>
-                        <button class="checkout-button" data-purchaseId="{{ purchase.id }}" data-purchaseProductId="{{ purchaseProduct.id }}">Zapłać</button>
-                    </section>
-                {% endfor %}
+                    </div>
+                    <button class="checkout-button" data-purchaseId="{{ purchaseProduct.purchase.id }}" data-purchaseProductId="{{ purchaseProduct.id }}">Zapłać</button>
+                </section>
             </div>
         </div>
     </div>

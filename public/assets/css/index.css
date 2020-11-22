@@ -357,6 +357,10 @@ m.pagination li i {
     background-color: #1877F2;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 #checkout-button:hover {
     opacity: 0.8;
 }  
