@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Product;
 use App\Entity\Category;
 use App\Entity\DeliveryType;
-use App\Service\Paginator;
+use App\Model\Paginator;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
