@@ -52,7 +52,7 @@ class ProductRepository extends ServiceEntityRepository
             WHERE ' . $categoryClause . '
             AND p.name LIKE :name 
             AND p.quantity > 0 
-            AND p.is_deleted is null or p.is_deleted = false
+            AND (p.is_deleted is null or p.is_deleted = false)
             AND ' . $ownerClause
         )
         ->setParameter('category', $category)
