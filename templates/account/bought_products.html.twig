@@ -1,9 +1,8 @@
 {% extends 'account/account_template.html.twig' %}
 
 {% block account_body %}
-    {% if purchases|length > 0 %}
-        {% for purchase in purchases %}
-            {% for purchaseProduct in purchase.purchaseProducts %}
+    {% if boughtProducts|length > 0 %}
+        {% for purchaseProduct in boughtProducts %}
             <div class="card card-body mb-3">
                 <div class="row mb-4 ml-2 mr-2">
                     <div class="col-12 col-sm-4 text-sm-left mb-1 mb-sm-0">
@@ -11,7 +10,7 @@
                     </div>
 
                     <div class="col-12 col-sm-4 text-sm-center mb-1 mb-sm-0">
-                        <span>{{ purchase.createdAt.format('Y-m-d H:i') }}</span>
+                        <span>{{ purchaseProduct.purchase.createdAt.format('Y-m-d H:i') }}</span>
                     </div>
 
                     <div class="col-12 col-sm-4 text-sm-right">
@@ -41,7 +40,7 @@
                     
                     <div class="col-6">
                         {%  if purchaseProduct.isPaid %}
-                            {{ purchase.createdAt.format('Y-m-d H:i') }}
+                            {{ purchaseProduct.purchase.createdAt.format('Y-m-d H:i') }}
                         {% else %} 
                             <a href="{{ path('purchase_product_payment_view', {id: purchaseProduct.getId() }) }}" class="link-color no-underline cursor-pointer">Zapłać</a>
                         {% endif %}
@@ -52,8 +51,7 @@
                 </div>
             </div>
             {% endfor %}
-        {% endfor %}
-
+        {% include 'index/_pagination.html.twig' with {'controller_name' : 'account_user_bought_products'} %}
     {% else %}
         <p class="h4 mt-2">Nie kupiłeś żadnych przedmiotów.</p>
     {% endif %}

@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Model\Paginator;
 use App\Entity\Product;
 use App\Entity\Purchase;
 use App\Entity\Conversation;
@@ -80,11 +81,26 @@ class AccountController extends AbstractController
     /**
      * @Route("/account/user/products/bought", name="account_user_bought_products")
      */
-    public function boughtProducts()
+    public function boughtProducts(Request $request)
     {
         $purchases = $this->getDoctrine()->getRepository(Purchase::class)->findBy(['user' => $this->getUser()]);
 
-        return $this->render('account/bought_products.html.twig', ['purchases' => $purchases]);
+        $boughtProducts = array();
+
+        (new ArrayCollection($purchases))->map(function($purchase) use (&$boughtProducts) {
+            foreach($purchase->getPurchaseProducts() as $product) {
+                $boughtProducts[] = $product;
+            }
+        });
+
+        $currentPage = $request->query->get('page') ? $request->query->get('page') : 1;
+        $paginator = new Paginator(10, $boughtProducts, $currentPage);
+
+        $boughtProducts = $paginator->getUnitsForThisPage();
+
+        $pages = $paginator->getNumberOfPages();
+
+        return $this->render('account/bought_products.html.twig', ['boughtProducts' => $boughtProducts, 'pages' => $pages, 'currentPage' => $currentPage]);
     }
 
     /**

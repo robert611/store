@@ -142,7 +142,7 @@
 
                         <hr>
                     {% endfor %}
-                    {% include 'index/_pagination.html.twig' %}
+                    {% include 'index/_pagination.html.twig' with {'controller_name' : 'product_listing'} %}
                 </div>
                 {% else %}
                     <p class="h4">Nie ma produktów pasujących do twoich kryteriów.</p>
