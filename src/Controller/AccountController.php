@@ -54,7 +54,7 @@ class AccountController extends AbstractController
         $income = 0;
         
         $soldProducts->map(function($purchaseProduct) use (&$income) {
-            $income += $purchaseProduct->getProduct()->getPrice();
+            $income += $purchaseProduct->getProduct()->getPrice() * $purchaseProduct->getQuantity();
         });
 
         return $this->render('account/index.html.twig',
