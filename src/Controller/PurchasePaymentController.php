@@ -104,6 +104,15 @@ class PurchasePaymentController extends AbstractController
         $entityManager->persist($purchaseProduct);
         $entityManager->flush();
 
-        return $this->redirectToRoute('purchase_after_buy_message');
+        return $this->redirectToRoute('show_message_after_payment');
+    }
+
+    /**
+     * @Route("show/message/after/payment", name="show_message_after_payment")
+     * @IsGranted("ROLE_USER")
+     */
+    public function showMessageAfterPayment()
+    {
+        return $this->render('purchase/show_message_after_payment.html.twig');
     }
 }

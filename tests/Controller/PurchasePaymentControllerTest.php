@@ -107,8 +107,17 @@ class PurchasePaymentControllerTest extends WebTestCase
 
         $isPaid = $purchaseProduct->getIsPaid();
 
-        $this->assertResponseRedirects('/purchase/after/buy/message');
+        $this->assertResponseRedirects('/show/message/after/payment');
 
         $this->assertTrue($isPaid == 1 or $isPaid == true);
+    }
+
+    public function testIfCorrectMessageIsDisplayedAfterPayment()
+    {
+        $this->client->loginUser($this->testCasualUser);
+
+        $this->client->request('GET', "/show/message/after/payment");
+
+        $this->assertSelectorTextContains('p', 'Przedmiot został kupiony i opłacony, dziękujemy i zachęcamy do kolejnych zakupów.');
     }
 }
