@@ -6,17 +6,13 @@ Array.from(deliveryTypes).forEach((element) => {
 
         document.getElementById('item-delivery-price').textContent = currentPrice;
 
-        let productId = document.getElementById('product-id-input').value;
-
-        let itemsQuantity = document.getElementById('items-quantity').value;
-
-        let path = `/purchase/${productId}/${element.getAttribute('data-deliveryTypeId')}/${itemsQuantity}/buy`;
+        document.getElementById('delivery-type-id-input').value = element.getAttribute('data-deliveryTypeId');
 
         /* Adjust foward button text and progress bar */
         if (element.getAttribute('data-paymentType') == "cash-on-delivery") {
-            adjustForwardButtonText(path, 'Kupuję', '100');
+            adjustForwardButtonText('Kupuję', '100');
         } else {
-            adjustForwardButtonText(path, 'Płatność', '0');
+            adjustForwardButtonText('Płatność', '0');
         }
     });
 })

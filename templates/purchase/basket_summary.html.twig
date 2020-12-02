@@ -113,8 +113,9 @@
                         <p class="text-right mt-2">Do zapłaty <b>{{ productsPrice }} zł</b> + dostawa</p>
 
                         <form method="post" action="{{ path('purchase_basket_buy') }}">
+                            <input type="hidden" name="code" value="{{ code }}" id="code-input"> 
                             <a id="forward-to-payment-link" {{ app.user.userAddress ? 'data-userAddressFilled=true' : null }}>
-                                <button class="btn btn-success no-border-radius width-100" disabled>Płatność</button>
+                                <button class="btn btn-success no-border-radius width-100" id="purchase-form-button" disabled>Płatność</button>
                             </a>
                         </form>
                         <div id="no-user-address-error-div" class="error-msg mt-2"></div>

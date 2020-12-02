@@ -41,6 +41,11 @@ class Purchase
      */
     private $purchaseProducts;
 
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $code;
+
     public function __construct()
     {
         $this->purchaseProducts = new ArrayCollection();
@@ -114,6 +119,18 @@ class Purchase
                 $purchaseProduct->setPurchase(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

@@ -9,6 +9,7 @@ use App\Repository\PurchaseRepository;
 use App\Repository\PurchaseProductRepository;
 use App\Repository\UserAddressRepository;
 use App\Repository\BasketRepository;
+use App\Model\PurchaseCodeGenerator;
 use App\Entity\Basket;
 
 class PurchaseControllerTest extends WebTestCase
@@ -110,6 +111,44 @@ class PurchaseControllerTest extends WebTestCase
         $this->assertSelectorTextContains('html', "Wystawione jest {$product->getQuantity()} sztuk tego przedmiotu, a ty próbujesz kupić {$tooBigQuantity} sztuk.");
     }
 
+    public function testIfUserCanNotBuyMultipleTimes()
+    {
+        $this->client->loginUser($this->testCasualUser);
+
+        /* First click buy on product page */
+        $product = static::$container->get(ProductRepository::class)->findAll()[0];
+
+        $crawler = $this->client->request('GET', "/product/{$product->getId()}");
+
+        $buttonCrawlerNode = $crawler->selectButton('Kup teraz');
+
+        $form = $buttonCrawlerNode->form();
+
+        $crawler = $this->client->submit($form);
+
+        /* Then on order summary, choose delviery method and confirm buying product */
+        $deliveryTypeRadio = $crawler->filter('.purchase-summary-product-delivery-type')->first();
+
+        $deliveryTypeAttributes = $deliveryTypeRadio->extract(['data-deliverytypeid']);
+
+        $deliveryTypeId = $deliveryTypeAttributes[0][0];
+
+        $buttonCrawlerNode = $crawler->selectButton('Płatność');
+
+        $purchaseForm = $buttonCrawlerNode->form();
+        $purchaseForm['delivery_type_id'] = $deliveryTypeId; 
+        $purchaseForm['code'] = static::$container->get(PurchaseRepository::class)->findAll()[0]->getCode();
+
+        $crawler = $this->client->submit($purchaseForm);
+
+        /* Using the code that already exists in database, controller should abondon request and redirect to index with message about what happened */
+        $this->assertResponseRedirects('/');
+       
+        $crawler = $this->client->request('GET', "/");
+
+        $this->assertSelectorTextContains('html', 'Próbowałeś/aś dwukrotnie wykonać to samo zamówienie. Pierwszy zakup został zatwierdzony. Sprawdź kupione przedmioty, żeby upewnić się że wszystko jest w porządku.');
+    }
+
     public function testIfUserCanBuyProduct()
     {
         $this->client->loginUser($this->testCasualUser);
@@ -125,8 +164,6 @@ class PurchaseControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        $crawler = $this->client->request('GET', "/purchase/{$product->getId()}/summary");
-
         $deliveryTypeRadio = $crawler->filter('.purchase-summary-product-delivery-type')->first();
         $deliveryTypeAttributes = $deliveryTypeRadio->extract(['data-deliverytypeid', 'data-paymenttype', 'data-deliveryprice']);
 
@@ -134,7 +171,12 @@ class PurchaseControllerTest extends WebTestCase
         $deliveryTypePayment = $deliveryTypeAttributes[0][1];
         $deliveryTypePrice = $deliveryTypeAttributes[0][2];
 
-        $crawler = $this->client->request('GET', "/purchase/{$product->getId()}/{$deliveryTypeId}/{$product->getQuantity()}/buy");
+        $buttonCrawlerNode = $crawler->selectButton('Płatność');
+
+        $purchaseForm = $buttonCrawlerNode->form();
+        $purchaseForm['delivery_type_id'] = $deliveryTypeId; 
+
+        $crawler = $this->client->submit($purchaseForm);
 
         $purchases = static::$container->get(PurchaseRepository::class)->findAll();
         $purchase = $purchases[count($purchases) - 1];
@@ -187,7 +229,12 @@ class PurchaseControllerTest extends WebTestCase
         $deliveryTypeRadio = $crawler->filter('.purchase-summary-product-delivery-type')->first();
         $deliveryTypeId = $deliveryTypeRadio->extract(['data-deliverytypeid'])[0];
 
-        $crawler = $this->client->request('GET', "/purchase/{$product->getId()}/{$deliveryTypeId}/{$product->getQuantity()}/buy");
+        $buttonCrawlerNode = $crawler->selectButton('Płatność');
+
+        $purchaseForm = $buttonCrawlerNode->form();
+        $purchaseForm['delivery_type_id'] = $deliveryTypeId;
+
+        $crawler = $this->client->submit($purchaseForm);
 
         $this->assertResponseRedirects("/");
 
@@ -224,8 +271,13 @@ class PurchaseControllerTest extends WebTestCase
         $userAddress = static::$container->get(UserAddressRepository::class)->findOneBy(['user' => $this->testCasualUser]);
         static::$container->get(UserAddressRepository::class)->remove($userAddress->getId());
 
-        $crawler = $this->client->request('GET', "/purchase/{$product->getId()}/{$deliveryTypeId}/{$product->getQuantity()}/buy");
-        
+        $buttonCrawlerNode = $crawler->selectButton('Płatność');
+
+        $purchaseForm = $buttonCrawlerNode->form();
+        $purchaseForm['delivery_type_id'] = $deliveryTypeId;
+
+        $crawler = $this->client->submit($purchaseForm);   
+
         $this->assertResponseRedirects("/");
 
         static::$container->get(UserAddressRepository::class)->save($userAddress);
@@ -252,7 +304,9 @@ class PurchaseControllerTest extends WebTestCase
             }
         }
 
-        $crawler = $this->client->request('POST', "purchase/basket/buy", ['productDeliveryType' => $productDeliveryType]);
+        $code = (new PurchaseCodeGenerator(static::$container->get(PurchaseRepository::class)))->generate();
+
+        $crawler = $this->client->request('POST', "purchase/basket/buy", ['productDeliveryType' => $productDeliveryType, 'code' => $code]);
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
@@ -273,6 +327,23 @@ class PurchaseControllerTest extends WebTestCase
 
         $entityManager->remove($purchase);
         $entityManager->flush();
+    }
+
+    public function testIfUserCanNotBuyProductMultipleTimesUsingBasket()
+    {
+        $this->client->loginUser($this->testCasualUser);
+
+        /* Try to buy products from basket with code that alreay exists in database */
+        $code = static::$container->get(PurchaseRepository::class)->findAll()[0]->getCode();
+
+        $crawler = $this->client->request('POST', "purchase/basket/buy", ['productDeliveryType' => [], 'code' => $code]);
+
+        /* Using the code that already exists in database, controller should abondon request and redirect to index with message about what happened */
+        $this->assertResponseRedirects('/');
+       
+        $crawler = $this->client->request('GET', "/");
+
+        $this->assertSelectorTextContains('html', 'Próbowałeś/aś dwukrotnie wykonać to samo zamówienie. Pierwszy zakup został zatwierdzony. Sprawdź kupione przedmioty, żeby upewnić się że wszystko jest w porządku.');
     }
 
     /**
@@ -334,7 +405,6 @@ class PurchaseControllerTest extends WebTestCase
 
         $this->assertResponseRedirects("/");
     }
-
 
     public function provideUrls()
     {

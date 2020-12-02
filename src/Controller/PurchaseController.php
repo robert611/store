@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Model\PurchaseCodeGenerator;
 use App\Entity\Purchase;
 use App\Entity\Product;
 use App\Entity\DeliveryType;
@@ -21,7 +22,7 @@ class PurchaseController extends AbstractController
      * @Route("purchase/basket/summary", name="purchase_basket_summary")
      * @IsGranted("ROLE_USER")
      */
-    public function basketPurchaseSummary(Request $request)
+    public function basketPurchaseSummary(Request $request, PurchaseCodeGenerator $purchaseCodeGenerator)
     {
         $form = $this->createForm(UserAddressType::class);
 
@@ -31,20 +32,26 @@ class PurchaseController extends AbstractController
             return $basketElement->getProduct()->getPrice() * $basketElement->getQuantity();
         })->toArray());
 
+        /* It will be used to identify if given purchase was already processed and user does not try to buy the same products multiple times */
+        $code = $purchaseCodeGenerator->generate();
+
         return $this->render('purchase/basket_summary.html.twig',
             ['basket' => $basket, 'productsPrice' => $productsPrice, 'form' => $form->createView(), 
-                'itemsQuantity' => $request->request->get('items-quantity')]);
+                'itemsQuantity' => $request->request->get('items-quantity'), 'code' => $code]);
     }
 
     /**
      * @Route("purchase/{id}/summary", name="purchase_summary")
      * @IsGranted("ROLE_USER")
      */
-    public function purchaseSummary(Request $request, Product $product)
+    public function purchaseSummary(Request $request, Product $product, PurchaseCodeGenerator $purchaseCodeGenerator)
     {
         $form = $this->createForm(UserAddressType::class);
 
         $itemsQuantity = $request->request->get('items-quantity');
+
+        /* It will be used to identify if given purchase was already processed and user does not try to buy the same products multiple times */
+        $code = $purchaseCodeGenerator->generate();
 
         if ($itemsQuantity > $product->getQuantity()) {
             $this->addFlash('warning', "Wystawione jest {$product->getQuantity()} sztuk tego przedmiotu, a ty próbujesz kupić {$itemsQuantity} sztuk.");
@@ -53,24 +60,37 @@ class PurchaseController extends AbstractController
         }
 
         return $this->render('purchase/summary.html.twig',
-            ['product' => $product, 'form' => $form->createView(), 'itemsQuantity' => $itemsQuantity]);
+            ['product' => $product, 'form' => $form->createView(), 'itemsQuantity' => $itemsQuantity, 'code' => $code]);
     }
 
     /**
-     * @Route("purchase/{id}/{deliveryTypeId}/{itemsQuantity}/buy", name="purchase_buy")
+     * @Route("purchase/buy", name="purchase_buy")
      * @IsGranted("ROLE_USER")
      */
-    public function buy(Request $request, Product $product, $deliveryTypeId, $itemsQuantity)
+    public function buy(Request $request)
     {
+        $product = $this->getDoctrine()->getRepository(Product::class)->find($request->request->get('product_id'));
+
         $this->denyAccessUnlessGranted('PURCHASE_BUY', $product);
 
-        $deliveryType = $this->getDoctrine()->getRepository(DeliveryType::class)->find($deliveryTypeId);
+        $code = $request->request->get('code');
+
+        if (is_object($this->getDoctrine()->getRepository(Purchase::class)->findOneBy(['code' => $code]))) {
+            $this->addFlash('warning', 'Próbowałeś/aś dwukrotnie wykonać to samo zamówienie. Pierwszy zakup został zatwierdzony. Sprawdź kupione przedmioty, żeby upewnić się że wszystko jest w porządku.');
+
+            return $this->redirectToRoute('index');
+        }
+
+        $itemsQuantity = (int) $request->request->get('items_quantity');
+
+        $deliveryType = $this->getDoctrine()->getRepository(DeliveryType::class)->find($request->request->get('delivery_type_id'));
 
         $purchase = new Purchase();
 
         $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
         $purchase->setPrice(($product->getPrice() * $itemsQuantity) + $deliveryType->getDefaultPrice());
+        $purchase->setCode($code);
 
         $purchaseProduct = new PurchaseProduct();
 
@@ -124,6 +144,14 @@ class PurchaseController extends AbstractController
 
         $this->denyAccessUnlessGranted('PURCHASE_BUY_WITH_BASKET', $products);
 
+        $code = $request->request->get('code');
+
+        if (is_object($this->getDoctrine()->getRepository(Purchase::class)->findOneBy(['code' => $code]))) {
+            $this->addFlash('warning', 'Próbowałeś/aś dwukrotnie wykonać to samo zamówienie. Pierwszy zakup został zatwierdzony. Sprawdź kupione przedmioty, żeby upewnić się że wszystko jest w porządku.');
+
+            return $this->redirectToRoute('index');
+        }
+
         $productsDeliveryTypes = array();
 
         $deliveriesPrice = 0;
@@ -140,6 +168,7 @@ class PurchaseController extends AbstractController
         $purchase->setUser($this->getUser());
         $purchase->setCreatedAt(new \DateTime());
         $purchase->setPrice($productsPrice + $deliveriesPrice);
+        $purchase->setCode($code);
 
         $isProductWithPrepayment = false;
 

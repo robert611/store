@@ -1,18 +1,14 @@
 /* Change purchase summary forward link to cash-on-delivery payment controller or to prepayment controller */
-function adjustForwardButtonText(path, buttonText, progressBarWidth)
+function adjustForwardButtonText(buttonText, progressBarWidth)
 {
-    let forwardToPaymentLink = document.getElementById('forward-to-payment-link');
-    let linkButton = forwardToPaymentLink.firstChild;
-
-    if (linkButton.nodeName == '#text') linkButton = linkButton.nextSibling;
+    let formButton = document.getElementById('purchase-form-button');
     
-    linkButton.textContent = "";
-    linkButton.appendChild(createSpinnerWidget('dark'));
+    formButton.textContent = "";
+    formButton.appendChild(createSpinnerWidget('dark'));
 
     setTimeout(function() {
-        linkButton.textContent = buttonText;
-        linkButton.disabled = false;
-        forwardToPaymentLink.setAttribute('href', path);
+        formButton.textContent = buttonText;
+        formButton.disabled = false;
         document.getElementById('payment-progress-bar').style.width = progressBarWidth + "%";
     }, 600);
 }

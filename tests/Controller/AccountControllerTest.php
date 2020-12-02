@@ -9,6 +9,7 @@ use App\Repository\ProductRepository;
 use App\Repository\PurchaseRepository;
 use App\Entity\Purchase;
 use App\Entity\PurchaseProduct;
+use App\Model\PurchaseCodeGenerator;
 
 class AccountControllerTest extends WebTestCase
 {
@@ -108,10 +109,13 @@ class AccountControllerTest extends WebTestCase
 
         $entityManager = static::$container->get('doctrine.orm.entity_manager');
 
+        $code = (new PurchaseCodeGenerator(static::$container->get(PurchaseRepository::class)))->generate();
+
         $purchase = new Purchase();
         $purchase->setUser($this->testCasualUser);
         $purchase->setPrice(100);
         $purchase->setCreatedAt(new \DateTime());
+        $purchase->setCode($code);
 
         $product = static::$container->get(ProductRepository::class)->findAll()[0];
 

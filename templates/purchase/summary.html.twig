@@ -109,11 +109,14 @@
 
                         <p class="text-right mt-2">Do zapłaty <b>{{ product.price * itemsQuantity }} zł</b> + dostawa</p>
 
-                        <input type="hidden" id="items-quantity" value="{{ itemsQuantity }}">
-                        
-                        <a id="forward-to-payment-link" {{ app.user.userAddress ? 'data-userAddressFilled=true' : null }}>
-                            <button class="btn btn-success no-border-radius width-100" disabled>Płatność</button>
-                        </a>
+                        <form method="post" action="{{ path('purchase_buy') }}">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="delivery_type_id" id="delivery-type-id-input">
+                            <input type="hidden" name="items_quantity" value="{{ itemsQuantity }}">
+                            <input type="hidden" name="code" value="{{ code }}"> 
+                            <button class="btn btn-success no-border-radius width-100" id="purchase-form-button" disabled {{ app.user.userAddress ? 'data-userAddressFilled=true' : null }}>Płatność</button>
+                        </form>
+
                         <div id="no-user-address-error-div" class="error-msg mt-2"></div>
                         <small class="text-muted mt-1">Klikając w ten przycisk potwierdzasz zakup. Sprzedawca otrzyma twoje zamówienie.</small>
                     </div>

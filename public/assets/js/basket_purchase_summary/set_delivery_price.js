@@ -27,16 +27,14 @@ Array.from(deliveryTypes).forEach((element) => {
 
         itemsDeliveryPriceSpan.textContent = sumDeliveriesPrice();
 
-        let path = `purchase/basket/buy`;
-
         /* If it is smaller than checkedDeliveries.length, then not all products have chosen delivery method */
         if (productsAmount == checkedDeliveries.length)
         {
             /* Adjust foward button text and progress bar */
             if (getPaymentMethod() == "cash-on-delivery") {
-                adjustForwardButtonText(path, 'Kupuję', '100');
+                adjustForwardButtonText('Kupuję', '100');
             } else {
-                adjustForwardButtonText(path, 'Płatność', '0');
+                adjustForwardButtonText('Płatność', '0');
             }
         } else {
             disableForwardButton();

@@ -18,4 +18,17 @@ class PurchaseRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Purchase::class);
     }
+
+    public function isCodeAvailable(string $code): bool
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        $qb->select('COUNT(p)');
+        $qb->where($qb->expr()->eq('p.code', ':code'));
+
+        $query = $qb->getQuery();
+        $query->setParameter('code', $code);
+
+        return 0 === (int) $query->getScalarResult()[0][1];
+    }
 }

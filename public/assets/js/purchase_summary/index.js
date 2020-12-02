@@ -14,7 +14,7 @@ userAddressForm ? userAddressForm.addEventListener('submit', (e) => {
         hideUserAddressForm();
         showUserAddressData(JSON.parse(userAddress));
 
-        document.getElementById('forward-to-payment-link').setAttribute('data-userAddressFilled', true);
+        document.getElementById('purchase-form-button').setAttribute('data-userAddressFilled', true);
         document.getElementById('no-user-address-error-div').textContent = "";
     });
 }) : null;
