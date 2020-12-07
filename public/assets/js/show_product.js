@@ -7,12 +7,13 @@ function assignItemsQuantityToForms()
 
     let buyNowFormInput = document.getElementById('buy-now-form');
 
-    itemsQuantityInput.addEventListener('change', (e) => {
+    /* If given product was posted as announcment then itemsQuantityInput will be null */
+    itemsQuantityInput ? itemsQuantityInput.addEventListener('change', (e) => {
         let itemsQuantity = itemsQuantityInput.value;
 
         addToBasketFormInput.value = itemsQuantity;
         buyNowFormInput.value = itemsQuantity;
-    });
+    }): null;
 }
 
 assignItemsQuantityToForms();
