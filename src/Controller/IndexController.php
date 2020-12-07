@@ -53,7 +53,9 @@ class IndexController extends AbstractController
             'products' => $products, 
             'pages' => $pages,
             'currentPage' => $currentPage,
-            'deliveryTypes' => $deliveryTypes
+            'deliveryTypes' => $deliveryTypes,
+            'productCategory' => $productCategory,
+            'productOwner' => $owner
         ]);
     }
 }

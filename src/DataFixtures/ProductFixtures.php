@@ -41,6 +41,32 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
 
             $this->addReference('product.'. $key, $product);
         }
+
+        for($i = 1; $i <= 20; $i++) {
+            $product = new Product();
+            $product->setName('Toy');
+            $product->setPrice(50);
+            $product->setDescription('Just a toy for pagination test');
+            $product->setCategory($this->getReference("category." . 1));
+            $product->setState('new');
+            $product->setAuctionType('buy_now');
+            $product->setDeliveryTime(72);
+            $product->setOwner($this->getReference("user.0"));
+            $product->setDuration(0);
+            $product->setQuantity(10);
+            $product->setIsSoldOut(0);
+            $product->setIsDeleted(0);
+            $product->setCreatedAt(new \DateTime());
+
+            foreach ([1, 2, 3] as $deliveryType) 
+            {
+                $product->addDeliveryType($this->getReference("deliveryType." . ($deliveryType - 1)));
+            }
+    
+            $manager->persist($product);
+
+            $this->addReference('product.'. ($i + $key), $product);
+        }
         
         $manager->flush();
 
@@ -158,7 +184,7 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'is_sold_out' => '0',
                 'delivery_type' => [],
                 'is_deleted' => false
-            ]
+            ],
         ];
     }
 
