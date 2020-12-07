@@ -50,6 +50,12 @@ class PurchaseController extends AbstractController
 
         $itemsQuantity = $request->request->get('items-quantity');
 
+        if (is_null($itemsQuantity)) {
+            $this->addFlash('warning', "Musisz podać liczbę sztuk tego produktu, którą chcesz kupić.");
+
+            return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+        }
+
         /* It will be used to identify if given purchase was already processed and user does not try to buy the same products multiple times */
         $code = $purchaseCodeGenerator->generate();
 

@@ -49,6 +49,21 @@ class PurchaseControllerTest extends WebTestCase
         $this->assertResponseRedirects('/login');
     }
 
+    public function testIfUserCannotSeeSummaryWihtourGivingItemsQuantity()
+    {
+        $this->client->loginUser($this->testCasualUser);
+
+        $productId = static::$container->get(ProductRepository::class)->findAll()[0]->getId();
+
+        $this->client->request('GET', "purchase/{$productId}/summary");
+
+        $this->assertResponseRedirects("/product/{$productId}");
+
+        $this->client->request('GET', "/product/{$productId}");
+
+        $this->assertSelectorTextContains('html', 'Musisz podać liczbę sztuk tego produktu, którą chcesz kupić.');
+    }
+
     public function testIfPurchaseSummaryPageIsSuccessfull()
     {
         $this->client->loginUser($this->testCasualUser);
@@ -224,8 +239,6 @@ class PurchaseControllerTest extends WebTestCase
 
         $crawler = $this->client->submit($form);
 
-        $crawler = $this->client->request('GET', "/purchase/{$product->getId()}/summary");
-
         $deliveryTypeRadio = $crawler->filter('.purchase-summary-product-delivery-type')->first();
         $deliveryTypeId = $deliveryTypeRadio->extract(['data-deliverytypeid'])[0];
 
@@ -262,8 +275,6 @@ class PurchaseControllerTest extends WebTestCase
         $form['items-quantity'] = 1;
 
         $crawler = $this->client->submit($form);
-
-        $crawler = $this->client->request('GET', "/purchase/{$product->getId()}/summary");
 
         $deliveryTypeRadio = $crawler->filter('.purchase-summary-product-delivery-type')->first();
         $deliveryTypeId = $deliveryTypeRadio->extract(['data-deliverytypeid'])[0];
