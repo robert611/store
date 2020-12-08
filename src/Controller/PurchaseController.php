@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Messenger\MessageBusInterface;
 use App\Model\PurchaseCodeGenerator;
 use App\Entity\Purchase;
 use App\Entity\Product;
@@ -15,9 +16,17 @@ use App\Entity\DeliveryType;
 use App\Entity\PurchaseProduct;
 use App\Entity\Basket;
 use App\Form\UserAddressType;
+use App\Message\PurchaseMessage;
 
 class PurchaseController extends AbstractController
 {
+    private $bus;
+
+    public function __construct(MessageBusInterface $bus) 
+    {
+        $this->bus = $bus;
+    }
+
     /**
      * @Route("purchase/basket/summary", name="purchase_basket_summary")
      * @IsGranted("ROLE_USER")
@@ -125,6 +134,8 @@ class PurchaseController extends AbstractController
         $entityManager->persist($purchase);
         $entityManager->persist($purchaseProduct);
         $entityManager->flush();
+
+        $this->bus->dispatch(new PurchaseMessage($purchaseProduct->getId()));
 
         if ($deliveryType->getPayment() == "prepayment") {
             return $this->redirectToRoute('purchase_payment_view', ['id' => $purchase->getId()]);
