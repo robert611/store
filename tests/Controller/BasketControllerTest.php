@@ -146,4 +146,15 @@ class BasketControllerTest extends WebTestCase
 
         $this->assertTrue(is_object($basket));
     }
+
+    public function testIfCorrectMessageIsShownIfThereAreNoProductsInTheBasket()
+    {
+        $user = static::$container->get(UserRepository::class)->findOneBy(['username' => 'no_basket_products']);
+        
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request('GET', "/basket");
+
+        $this->assertSelectorTextContains('html', 'Twój koszyk jest pusty.');
+    }
 }

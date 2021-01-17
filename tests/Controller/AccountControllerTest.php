@@ -167,6 +167,17 @@ class AccountControllerTest extends WebTestCase
         $this->assertSelectorTextContains('html', 'Nie kupiłeś żadnych przedmiotów.');
     }
 
+    public function testIfCorrectMessageIsShownIfThereAreNoConversations()
+    {
+        $user = static::$container->get(UserRepository::class)->findOneBy(['username' => 'no_conversations']);
+        
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request('GET', "/account/user/conversations");
+
+        $this->assertSelectorTextContains('html', 'Nie masz żadnych wiadomości.');
+    }
+
     public function provideUrls()
     {
         return [
