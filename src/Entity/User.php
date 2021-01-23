@@ -107,6 +107,11 @@ class User implements UserInterface
      */
     private $messages;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ProductOpinion::class, mappedBy="user")
+     */
+    private $productOpinions;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -114,6 +119,7 @@ class User implements UserInterface
         $this->purchases = new ArrayCollection();
         $this->conversations = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->productOpinions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -434,5 +440,45 @@ class User implements UserInterface
         $this->plainPassword = $plainPassword;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|ProductOpinion[]
+     */
+    public function getProductOpinions(): Collection
+    {
+        return $this->productOpinions;
+    }
+
+    public function addProductOpinion(ProductOpinion $productOpinion): self
+    {
+        if (!$this->productOpinions->contains($productOpinion)) {
+            $this->productOpinions[] = $productOpinion;
+            $productOpinion->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductOpinion(ProductOpinion $productOpinion): self
+    {
+        if ($this->productOpinions->removeElement($productOpinion)) {
+            // set the owning side to null (unless already changed)
+            if ($productOpinion->getUser() === $this) {
+                $productOpinion->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function hasOpinionOnProduct($product)
+    {
+        foreach ($this->productOpinions as $opinion)
+        {
+            if ($opinion->getProduct()->getId() == $product->getId()) return $opinion->getId();
+        }
+
+        return null;
     }
 }

@@ -1,0 +1,5 @@
+<form method="post" class="display-inline" action="{{ path('product_opinion_delete', {'opinion': opinion.id}) }}" onsubmit="return confirm('Czy jesteś pewien, że chcesz usunąć twoją opinię?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ opinion.id) }}">
+    <button class="btn btn-danger no-border-radius float-right mr-2">Usuń</button>
+</form>

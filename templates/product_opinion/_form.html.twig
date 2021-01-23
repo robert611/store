@@ -1,0 +1,34 @@
+{{ form_start(form) }}
+    <div class="mb-3">
+        {{ form_label(form.opinion, 'Recenzja produktu(opcjonalna)', {'label_attr': { 'class' : 'mb-2' }}) }}
+        {{ form_widget(form.opinion, {'attr': { 'class' : 'form-control', 'rows' : '3', 'required': false }}) }}
+        <div class="error-msg form-error mt-1">
+            {{ form_errors(form.opinion) }}
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col">
+            {{ form_widget(form.advantages, {'attr': { 'class' : 'form-control', 'placeholder' : 'Zalety(opcjonalne)' }}) }}
+            <small class="gray">Wpisy oddzielaj przecinkami</small>
+            <div class="error-msg form-error mt-1">
+                {{ form_errors(form.advantages) }}
+            </div>
+        </div>
+
+        <div class="col">
+            {{ form_widget(form.flaws, {'attr': { 'class' : 'form-control', 'placeholder' : 'Wady(opcjonalne)' }}) }}
+            <small class="gray">Wpisy oddzielaj przecinkami</small>
+            <div class="error-msg form-error mt-1">
+                {{ form_errors(form.flaws) }}
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="mark" value="{{ opinion is defined ? opinion.mark : 0}}" id="mark-input">
+
+    <hr>
+    <button type="submit" class="btn btn-primary no-border-radius float-right" id="opinion-form-button">{{ button_label }}</button>
+    <a href="{{ path('account_user_bought_products')}}" class="btn mr-2 link-color no-underline cursor-pointer ml-4 float-right">Wróć</a>
+
+{{ form_end(form) }}

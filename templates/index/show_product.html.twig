@@ -2,7 +2,8 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('assets/js/show_product.js') }}"></script>
+    <script src="{{ asset('assets/js/show_product.js') }}"></script>   
+    <script src="{{ asset('assets/js/display_product_opinion.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -167,5 +168,45 @@
                 {{ product.description }}
             </p>
         </div>
+
+        {% if product.productOpinions|length > 0 %}
+            <div class="card card-body no-border-radius mt-3 p-4 pl-3">
+                <div class="row">
+                    <h4 class="col-md-6 mb-0">Opinie o produkcie({{ product.productOpinions|length }})</h4>
+                    <p class="col-md-6 mb-0">
+                        <i class="material-icons icon-align mr-2 float-right cursor-pointer" id="show-product-opinions-icon">keyboard_arrow_right</i>
+                        <radiogroup class="mark-radiogroup mb-2 mt-0 float-right" id="icon-group">
+                            <span class="full-mark" {{ "style=width:"~product.averageMark * 20~"%;"}}></span>
+                            <span role="radio" data-value="1" aria-label="1 - beznadziejny" tabindex="0" class="mark mark-icon" id="mark-icon-1"></span>
+                            <span role="radio" data-value="2" aria-label="2 - słaby" tabindex="0" class="mark mark-icon" id="mark-icon-2"></span>
+                            <span role="radio" data-value="3" aria-label="3 - przeciętny" tabindex="0" class="mark mark-icon" id="mark-icon-3"></span>
+                            <span role="radio" data-value="4" aria-label="4 - ok" tabindex="0" class="mark mark-icon" id="mark-icon-4"></span>
+                            <span role="radio" data-value="5" aria-label="5 - super" tabindex="0" class="mark mark-icon" id="mark-icon-5"></span>
+                        </radiogroup>
+                    </p>
+                </div>
+                <div id="product-opinions-container" class="hidden mt-2">
+                    {% for opinion in product.productOpinions %}
+                        <div class="mb-3 mt-2">
+                            <p class="text-left mb-1">
+                                <radiogroup class="mark-radiogroup mt-0 mr-2" id="icon-group">
+                                    <span class="full-mark" {{ "style=width:"~opinion.mark * 20~"%;"}}></span>
+                                    <span class="mark mark-icon"></span>
+                                    <span class="mark mark-icon"></span>
+                                    <span class="mark mark-icon"></span>
+                                    <span class="mark mark-icon"></span>
+                                    <span class="mark mark-icon"></span>
+                                </radiogroup>
+                                <span> <a href="{{ path('product_listing', { owner: opinion.user.id }) }}" class="link-color no-underline">{{ opinion.user.username }}</a>
+                                <span>{{ opinion.createdAt.format('Y-m-d H:i') }}
+                            </p>
+                            <p class="mb-0">
+                                {{ opinion.opinion }}
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

@@ -185,6 +185,20 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
                 'delivery_type' => [],
                 'is_deleted' => false
             ],
+            [
+                'name' => 'Opinion Product', 
+                'description' => 'A really great product', 
+                'price' => '500',
+                'category' => 5,
+                'state' => "nowy",
+                'auction_type' => 'buy_now',
+                'delivery_time' => '48h',
+                'duration' => '0',
+                'quantity' => '10',
+                'is_sold_out' => '0',
+                'delivery_type' => [1, 2, 3],
+                'is_deleted' => false
+            ]
         ];
     }
 

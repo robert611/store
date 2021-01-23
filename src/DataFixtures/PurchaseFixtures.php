@@ -26,6 +26,19 @@ class PurchaseFixtures extends Fixture implements DependentFixtureInterface
 
         $this->addReference('purchase', $purchase);
 
+        /* Second */
+        $secondPurchase = new Purchase();
+
+        $code = (new PurchaseCodeGenerator($purchaseRepository))->generate();
+
+        $secondPurchase->setUser($this->getReference("user.7"));
+        $secondPurchase->setCreatedAt(new \DateTime());
+        $secondPurchase->setPrice(300);
+        $secondPurchase->setCode($code);
+
+        $this->addReference('purchase.2', $secondPurchase);
+
+        $manager->persist($secondPurchase);
         $manager->persist($purchase);
         $manager->flush();
     }

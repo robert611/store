@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/product_opinion.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="offset-md-1 col-md-10">
+            <h2>Oceń zakupione produkty</h2>
+            <div class="card mt-4 card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        {% if product.productPictures[0] is defined %}
+                            <img class="img-fluid" src="{{ asset('uploads/pictures/'~product.productPictures[0].name ) }}">
+                        {% endif %}
+                    </div>
+                    <div class="col-md-9">
+                        <h4>{{ product.name }}</h4>
+                        <span class="mb-1">Twoja ocena:</span> <br>
+                        <radiogroup class="mark-radiogroup mb-2" id="icon-group">
+                        <span class="full-mark" {{ opinion.mark is not null ? "style=width:"~opinion.mark * 20~"%;"}}></span>
+                            <span role="radio" data-value="1" aria-label="1 - beznadziejny" tabindex="0" class="mark mark-icon" id="mark-icon-1"></span>
+                            <span role="radio" data-value="2" aria-label="2 - słaby" tabindex="0" class="mark mark-icon" id="mark-icon-2"></span>
+                            <span role="radio" data-value="3" aria-label="3 - przeciętny" tabindex="0" class="mark mark-icon" id="mark-icon-3"></span>
+                            <span role="radio" data-value="4" aria-label="4 - ok" tabindex="0" class="mark mark-icon" id="mark-icon-4"></span>
+                            <span role="radio" data-value="5" aria-label="5 - super" tabindex="0" class="mark mark-icon" id="mark-icon-5"></span>
+                        </radiogroup>
+                        <span id="mark-icon-description"></span>
+                        {{ include('product_opinion/_form.html.twig', {'button_label': 'Edytuj ocenę'}) }}
+                        {{ include('product_opinion/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

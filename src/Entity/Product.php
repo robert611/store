@@ -144,6 +144,11 @@ class Product
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $is_deleted;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ProductOpinion::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $productOpinions;
     
     public function __construct()
     {
@@ -151,6 +156,7 @@ class Product
         $this->deliveryTypes = new ArrayCollection();
         $this->productPictures = new ArrayCollection();
         $this->baskets = new ArrayCollection();
+        $this->productOpinions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -474,5 +480,47 @@ class Product
         $this->is_deleted = $is_deleted;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|ProductOpinion[]
+     */
+    public function getProductOpinions(): Collection
+    {
+        return $this->productOpinions;
+    }
+
+    public function addProductOpinion(ProductOpinion $productOpinion): self
+    {
+        if (!$this->productOpinions->contains($productOpinion)) {
+            $this->productOpinions[] = $productOpinion;
+            $productOpinion->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductOpinion(ProductOpinion $productOpinion): self
+    {
+        if ($this->productOpinions->removeElement($productOpinion)) {
+            // set the owning side to null (unless already changed)
+            if ($productOpinion->getProduct() === $this) {
+                $productOpinion->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+    
+    public function getAverageMark(): float
+    {
+        $totalMark = 0;
+
+        foreach ($this->productOpinions as $opinion) 
+        {
+            $totalMark+= $opinion->getMark();
+        }
+
+        return (float) ($totalMark / count($this->productOpinions));
     }
 }

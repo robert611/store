@@ -39,10 +39,17 @@
                     <hr class="mt-4">
                     
                     <div class="col-6">
-                        {%  if purchaseProduct.isPaid %}
+                        {% if purchaseProduct.isPaid %}
                             {{ purchaseProduct.purchase.createdAt.format('Y-m-d H:i') }}
                         {% else %} 
                             <a href="{{ path('purchase_product_payment_view', {id: purchaseProduct.getId() }) }}" class="link-color no-underline cursor-pointer">Zapłać</a>
+                        {% endif %}
+
+                        {% set opinionId = app.user.hasOpinionOnProduct(purchaseProduct.product) %}
+                        {% if opinionId is not null %}
+                            <a href="{{ path('edit_product_opinion', {opinion: opinionId }) }}" class="link-color no-underline cursor-pointer ml-4">Zmień Ocenę</a>
+                        {% else %}
+                            <a href="{{ path('new_product_opinion', {product: purchaseProduct.product.id }) }}" class="link-color no-underline cursor-pointer ml-4">Oceń Produkt</a>
                         {% endif %}
                     </div>
                     <div class="col-6 text-right">

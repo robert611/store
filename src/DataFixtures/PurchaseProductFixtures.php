@@ -36,8 +36,21 @@ class PurchaseProductFixtures extends Fixture implements DependentFixtureInterfa
 
         $this->addReference('purchaseProduct.1', $purchaseProductWithCashPayment);
 
+        $thirdPurchase = new PurchaseProduct();
+
+        $product = $this->getReference('product.7');
+
+        $thirdPurchase->setPurchase($this->getReference('purchase.2'));
+        $thirdPurchase->setQuantity(2);
+        $thirdPurchase->setProduct($product);
+        $thirdPurchase->setDeliveryType($product->getDeliveryTypes()[0]);
+        $thirdPurchase->setIsPaid(0);
+
+        $this->addReference('purchaseProduct.2', $thirdPurchase);
+
         $manager->persist($purchaseProduct);
         $manager->persist($purchaseProductWithCashPayment);
+        $manager->persist($thirdPurchase);
         $manager->flush();
     }
 

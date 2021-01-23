@@ -45,7 +45,9 @@ class UserFixtures extends Fixture
             ['username' => 'mario11', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'mario11@interia.pl'],
             ['username' => 'Vhegar', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'vhegar@interia.pl'],
             ['username' => 'no_conversations', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'noconversations@interia.pl'],
-            ['username' => 'no_basket_products', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'nobasketproducts@interia.pl']
+            ['username' => 'no_basket_products', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'nobasketproducts@interia.pl'],
+            ['username' => 'opinion_user', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'opinion_user@interia.pl'],
+            ['username' => 'Robb12', 'roles' => ['ROLE_USER'], 'password' => 'password', 'email' => 'user_without_opinions@interia.pl']
         ];
     }
 }
