@@ -112,6 +112,11 @@ class User implements UserInterface
      */
     private $productOpinions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AuctionBid::class, mappedBy="user")
+     */
+    private $auctionBids;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -120,6 +125,7 @@ class User implements UserInterface
         $this->conversations = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->productOpinions = new ArrayCollection();
+        $this->auctionBids = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -480,5 +486,35 @@ class User implements UserInterface
         }
 
         return null;
+    }
+
+    /**
+     * @return Collection|AuctionBid[]
+     */
+    public function getAuctionBids(): Collection
+    {
+        return $this->auctionBids;
+    }
+
+    public function addAuctionBid(AuctionBid $auctionBid): self
+    {
+        if (!$this->auctionBids->contains($auctionBid)) {
+            $this->auctionBids[] = $auctionBid;
+            $auctionBid->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuctionBid(AuctionBid $auctionBid): self
+    {
+        if ($this->auctionBids->removeElement($auctionBid)) {
+            // set the owning side to null (unless already changed)
+            if ($auctionBid->getUser() === $this) {
+                $auctionBid->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -44,7 +44,8 @@ class RegistrationControllerTest extends WebTestCase
         $this->assertSelectorTextNotContains('html', 'Exception');
         $this->assertSelectorTextContains('html', 'Rejestracja przebiegła pomyślnie');
 
-        $user = static::$container->get('doctrine')->getRepository(User::class)->findAll()[4];
+        $users = static::$container->get('doctrine')->getRepository(User::class)->findAll();
+        $user = $users[count($users) - 1];
         
         $this->assertEquals($form->get('registration_form[email]')->getValue(), $user->getEmail());
         $this->assertEquals($form->get('registration_form[username]')->getValue(), $user->getUsername());

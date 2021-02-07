@@ -65,6 +65,7 @@
             <div class="mb-3">
                 <b>{{ form_label(form.price, 'Cena przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                 {{ form_widget(form.price, {'attr': { 'class' : 'form-control', 'min' : '0' }}) }}
+                <b><small class="text-muted">Jeśli typ aukcji to licytacja, podaj cenę minimalną!</small></b>
                 <div class="error-msg form-error mt-1">
                     {{ form_errors(form.price) }}
                 </div>
@@ -73,6 +74,7 @@
             <div class="mb-3">
                 <b>{{ form_label(form.quantity, 'Ilość sztuk danego przedmiotu', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                 {{ form_widget(form.quantity, {'attr': { 'class' : 'form-control', 'min' : '0' }}) }}
+                <b><small class="text-muted">Jeśli typ aukcji to licytacja, licytowane będą wszystkie sztuki na raz!</small></b>
                 <div class="error-msg form-error mt-1">
                     {{ form_errors(form.quantity) }}
                 </div>
@@ -170,8 +172,11 @@
             <div class="mb-3">
                 <b>{{ form_label(form.duration, 'Czas trwania aukcji(w dniach)', {'label_attr': { 'class' : 'mb-3' }}) }}</b>
                 {{ form_widget(form.duration, {'attr': { 'class' : 'form-control' }}) }}
-                <small class="text-muted">Jeśli nie podasz żadnej wartości, produkt będzie dostępny do kupna aż do momentu zakupu bądź usunięcia go przez ciebie.</small>
+                <small class="text-muted">Jeśli nie podasz żadnej wartości, produkt będzie dostępny do kupna aż do momentu zakupu bądź usunięcia go przez ciebie. Jeśli wybrano licytację, wartość musi zostać uzupełniona.</small>
                 <div class="error-msg form-error mt-1">
+                    {% for message in app.flashes('product_form_duration_errors') %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
                     {{ form_errors(form.duration) }}
                 </div>
             </div>

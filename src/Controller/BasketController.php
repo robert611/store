@@ -59,7 +59,10 @@ class BasketController extends AbstractController
         $basketElements = $basketRepository->findBy(['user' => $this->getUser()]);
 
         $productsPrize = array_sum((new ArrayCollection($basketElements))->map(function($basketElement) {
-            return $basketElement->getProduct()->getPrice() * $basketElement->getQuantity();
+            $product = $basketElement->getProduct();
+
+            if ($product->getAuctionType() == "buy_now" or !$product->isAuctionActive())
+                return $product->getPrice() * $basketElement->getQuantity();
         })->toArray());
 
         return $this->render('basket/basket.html.twig', ['basketElements' => $basketElements, 'productsPrize' => $productsPrize]);

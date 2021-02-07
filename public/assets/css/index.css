@@ -435,6 +435,11 @@ m.pagination li i {
     display: none;
 }
 
+.auction-duration-string {
+    font-weight: bold;
+    color: #311b92;
+}
+
 @media(min-width: 1510px) {
     .height-350 {
        height: 350px;

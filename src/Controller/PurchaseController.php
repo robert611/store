@@ -37,15 +37,26 @@ class PurchaseController extends AbstractController
 
         $basket = $this->getDoctrine()->getRepository(Basket::class)->findBy(['user' => $this->getUser()]);
 
-        $productsPrice = array_sum((new ArrayCollection($basket))->map(function($basketElement) {
-            return $basketElement->getProduct()->getPrice() * $basketElement->getQuantity();
+        /* Filter out active auctions */
+        $basketElements = (new ArrayCollection($basket))->filter(function($basketElement) {
+            $product = $basketElement->getProduct();
+
+            if ($product->getAuctionType() == "buy_now" or !$product->isAuctionActive())
+                return true;
+            else return false;
+        });
+
+        $productsPrice = array_sum($basketElements->map(function($basketElement) {
+            $product = $basketElement->getProduct();
+
+            return $product->getPrice() * $basketElement->getQuantity();
         })->toArray());
 
         /* It will be used to identify if given purchase was already processed and user does not try to buy the same products multiple times */
         $code = $purchaseCodeGenerator->generate();
 
         return $this->render('purchase/basket_summary.html.twig',
-            ['basket' => $basket, 'productsPrice' => $productsPrice, 'form' => $form->createView(), 
+            ['basket' => $basketElements, 'productsPrice' => $productsPrice, 'form' => $form->createView(), 
                 'itemsQuantity' => $request->request->get('items-quantity'), 'code' => $code]);
     }
 
@@ -152,9 +163,18 @@ class PurchaseController extends AbstractController
     {
         $basketProducts = $this->getDoctrine()->getRepository(Basket::class)->findBy(['user' => $this->getUser()]);
 
+        /* Filter active auctions from basket */
+        $filteredBasketProducts = (new ArrayCollection($basketProducts))->filter(function($element) {
+            $product = $element->getProduct();
+
+            if ($product->getAuctionType() == "buy_now" or !$product->isAuctionActive()) return true;
+
+            return false;
+        });
+
         $productsPrice = 0;
 
-        $products = (new ArrayCollection($basketProducts))->map(function($element) use (&$productsPrice) {
+        $products = $filteredBasketProducts->map(function($element) use (&$productsPrice) {
             $productsPrice += $element->getProduct()->getPrice() * $element->getQuantity();
             return $element->getProduct();
         });
@@ -189,7 +209,7 @@ class PurchaseController extends AbstractController
 
         $isProductWithPrepayment = false;
 
-        foreach ($basketProducts as $basketProduct)
+        foreach ($filteredBasketProducts as $basketProduct)
         {
             $purchaseProduct = new PurchaseProduct();
 

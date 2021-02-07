@@ -65,7 +65,7 @@ class ProductController extends AbstractController
             $pictures = $form->get('pictures')->getData();
 
             /* Make sure there is at least 1 picture and less than 24, It can be done in ProductType with constraints because it would affect also editting */
-            if (!$this->validatePictures($pictures))
+            if (!$this->validatePictures($pictures) or !$this->isAuctionDurationGiven($form->get('auction_type')->getData(), $form->get('duration')->getData()))
             {
                 return $this->render('product/new.html.twig', [
                     'form' => $form->createView()
@@ -218,11 +218,23 @@ class ProductController extends AbstractController
         return $this->redirectToRoute('account_user_auction_list');
     }
 
-    public function validatePictures($pictures)
+    public function validatePictures($pictures): bool
     {
         if (count($pictures) < 1 || count($pictures) > 24) 
         {
             $this->addFlash('product_form_picture_error', 'Wybierz przynajmniej jedno zdjęcie i nie więcej niż 24');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isAuctionDurationGiven($auctionType, $duration): bool
+    {
+        if ($auctionType == "auction" && $duration == null) 
+        {
+            $this->addFlash('product_form_duration_errors', 'Musisz podać czas trwania licytacji.');
 
             return false;
         }

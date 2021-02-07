@@ -149,6 +149,11 @@ class Product
      * @ORM\OneToMany(targetEntity=ProductOpinion::class, mappedBy="product", orphanRemoval=true)
      */
     private $productOpinions;
+
+    /**
+     * @ORM\OneToMany(targetEntity=AuctionBid::class, mappedBy="product")
+     */
+    private $auctionBids;
     
     public function __construct()
     {
@@ -157,6 +162,7 @@ class Product
         $this->productPictures = new ArrayCollection();
         $this->baskets = new ArrayCollection();
         $this->productOpinions = new ArrayCollection();
+        $this->auctionBids = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -522,5 +528,63 @@ class Product
         }
 
         return (float) ($totalMark / count($this->productOpinions));
+    }
+
+    public function getHighestBiderId(): ?int
+    {
+        $highestBid = null;
+
+        if ($this->getAuctionBids()->isEmpty()) return null;
+
+        foreach ($this->auctionBids as $auctionBid)
+        {
+            if ($highestBid == null) {
+                $highestBid = $auctionBid;
+                continue;
+            }
+
+            if ($highestBid->getBid() < $auctionBid->getBid()) $highestBid = $auctionBid;
+        }
+
+        return $highestBid->getUser()->getId();
+    }
+
+    public function isAuctionActive(): bool
+    {
+        if ($this->getAuctionType() !== "auction" or $this->getIsSoldOut() == true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return Collection|AuctionBid[]
+     */
+    public function getAuctionBids(): Collection
+    {
+        return $this->auctionBids;
+    }
+
+    public function addAuctionBid(AuctionBid $auctionBid): self
+    {
+        if (!$this->yes->contains($auctionBid)) {
+            $this->auctionBids[] = $auctionBid;
+            $auctionBid->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuctionBid(AuctionBid $auctionBid): self
+    {
+        if ($this->auctionBids->removeElement($auctionBid)) {
+            // set the owning side to null (unless already changed)
+            if ($auctionBid->getProduct() === $this) {
+                $auctionBid->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

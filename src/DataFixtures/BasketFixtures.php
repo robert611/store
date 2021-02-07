@@ -59,6 +59,11 @@ class BasketFixtures extends Fixture implements DependentFixtureInterface
                 'user_id' => 3,
                 'quantity' => 5
             ],
+            [
+                'product_id' => 9,
+                'user_id' => 9,
+                'quantity' => 1
+            ]
         ];
     }
 

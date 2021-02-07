@@ -417,6 +417,29 @@ class PurchaseControllerTest extends WebTestCase
         $this->assertResponseRedirects("/");
     }
 
+    public function testIfProductWithActiveAuctionIsNotInSummary()
+    {
+        $user = static::$container->get(UserRepository::class)->findOneBy(['username' => 'user_with_auction_product_in_the_basket']);
+
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request('GET', "/purchase/basket/summary");
+    
+        $this->assertSelectorTextContains('html', 'Do zapłaty 0 zł + dostawa');
+        $this->assertSelectorTextNotContains('html', 'Auction Product');
+    }
+
+    public function testIfUserCannotBuyProductWithActiveAuction()
+    {  
+        $user = static::$container->get(UserRepository::class)->findOneBy(['username' => 'user_with_auction_product_in_the_basket']);
+
+        $this->client->loginUser($user);
+        
+        $crawler = $this->client->request('GET', "purchase/basket/buy");
+
+        $this->assertResponseRedirects("/");
+    }
+
     public function provideUrls()
     {
         return [

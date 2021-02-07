@@ -55,19 +55,35 @@
                             </ul>
                         <hr>
 
-                        <small class="text-muted">Liczba sztuk</small> <br>
+                        {% if product.auctionType is not same as("auction") %}
+                            <small class="text-muted">Liczba sztuk</small> <br>
 
-                        <div class="float-left">
-                            <input type="number" value="{{ productQuantityToBuyForUser is same as (0) ? 0 : 1 }}" min="{{ productQuantityToBuyForUser is same as (0) ? 0 : 1 }}" max="{{ productQuantityToBuyForUser }}" class="form-control mb-2" style="width: 100px" id="buying-items-quantity-input"> 
-                        </div>
-                        <div class="float-left">
-                            <span class="text-muted col-5 ml-2">z {{ productQuantityToBuyForUser }} sztuk 
-                                {% if product.quantity > productQuantityToBuyForUser %}
-                                    ({{ product.quantity - productQuantityToBuyForUser }} w koszyku)
-                                {% endif %}
-                            </span>
-                        </div>
-                        <div style="clear:both"></div>
+                            <div class="float-left">
+                                <input type="number" value="{{ productQuantityToBuyForUser is same as (0) ? 0 : 1 }}" min="{{ productQuantityToBuyForUser is same as (0) ? 0 : 1 }}" max="{{ productQuantityToBuyForUser }}" class="form-control mb-2" style="width: 100px" id="buying-items-quantity-input"> 
+                            </div>
+                            <div class="float-left">
+                                <span class="text-muted col-5 ml-2">z {{ productQuantityToBuyForUser }} sztuk 
+                                    {% if product.quantity > productQuantityToBuyForUser %}
+                                        ({{ product.quantity - productQuantityToBuyForUser }} w koszyku)
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div style="clear:both"></div>
+                        {% else %}
+                            {% if app.user and product.getHighestBiderId() is same as(app.user.id) %}
+                                <div class="mb-2">Obecnie twoja oferta {{ product.price }} złotych jest najwyższa.</div>
+                            {% endif %}
+                            <form method="post" action="{{ path('auction_bid', {'id' : product.id }) }}">
+                                <div class="float-left mb-2">
+                                    <input type="number" class="form-control" name="bid-price" value="{{ product.price + 1 }}" min="{{ product.price + 1 }}">
+                                </div>
+                                <div class="float-left mb-2">
+                                    <span class="text-muted col-5 ml-2">zł za {{ product.quantity }} sztuk</span>
+                                </div>
+
+                                <button type="submit" {{ product.owner == app.user ? 'disabled' }} class="btn btn-danger no-border-radius width-100 mb-2">Licytuj</button>
+                            </form>
+                        {% endif %}
 
                         <form method="post" action="{{ path('basket_add_product', {'id': product.id}) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('basket_add_product' ~ product.id) }}">
@@ -75,10 +91,12 @@
                             <button type="submit" {{ product.owner == app.user or productQuantityToBuyForUser is same as (0) ? 'disabled' }}  class="btn btn-danger no-border-radius width-100 mb-2">Dodaj do koszyka</button>
                         </form>
 
-                        <form method="post" action="{{ path('purchase_summary', {'id' : product.id }) }}">
-                            <input type="hidden" name="items-quantity" id="buy-now-form" value="1">
-                            <button type="submit" {{ product.owner == app.user or productQuantityToBuyForUser is same as (0) ? 'disabled' }} class="btn btn-danger no-border-radius width-100">Kup teraz</button>
-                        </form>
+                        {% if product.auctionType is not same as('auction') %}
+                            <form method="post" action="{{ path('purchase_summary', {'id' : product.id }) }}">
+                                <input type="hidden" name="items-quantity" id="buy-now-form" value="1">
+                                <button type="submit" {{ product.owner == app.user or productQuantityToBuyForUser is same as (0) ? 'disabled' }} class="btn btn-danger no-border-radius width-100">Kup teraz</button>
+                            </form>
+                        {% endif %}
                     {% else %}
                         <hr class="mb-1">
                         <div class="mb-2">

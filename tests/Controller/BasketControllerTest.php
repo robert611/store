@@ -157,4 +157,15 @@ class BasketControllerTest extends WebTestCase
 
         $this->assertSelectorTextContains('html', 'Twój koszyk jest pusty.');
     }
+
+    public function testIfProductWithActiveAuctionIsNotInSummary()
+    {
+        $user = static::$container->get(UserRepository::class)->findOneBy(['username' => 'user_with_auction_product_in_the_basket']);
+
+        $this->client->loginUser($user);
+
+        $crawler = $this->client->request('GET', "/basket");
+
+        $this->assertSelectorTextContains('html', 'Do zapłaty 0 zł + dostawa');
+    }
 }
