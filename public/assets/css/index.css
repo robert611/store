@@ -361,6 +361,10 @@ m.pagination li i {
     cursor: pointer;
 }
 
+.disable-focus:focus {
+    outline: none!important;
+}
+
 #checkout-button:hover {
     opacity: 0.8;
 }  

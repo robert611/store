@@ -15,7 +15,7 @@
                             <h5>{{ (purchaseProduct.product.price * purchaseProduct.quantity) + purchaseProduct.deliveryType.defaultPrice }} zł</h5>
                         </div>
                     </div>
-                    <button class="checkout-button" data-purchaseId="{{ purchaseProduct.purchase.id }}" data-purchaseProductId="{{ purchaseProduct.id }}">Zapłać</button>
+                    <button class="checkout-button disable-focus" data-purchaseId="{{ purchaseProduct.purchase.id }}" data-purchaseProductId="{{ purchaseProduct.id }}">Zapłać</button>
                 </section>
             </div>
         </div>
@@ -26,12 +26,16 @@
     {{ parent() }}
     <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="{{ asset('assets/js/create_spinner_widget.js') }}"></script>
     <script type="text/javascript">
         var stripe = Stripe("pk_test_ZYDGLYL5xhuq5y2Aa8Rudxgg");
         var checkoutButtons = document.getElementsByClassName("checkout-button");
 
         Array.from(checkoutButtons).forEach(checkoutButton => 
             checkoutButton.addEventListener("click", function () {
+                checkoutButton.textContent = "";
+                checkoutButton.appendChild(createSpinnerWidget('dark'));
+
                 fetch(`/purchase/${checkoutButton.getAttribute('data-purchaseId')}/payment/${checkoutButton.getAttribute('data-purchaseProductId')}`, {
                     method: "POST",
                 })
@@ -50,6 +54,8 @@
                     // If redirectToCheckout fails due to a browser or network
                     // error, you should display the localized error message to your
                     // customer using error.message.
+                    checkoutButton.textContent = "Zapłać";
+
                     if (result && result.error) {
                         alert(result.error.message);
                     }
