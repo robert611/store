@@ -2,7 +2,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('assets/js/filter_products.js') }}"></script>
+    <script src="{{ asset('assets/js/filter_products/add_div_with_pagination.js') }}"></script>
+    <script src="{{ asset('assets/js/filter_products/create_product_widget.js') }}"></script>
+    <script src="{{ asset('assets/js/filter_products/filter_products.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -57,27 +59,27 @@
 
                     <h5 class="mt-3">cena (zł)</h5>
                     <div class="form-check">
-                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="0" data-maxPrice="349.99" id="prize-bracket-one">
+                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="0" data-maxPrice="{{ filterPrices[0] - 0.01}}" id="prize-bracket-one">
                         <label class="form-check-label" for="prize-bracket-one">
-                            poniżej 350 zł
+                            poniżej {{ filterPrices[0] }} zł
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="350" data-maxPrice="1750" id="prize-bracket-two">
+                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="{{ filterPrices[0] }}" data-maxPrice="{{ filterPrices[1] }}" id="prize-bracket-two">
                         <label class="form-check-label" for="prize-bracket-two">
-                            350 zł do 1750 zł
+                            {{ filterPrices[0] }} zł do {{ filterPrices[1] }} zł
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="1750.01" data-maxPrice="2750" id="prize-bracket-three">
+                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="{{ filterPrices[1] + 0.01 }}" data-maxPrice="{{ filterPrices[2] }}" id="prize-bracket-three">
                         <label class="form-check-label" for="prize-bracket-three">
-                            1750 zł do 2750 zł
+                            {{ filterPrices[1] }} zł do {{ filterPrices[2] }} zł
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="2750" data-maxPrice="1000000000" id="prize-bracket-four">
+                        <input class="form-check-input" name="price_fork" type="radio" data-minPrice="{{ filterPrices[2] + 00.1 }}" data-maxPrice="{{ filterPrices[3] }}" id="prize-bracket-four">
                         <label class="form-check-label" for="prize-bracket-four">
-                            powyżej 2750 zł
+                            powyżej {{ filterPrices[2] }} zł
                         </label>
                     </div>
 

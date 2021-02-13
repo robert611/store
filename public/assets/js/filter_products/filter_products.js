@@ -1,20 +1,12 @@
 let activeOptions = {'state': null, 'auctionType': null, 'minPrice': null, 'maxPrice': null, 'deliveryTypes': []};
-let currentProducts = [];
-
-let stateOptions = [document.getElementById('state_new'), document.getElementById('state_used'),  document.getElementById('state_very_good')];
-let auctionOptions = document.getElementsByClassName('product-auction-type');
-let priceOptions = [document.getElementById('prize-bracket-one'), document.getElementById('prize-bracket-two'), document.getElementById('prize-bracket-three'), document.getElementById('prize-bracket-four')];
-
-let minimumPrice = document.getElementById('minimum-price');
-let maximumPrice = document.getElementById('maximum-price');
-
-let deliveryOptions = document.getElementsByClassName('delivery-type-checkbox');
 
 /* "Kategorie" is a default value of category parameter */
 let categoryId = getUrlVars()['category'] !== 'Kategorie' && getUrlVars()['category'] !== null ? '?category=' + getUrlVars()['category'] : '';
 let productName = getUrlVars()['product'] ? (categoryId ? '&' : '?' ) + 'name=' + getUrlVars()['product'] : '';
 let quantity = (categoryId || productName ? '&' : '?' ) + 'quantity[gt]=0'
 let owner = getUrlVars()['owner'] ? '&owner=' + getUrlVars()['owner'] : '';
+
+const productsPerPage = 12;
 
 fetch(`/api/products${categoryId}${productName}${quantity}${owner}`)
     .then((response) => {
@@ -29,7 +21,16 @@ fetch(`/api/products${categoryId}${productName}${quantity}${owner}`)
 
 function activateFilters(products)
 {
-    console.log(products)
+    let stateOptions = [document.getElementById('state_new'), document.getElementById('state_used'),  document.getElementById('state_very_good')];
+    let auctionOptions = document.getElementsByClassName('product-auction-type');
+    let priceOptions = [document.getElementById('prize-bracket-one'), document.getElementById('prize-bracket-two'), document.getElementById('prize-bracket-three'), document.getElementById('prize-bracket-four')];
+
+
+    let deliveryOptions = document.getElementsByClassName('delivery-type-checkbox');
+
+    let minimumPrice = document.getElementById('minimum-price');
+    let maximumPrice = document.getElementById('maximum-price');
+
     stateOptions.forEach((option) => {
         option.addEventListener('click', () => {  
 
@@ -175,84 +176,112 @@ function filterProducts(products)
 
 function renderProducts(products)
 {
-    let productContainer = document.getElementById('product-container');
-
     if (products.length == 0) {
-        productContainer.innerHTML = "<h4>Żadne oferty nie pasują do podanych kryteriów</h4>";
-        productContainer.classList.remove("card");
-        productContainer.classList.remove("card-body");
+        removeCardClassFromProductsContainer();
+        changeProductsContainerContent("<h4>Żadne oferty nie pasują do podanych kryteriów</h4>");
     } else {
-        productContainer.textContent = "";
-        productContainer.classList.add("card");
-        productContainer.classList.add("card-body");
-    } 
+        addCardClassToProductsContainer();
 
-    for (product in products)
-    {
-        productContainer.appendChild(createProductWidget(products[product]));
-        productContainer.appendChild(document.createElement('hr'));
+        if(products.length > productsPerPage) {
+            let pageProducts = getPageProducts(products, productsPerPage, 1);
+            let pages = roundUp(products.length / productsPerPage, 0);
+
+            changeProductsContainerContent(null);
+            showPageProducts(pageProducts);
+
+            addDivWithPagination(pages, 1);
+            addEventListenerToPagination(pages, products);
+        } else {
+            changeProductsContainerContent(null);
+            showPageProducts(products);
+        }
     }
 }
 
-function createProductWidget(product)
+function changeProductsContainerContent(content)
 {
-    let container = document.createElement('div');
-    container.setAttribute('class', 'row mb-2');
+    let productsContainer = document.getElementById('product-container');
 
-    let leftSide = document.createElement('div');
-    leftSide.setAttribute('class', 'col-4 col-sm-4 col-md-3 col-xl-2 text-center mb-2');
+    productsContainer.innerHTML = content;
+}
 
-    let img = document.createElement('img');
-    img.setAttribute('class', 'img-fluid');
-    
-    img.setAttribute('src', `/uploads/pictures/${product.productPictures[0] ? product.productPictures[0].name : ''}`);
+function addCardClassToProductsContainer()
+{
+    let productsContainer = document.getElementById('product-container');
 
-    leftSide.appendChild(img);
+    if (!productsContainer.classList.contains('card')) {
+        productsContainer.classList.add("card");
+        productsContainer.classList.add("card-body");
+    }
+}
+function removeCardClassFromProductsContainer()
+{
+    let productsContainer = document.getElementById('product-container');
 
-    let rightSide = document.createElement('div');
-    rightSide.setAttribute('class', 'col-8 col-sm-6 col-md-9 col-xl-10 mb-2');
+    if (productsContainer.classList.contains('card')) {
+        productsContainer.classList.remove("card");
+        productsContainer.classList.remove("card-body");
+    }
+}
 
-    let paragraph = document.createElement('p');
+function showPageProducts(products)
+{
+    let productsContainer = document.getElementById('product-container');
 
-    let anchor = document.createElement('a');
-    anchor.setAttribute('href', `/product/${product.id}`);
-    anchor.setAttribute('class', 'no-anchor-styles');
-    anchor.textContent = product.name;
+    for (product in products)
+    {
+        productsContainer.appendChild(createProductWidget(products[product]));
+        productsContainer.appendChild(document.createElement('hr'));
+    }
+}
 
-    let breakLine = document.createElement('br');
+function getPageProducts(products, productsOnPage, page)
+{
+    let pageProducts = [];
 
-    let firstProperty = document.createElement('small');
-    let secondProperty = document.createElement('small');
-    let thirdProperty = document.createElement('small');
+    for (let i = 1; i <= productsOnPage; i++)
+    {
+        let c = i + (page - 1) * productsOnPage;
 
-    firstProperty.textContent = 'Stan: ' + product.state;
-
-    paragraph.appendChild(anchor);
-    paragraph.appendChild(breakLine);
-    paragraph.appendChild(firstProperty);
-
-    if (typeof product.productSpecificProperties[0] !== 'undefined') {
-        secondProperty.textContent = product.productSpecificProperties[0].property + ': ' + product.productSpecificProperties[0].value;
-        secondProperty.setAttribute('class', 'ml-3');
-        paragraph.appendChild(secondProperty);
+        if (c <= products.length)
+        {
+            let b = products[c - 1];
+            pageProducts.push(b);
+        }
     }
 
-    if (typeof product.productBasicProperties[0] !== 'undefined') {
-        thirdProperty.textContent = product.productBasicProperties[0].property + ': ' + product.productBasicProperties[0].value;
-        thirdProperty.setAttribute('class', 'ml-3');
-        paragraph.appendChild(thirdProperty);
-    }
+    return pageProducts;  
+}
 
-    let priceHeadline = document.createElement('h4');
-    priceHeadline.textContent = product.price + " zł";
+function addEventListenerToPagination(pages, products)
+{
+    let paginationAnchors = document.getElementsByClassName('show-page-products');
 
-    rightSide.appendChild(paragraph);
-    rightSide.appendChild(priceHeadline);
+    Array.from(paginationAnchors).forEach((anchor) => {
+        anchor.addEventListener('click', () => {
+            let currentPage = anchor.getAttribute('data-page');
 
-    container.appendChild(leftSide);
-    container.appendChild(rightSide);
+            let pageProducts = getPageProducts(products, productsPerPage, currentPage);
 
-    return container;
+            changeProductsContainerContent(null);
+            showPageProducts(pageProducts);
+
+            window.scrollTo(0, 0);
+            
+            addDivWithPagination(pages, currentPage);
+
+            addEventListenerToPagination(pages, products);
+        });
+    });
+}
+
+/**
+ * @param num The number to round
+ * @param precision The number of decimal places to preserve
+ */
+function roundUp(num, precision) {
+    precision = Math.pow(10, precision)
+    return Math.ceil(num * precision) / precision
 }
 
 function getUrlVars() {

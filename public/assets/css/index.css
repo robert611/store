@@ -193,6 +193,7 @@ footer {
     padding: 0 10px;
     line-height: 30px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .m-pagination li.active {

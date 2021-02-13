@@ -5,15 +5,11 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Product;
 use App\Entity\Category;
 use App\Entity\DeliveryType;
 use App\Model\Paginator;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use App\Model\CalculateFilterPrices;
 
 class IndexController extends AbstractController
 {
@@ -30,7 +26,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/listing", name="product_listing")
      */
-    public function productListing(Request $request)
+    public function productListing(Request $request, CalculateFilterPrices $calculateFilterPrices)
     {
         $productName = $request->query->get('product');
         $productCategory = $request->query->get('category');
@@ -40,9 +36,11 @@ class IndexController extends AbstractController
 
         $products = $this->getDoctrine()->getRepository(Product::class)->findProductByNameAndCategory($productName, $productCategory, $owner);
 
-        $paginator = new Paginator(15, $products, $currentPage);
+        $filterPrices = $calculateFilterPrices->getFitlerPrices($products);
 
-        $products = $paginator->getUnitsForThisPage();
+        $paginator = new Paginator(12, $products, $currentPage);
+
+        $thisPageProducts = $paginator->getUnitsForThisPage();
 
         $pages = $paginator->getNumberOfPages();
 
@@ -50,12 +48,13 @@ class IndexController extends AbstractController
 
         return $this->render('index/product_listing.html.twig', [
             'productName' => $productName, 
-            'products' => $products, 
+            'products' => $thisPageProducts, 
             'pages' => $pages,
             'currentPage' => $currentPage,
             'deliveryTypes' => $deliveryTypes,
             'productCategory' => $productCategory,
-            'productOwner' => $owner
+            'productOwner' => $owner,
+            'filterPrices' => $filterPrices
         ]);
     }
 }
