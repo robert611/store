@@ -16,6 +16,8 @@ fetch(`/api/products${categoryId}${productName}${quantity}${owner}`)
         return json['hydra:member'];
     })
     .then((products) => {
+        document.getElementById('loading-filters-spinner').classList.add('hidden');
+        document.getElementById('div-with-filters').classList.remove('hidden');
         products.length > 0 ? activateFilters(products) : null;
     });   
 
