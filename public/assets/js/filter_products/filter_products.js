@@ -25,7 +25,6 @@ function activateFilters(products)
     let auctionOptions = document.getElementsByClassName('product-auction-type');
     let priceOptions = [document.getElementById('prize-bracket-one'), document.getElementById('prize-bracket-two'), document.getElementById('prize-bracket-three'), document.getElementById('prize-bracket-four')];
 
-
     let deliveryOptions = document.getElementsByClassName('delivery-type-checkbox');
 
     let minimumPrice = document.getElementById('minimum-price');
@@ -72,6 +71,8 @@ function activateFilters(products)
             if (flag == false) {
                 activeOptions.minPrice = option.getAttribute('data-minPrice');
                 activeOptions.maxPrice = option.getAttribute('data-maxPrice');
+
+                clearPricesInputtedByUser(minimumPrice, maximumPrice);
             } else {
                 activeOptions.minPrice = false;
                 activeOptions.maxPrice = false;
@@ -81,16 +82,14 @@ function activateFilters(products)
         });
     });
 
-    minimumPrice.addEventListener('keyup', () => {
-        activeOptions.minPrice = minimumPrice.value;
+    [minimumPrice, maximumPrice].forEach(() => {
+        addEventListener('keyup', () => {
+            activeOptions.maxPrice = maximumPrice.value;
+            activeOptions.minPrice = minimumPrice.value;
 
-        filterProducts(products);
-    });
-
-    maximumPrice.addEventListener('keyup', () => {
-        activeOptions.maxPrice = maximumPrice.value;
-        
-        filterProducts(products);
+            uncheckPriceBrackets(priceOptions);
+            filterProducts(products);
+        });
     });
 
     Array.from(deliveryOptions).forEach((option) => {
@@ -131,6 +130,22 @@ function setOtherRadiosCheckedPropertyToFalse(elements, currentElement)
     Array.from(elements).forEach((element) => {
         if (element !== currentElement) {
             element.setAttribute('data-checked', 'false');
+        }
+    });
+}
+
+function clearPricesInputtedByUser(minimumPriceInput, maximumPriceInput)
+{
+    minimumPriceInput.value = "";
+    maximumPriceInput.value = "";
+}
+
+function uncheckPriceBrackets(priceOptions)
+{
+    priceOptions.forEach((option) => {
+        if(option.getAttribute('data-checked') == 'true') {
+            option.checked = false;
+            option.setAttribute('data-checked', 'false');
         }
     });
 }
