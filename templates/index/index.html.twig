@@ -16,186 +16,106 @@
             <div class="col-xs-12 col-xl-12 col-xxl-10 mb-2">
                 <div class="card card-body no-border-radius height-350">
                     <div class="row text-center">
-                        <div class="col-xs-12 col-sm-4 col-md-2">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/0358d2/c5071fd8438483ac918082d918a6/AMAZON-Alexa-Echo-Dot-3-Glosnik-inteligentny 192w,https://a.allegroimg.com/s320/0358d2/c5071fd8438483ac918082d918a6/AMAZON-Alexa-Echo-Dot-3-Glosnik-inteligentny 320w,https://a.allegroimg.com/s400/0358d2/c5071fd8438483ac918082d918a6/AMAZON-Alexa-Echo-Dot-3-Glosnik-inteligentny 400w,https://a.allegroimg.com/s480/0358d2/c5071fd8438483ac918082d918a6/AMAZON-Alexa-Echo-Dot-3-Glosnik-inteligentny 480w"/>
-                            <h4>139,99 zł</h4>
-                            <p>Amazon Alexa Echo Dot 3 Głośnik inteligentny</p>
-                        </div>
+                        {% for product in homepageProducts['six_products_row'] %}
+                            <div class="col-xs-12 col-sm-4 col-md-2">
+                                {% if product.productPictures[0] is defined %}
+                                    <img class="mb-3 img-fluid vertical-product-image-height" src="{{ asset('uploads/pictures/'~product.productPictures[0].name) }}"/>
+                                {% endif %}
 
-                        <div class="col-xs-12 col-sm-4 col-md-2">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 192w,https://a.allegroimg.com/s320/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 320w,https://a.allegroimg.com/s400/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 400w,https://a.allegroimg.com/s480/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 480w">
-
-                            <h4>818,00 zł</h4>
-                            <p>Smartfon Xiamoi Redmi Note 95 4/64GB Niebieski</p>
-
-                        </div>
-
-                        <div class="col-xs-12 col-sm-4 col-md-2">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/11c5ca/d2a389e2415e9d9481b84d989d70/TELEWIZOR-LED-32-SKYMASTER-32SH4530-HD-USB-HDMI 192w,https://a.allegroimg.com/s320/11c5ca/d2a389e2415e9d9481b84d989d70/TELEWIZOR-LED-32-SKYMASTER-32SH4530-HD-USB-HDMI 320w,https://a.allegroimg.com/s400/11c5ca/d2a389e2415e9d9481b84d989d70/TELEWIZOR-LED-32-SKYMASTER-32SH4530-HD-USB-HDMI 400w,https://a.allegroimg.com/s480/11c5ca/d2a389e2415e9d9481b84d989d70/TELEWIZOR-LED-32-SKYMASTER-32SH4530-HD-USB-HDMI 480w">
-
-                            <h4>469,00 zł</h4>
-                            <p>Telewizor led 32 SKYMASTER 32SH4530 USB HDMI</p>
-
-                        </div>
-
-                        <div class="col-xs-12 col-sm-4 col-md-2">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 192w,https://a.allegroimg.com/s320/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 320w,https://a.allegroimg.com/s400/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 400w,https://a.allegroimg.com/s480/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 480w">
-
-                            <h4>818,00 zł</h4>
-                            <p>Smartfon Xiamoi Redmi Note 95 4/64GB Niebieski</p>
-
-                        </div>
-
-                        <div class="col-xs-12 col-sm-4 col-md-2">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 192w,https://a.allegroimg.com/s320/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 320w,https://a.allegroimg.com/s400/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 400w,https://a.allegroimg.com/s480/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 480w">
-
-                            <h4>818,00 zł</h4>
-                            <p>Smartfon Xiamoi Redmi Note 95 4/64GB Niebieski</p>
-
-                        </div>
-
-                        <div class="col-xs-12 col-sm-4 col-md-2">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 192w,https://a.allegroimg.com/s320/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 320w,https://a.allegroimg.com/s400/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 400w,https://a.allegroimg.com/s480/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 480w">
-
-                            <h4>818,00 zł</h4>
-                            <p>Smartfon Xiamoi Redmi Note 95 4/64GB Niebieski</p>
-
-                        </div>
+                                <h4>{{ product.price }} zł</h4>
+                                <p><a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a></p>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container-fluid mt-5">
-        <p class="ml-2 product-row-caption">Meble do domu</p>
-        <div class="card card-body no-border-radius">
-            <div class="row text-center">
-                <div class="col-xs-12 col-sm-4 col-md-2">
-                    <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s512/11f1e7/a08f4a6f4faa86a9c1a751a8b3d5/Lozko-dzieciece-wysuwane-160x80-Hugo-STELAZ"/>
-                    <h4>299 zł</h4>
-                    <p>Łóżko dziecięce wysuwane 160x80 Hugo + STELAŻ</p>
-                </div>
+    {% if homepageProducts['second_six_products_row']|length > 0 %}
+        <div class="container-fluid mt-5">
+            <p class="ml-2 product-row-caption">{{ homepageProducts['second_six_products_row'][0].category.name }}</p>
+            <div class="card card-body no-border-radius">
+                <div class="row text-center">
+                    {% for product in homepageProducts['second_six_products_row'] %}
+                        <div class="col-xs-12 col-sm-4 col-md-2">
+                            {% if product.productPictures[0] is defined %}
+                                    <img class="mb-3 img-fluid vertical-product-image-height" src="{{ asset('uploads/pictures/'~product.productPictures[0].name) }}"/>
+                            {% endif %}
 
-                <div class="col-xs-12 col-sm-4 col-md-2">
-                    <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s512/1122f7/e797d9a84a688f6ab18b3ad91e43/MEBLE-BIURKO-NAROZNE-KOMPUTER-CLP-3SZ-124cm-BIALE">
-
-                    <h4>289,00 zł</h4>
-                    <p>MEBLE BIURKO NAROŻNE KOMPUTER CLP 3SZ 124cm BIAŁE</p>
-
-                </div>
-
-                <div class="col-xs-12 col-sm-4 col-md-2">
-                    <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s512/038a1b/806a3cb549829e1ebfa0477980e4/Mebloscianka-RITA-Nowoczesne-meble-pokojowe">
-
-                    <h4>599,00 zł</h4>
-                    <p>Meblościanka RITA Nowoczesne meble pokojowe</p>
-
-                </div>
-
-                <div class="col-xs-12 col-sm-4 col-md-2">
-                    <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s512/11e952/e19bfde04b9a98502b40b8cf8006/Kanapa-sofa-wersalka-rozkladana-z-funkcja-spania-2">
-
-                    <h4>519,00 zł</h4>
-                    <p>Kanapa sofa wersalka rozkładana z funkcją spania 2</p>
-
-                </div>
-
-                <div class="col-xs-12 col-sm-4 col-md-2">
-                    <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 192w,https://a.allegroimg.com/s320/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 320w,https://a.allegroimg.com/s400/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 400w,https://a.allegroimg.com/s480/11f6b4/d8bbeba54b44b7f90ac6ce18a95c/Smartfon-Xiaomi-Redmi-Note-9S-4-64GB-Niebieski 480w">
-
-                    <h4>818,00 zł</h4>
-                    <p>Smartfon Xiamoi Redmi Note 95 4/64GB Niebieski</p>
-
-                </div>
-
-                <div class="col-xs-12 col-sm-4 col-md-2">
-                    <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s512/11d893/41cfbffb42d8a2b63479dbd9828b/Nowoczesna-Komoda-CUBE-bialy-mat-140-cm">
-
-                    <h4>299,00 zł</h4>
-                    <p>Nowoczesna Komoda CUBE biały mat 140 cm</p>
-
+                            <h4>{{ product.price }} zł</h4>
+                            <p><a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a></p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="container-fluid mt-5">
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-4 mb-2">
-                <div class="card card-body text-center height-350">
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/11922a/44b21117415cb7baa7124b7abd45/DUZA-LADNA-MOCNA-FRYTKOWNICA-BEZTLUSZCZOWA 192w,https://a.allegroimg.com/s320/11922a/44b21117415cb7baa7124b7abd45/DUZA-LADNA-MOCNA-FRYTKOWNICA-BEZTLUSZCZOWA 320w,https://a.allegroimg.com/s400/11922a/44b21117415cb7baa7124b7abd45/DUZA-LADNA-MOCNA-FRYTKOWNICA-BEZTLUSZCZOWA 400w,https://a.allegroimg.com/s480/11922a/44b21117415cb7baa7124b7abd45/DUZA-LADNA-MOCNA-FRYTKOWNICA-BEZTLUSZCZOWA 480w">
+            {% if homepageProducts['two_products_row']|length > 0 %}
+                <div class="col-xs-12 col-sm-12 col-md-4 mb-2">
+                    <div class="card card-body text-center height-350">
+                        <div class="row">
+                            {% for product in homepageProducts['two_products_row'] %}
+                                <div class="col-xs-12 col-md-6">
+                                    {% if product.productPictures[0] is defined %}
+                                            <img class="mb-3 img-fluid vertical-product-image-height" src="{{ asset('uploads/pictures/'~product.productPictures[0].name) }}"/>
+                                    {% endif %}
 
-                            <h4>234,99 zł</h4>
-                            <p>Duża ładna mocna frytkownica beztłuszczowa</p>    
-                        </div>
-                        <div class="col-xs-12 col-md-6">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://c.allegroimg.com/s192/035ea3/3a14e14a4f0d8aafcf8ff34fc4bc/Nowoczesna-KOMODA-120CM-SZAFKA-8-SZUFLAD-Sonoma-PL 192w,https://c.allegroimg.com/s320/035ea3/3a14e14a4f0d8aafcf8ff34fc4bc/Nowoczesna-KOMODA-120CM-SZAFKA-8-SZUFLAD-Sonoma-PL 320w,https://c.allegroimg.com/s400/035ea3/3a14e14a4f0d8aafcf8ff34fc4bc/Nowoczesna-KOMODA-120CM-SZAFKA-8-SZUFLAD-Sonoma-PL 400w,https://c.allegroimg.com/s480/035ea3/3a14e14a4f0d8aafcf8ff34fc4bc/Nowoczesna-KOMODA-120CM-SZAFKA-8-SZUFLAD-Sonoma-PL 480w">
-
-                            <h4>359,00 zł</h4>
-                            <p>Nowoczesna Komoda 120cm szafka 8 szuflad Sonoma PL</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-4 mb-2">
-                <div class="card card-body height-350">
-                    <div class="row">
-                        <div class="row g-0">
-                            <div class="col-3 text-center">
-                                <img class="mb-3 img-fluid horizontal-product-image-height" src="https://a.allegroimg.com/s128/118530/9fb2f65b468ca5c738f2c6150325/MOCNY-LENOVO-4x3-40GHz-8GB-SSD512-VEGA-3-Win10 1x,https://a.allegroimg.com/s192/118530/9fb2f65b468ca5c738f2c6150325/MOCNY-LENOVO-4x3-40GHz-8GB-SSD512-VEGA-3-Win10 1.5x">
-                            </div>
-
-                            <div class="col-9">
-                                <h4>2 199, 00 zł</h4>
-                                <p>Mocny lenovo 4x3.40GHZ 8GB SSD612 Win 10</p>
-                            </div>
-                        </div>
-
-                        <div class="row g-0 mt-2">
-                            <div class="col-3 text-center">
-                                <img class="mb-3 img-fluid horizontal-product-image-height" src="https://a.allegroimg.com/s128/113f7d/031f2edb4a1ab7fc31a7bafc072c/piornik-szkolny-TIK-TOK-tuba-czarny 1x,https://a.allegroimg.com/s192/113f7d/031f2edb4a1ab7fc31a7bafc072c/piornik-szkolny-TIK-TOK-tuba-czarny 1.5x">
-                            </div>
-
-                            <div class="col-9">
-                                <h4>22,00 zł</h4>
-                                <p>Piórnik szkolny Tik Tok tuba czarny</p>
-                            </div>
-                        </div>
-
-                        <div class="row g-0 mt-2">
-                            <div class="col-3 text-center">
-                                <img class="mb-3 img-fluid horizontal-product-image-height" src="https://a.allegroimg.com/s128/11a984/f78fabb441d9962e538db8d642e3/Smartfon-Xiaomi-Redmi-Note-8-Pro-6-128-GB-Czarny 1x,https://a.allegroimg.com/s192/11a984/f78fabb441d9962e538db8d642e3/Smartfon-Xiaomi-Redmi-Note-8-Pro-6-128-GB-Czarny 1.5x">
-                            </div>
-
-                            <div class="col-9">
-                                <h4>958,00 zł</h4>
-                                <p>Smartfon Xiaomi Redmi Note 8 Pro 6/128GB Czarny</p>
-                            </div>
+                                    <h4>{{ product.price }} zł</h4>
+                                    <p><a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a></p>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-4 mb-2">
-                <div class="card card-body text-center height-350">
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://a.allegroimg.com/s192/11922a/44b21117415cb7baa7124b7abd45/DUZA-LADNA-MOCNA-FRYTKOWNICA-BEZTLUSZCZOWA 192w,https://a.allegroimg.com/s320/11922a/44b21117415cb7baa7124b7abd45/DUZA-LADNA-MOCNA-FRYTKOWNICA-BEZTLUSZCZOWA 320w,https://a.allegroimg.com/s400/11922a/44b21117415cb7baa7124b7abd45/DUZA-LADNA-MOCNA-FRYTKOWNICA-BEZTLUSZCZOWA 400w,https://a.allegroimg.com/s480/11922a/44b21117415cb7baa7124b7abd45/DUZA-LADNA-MOCNA-FRYTKOWNICA-BEZTLUSZCZOWA 480w">
+            {% endif %}
+            
+            {% if homepageProducts['three_products_row']|length > 0 %}
+                <div class="col-xs-12 col-sm-12 col-md-4 mb-2">
+                    <div class="card card-body height-350">
+                        <div class="row">
+                            {% for product in homepageProducts['three_products_row'] %}
+                                <div class="row g-0">
+                                    <div class="col-3 text-center">
+                                        {% if product.productPictures[0] is defined %}
+                                            <img class="mb-3 img-fluid horizontal-product-image-height" src="{{ asset('uploads/pictures/'~product.productPictures[0].name) }}"/>
+                                        {% else %}
+                                            <img class="mb-3 img-fluid horizontal-product-image-height" src="#"/>
+                                        {% endif %}
+                                    </div>
 
-                            <h4>234,99 zł</h4>
-                            <p>Duża ładna mocna frytkownica beztłuszczowa</p>    
-                        </div>
-                        <div class="col-xs-12 col-md-6">
-                            <img class="mb-3 img-fluid vertical-product-image-height" src="https://c.allegroimg.com/s192/035ea3/3a14e14a4f0d8aafcf8ff34fc4bc/Nowoczesna-KOMODA-120CM-SZAFKA-8-SZUFLAD-Sonoma-PL 192w,https://c.allegroimg.com/s320/035ea3/3a14e14a4f0d8aafcf8ff34fc4bc/Nowoczesna-KOMODA-120CM-SZAFKA-8-SZUFLAD-Sonoma-PL 320w,https://c.allegroimg.com/s400/035ea3/3a14e14a4f0d8aafcf8ff34fc4bc/Nowoczesna-KOMODA-120CM-SZAFKA-8-SZUFLAD-Sonoma-PL 400w,https://c.allegroimg.com/s480/035ea3/3a14e14a4f0d8aafcf8ff34fc4bc/Nowoczesna-KOMODA-120CM-SZAFKA-8-SZUFLAD-Sonoma-PL 480w">
-
-                            <h4>359,00 zł</h4>
-                            <p>Nowoczesna Komoda 120cm szafka 8 szuflad Sonoma PL</p>
+                                    <div class="col-9">
+                                        <h4>{{ product.price }} zł</h4>
+                                        <p><a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a></p>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
+
+            {% if homepageProducts['second_two_products_row']|length > 0 %}
+                <div class="col-xs-12 col-sm-12 col-md-4 mb-2">
+                    <div class="card card-body text-center height-350">
+                        <div class="row">
+                            {% for product in homepageProducts['second_two_products_row'] %}
+                                <div class="col-xs-12 col-md-6">
+                                    {% if product.productPictures[0] is defined %}
+                                            <img class="mb-3 img-fluid vertical-product-image-height" src="{{ asset('uploads/pictures/'~product.productPictures[0].name) }}"/>
+                                    {% endif %}
+
+                                    <h4>{{ product.price }} zł</h4>
+                                    <p><a href="{{ path('product_show', {'id': product.id}) }}" class="no-anchor-styles">{{ product.name }}</a></p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

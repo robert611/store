@@ -19,6 +19,91 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function getNumberOfAllProducts(): int
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        
+        $sql = 'SELECT count(*) as count FROM product';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetch()['count'];
+    }
+
+    public function getCategoriesWithGivenNumberOfProducts(int $productsNumber): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        
+        $sql = 'SELECT category_id FROM product GROUP BY category_id HAVING COUNT(id) > :productsNumber';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['productsNumber' => $productsNumber]);
+
+        return $stmt->fetchAllAssociative();
+    }
+
+    public function getRandomProducts(int $limit, array $randomIds): array
+    {
+        $entityManager = $this->getEntityManager();
+                
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            WHERE p.id IN(:randomIds)'
+        )
+        ->setParameter('randomIds', $randomIds)
+        ->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function getProductsIds(int $productsAmount): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        
+        $sql = "SELECT id FROM product ORDER BY rand() LIMIT $productsAmount";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getCategoryProductsRandomIds($categoryId, $limit, $excludedProducts): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        /* If you pass an empty array to Not In clause, none products will be returned */
+        if (empty($excludedProducts)) $excludedProducts = -1000;
+
+        $sql = "SELECT id FROM product WHERE category_id = :category_id AND id NOT IN(:excluded_products) ORDER BY rand() LIMIT $limit";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['category_id' => $categoryId, 'excluded_products' => is_array($excludedProducts) ? implode($excludedProducts) : $excludedProducts]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * @return Product[]
+     */
+    public function getRandomCategoryProducts(int $categoryId, int $limit, array $excludedProducts = []): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $randomIds = $this->getCategoryProductsRandomIds($categoryId, $limit, $excludedProducts);
+        
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            WHERE p.id IN(:randomIds)'
+        )
+        ->setParameter('randomIds', $randomIds);
+
+        return $query->getResult();
+    }
+
     /**
      * @return Product[]
      */

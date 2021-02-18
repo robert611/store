@@ -10,17 +10,20 @@ use App\Entity\Category;
 use App\Entity\DeliveryType;
 use App\Model\Paginator;
 use App\Model\CalculateFilterPrices;
+use App\Model\ChooseHomepageProducts;
 
 class IndexController extends AbstractController
 {
     /**
      * @Route("/", name="index")
      */
-    public function index()
+    public function index(ChooseHomepageProducts $chooseHomepageProducts)
     {
         $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
 
-        return $this->render('index/index.html.twig', ['categories' => $categories]);
+        $homepageProducts = $chooseHomepageProducts->getHomepageProducts();
+
+        return $this->render('index/index.html.twig', ['categories' => $categories, 'homepageProducts' => $homepageProducts]);
     }
 
     /**
