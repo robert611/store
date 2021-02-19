@@ -58,7 +58,7 @@ class ProductRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    public function getProductsIds(int $productsAmount): array
+    public function getRandomProductsIds(int $productsAmount): array
     {
         $conn = $this->getEntityManager()->getConnection();
         
@@ -70,7 +70,7 @@ class ProductRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
-    public function getCategoryProductsRandomIds($categoryId, $limit, $excludedProducts): array
+    public function getRandomCategoryProductsIds($categoryId, $limit, $excludedProducts): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -92,7 +92,7 @@ class ProductRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
 
-        $randomIds = $this->getCategoryProductsRandomIds($categoryId, $limit, $excludedProducts);
+        $randomIds = $this->getRandomCategoryProductsIds($categoryId, $limit, $excludedProducts);
         
         $query = $entityManager->createQuery(
             'SELECT p

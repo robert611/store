@@ -25,7 +25,7 @@ class ChooseHomepageProducts
 
         $amountOfAllProductsToDisplay = 19;
 
-        $randomProductsIdsToSearchThrough = $this->productRepository->getProductsIds($amountOfAllProductsToDisplay);
+        $randomProductsIdsToSearchThrough = $this->productRepository->getRandomProductsIds($amountOfAllProductsToDisplay);
 
         $categoriesWithAtLeastSixProducts = $this->productRepository->getCategoriesWithGivenNumberOfProducts(6);
         $categoriesWithAtLeastThreeProducts = $this->productRepository->getCategoriesWithGivenNumberOfProducts(3);
