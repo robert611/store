@@ -67,9 +67,36 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
 
             $this->addReference('product.'. ($i + $key), $product);
         }
+
+        for ($i = 1; $i <= 12; $i++) {
+            $category = $i < 7 ? 10 : 9;
+
+            $product = new Product();
+            $product->setName('Choose Homepage Products Test');
+            $product->setPrice(50);
+            $product->setDescription('Just a products for test with estate category');
+            $product->setCategory($this->getReference("category." . $category));
+            $product->setState('new');
+            $product->setAuctionType('buy_now');
+            $product->setDeliveryTime(72);
+            $product->setOwner($this->getReference("user.0"));
+            $product->setDuration(0);
+            $product->setQuantity(1);
+            $product->setIsSoldOut(0);
+            $product->setIsDeleted(0);
+            $product->setCreatedAt(new \DateTime());
+
+            foreach ([1, 2, 3] as $deliveryType) 
+            {
+                $product->addDeliveryType($this->getReference("deliveryType." . ($deliveryType - 1)));
+            }
+    
+            $manager->persist($product);
+
+            $this->addReference('product.'. ($i + 20 + $key), $product);
+        }
         
         $manager->flush();
-
     }
 
     public function getProducts()

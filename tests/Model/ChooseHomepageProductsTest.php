@@ -58,5 +58,23 @@ class ChooseHomepageProductsTest extends WebTestCase
         $this->assertEquals(count($homepageProducts), 5);
     }
 
+    public function testIfFirstRowWithSixProductsConsistsOfTheSameCategory()
+    {
+        $chooseHomepageProducts = new ChooseHomepageProducts($this->productRepository);
 
+        $homepageProducts = $chooseHomepageProducts->getHomepageProducts();
+
+        $firstRowWithSixProducts = $homepageProducts['six_products_row'];
+
+        $isRowConsistent = true;
+
+        $categoryId = $firstRowWithSixProducts[0]->getCategory()->getId();
+
+        foreach ($firstRowWithSixProducts as $product)
+        {
+            if ($product->getCategory()->getId() !== $categoryId) $isRowConsistent = false;
+        }
+        
+        $this->assertTrue($isRowConsistent);
+    }
 }
