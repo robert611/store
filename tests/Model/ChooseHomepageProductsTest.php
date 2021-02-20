@@ -42,4 +42,21 @@ class ChooseHomepageProductsTest extends WebTestCase
             $this->assertTrue(!in_array($productId[0]['id'], $savedProductsIds));
         }
     }
+
+    public function testIfGetHomepageProductsReturnsArrayWithProperIndexes()
+    {
+        $chooseHomepageProducts = new ChooseHomepageProducts($this->productRepository);
+
+        $homepageProducts = $chooseHomepageProducts->getHomepageProducts();
+
+        $this->assertTrue(isset($homepageProducts['six_products_row']));
+        $this->assertTrue(isset($homepageProducts['second_six_products_row']));
+        $this->assertTrue(isset($homepageProducts['three_products_row']));
+        $this->assertTrue(isset($homepageProducts['two_products_row']));
+        $this->assertTrue(isset($homepageProducts['second_two_products_row']));
+
+        $this->assertEquals(count($homepageProducts), 5);
+    }
+
+
 }
