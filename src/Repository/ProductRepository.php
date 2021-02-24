@@ -35,7 +35,7 @@ class ProductRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         
-        $sql = 'SELECT category_id FROM product GROUP BY category_id HAVING COUNT(id) > :productsNumber';
+        $sql = 'SELECT category_id FROM product GROUP BY category_id HAVING COUNT(id) >= :productsNumber';
 
         $stmt = $conn->prepare($sql);
         $stmt->execute(['productsNumber' => $productsNumber]);
