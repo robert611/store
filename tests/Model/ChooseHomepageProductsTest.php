@@ -10,10 +10,14 @@ class ChooseHomepageProductsTest extends WebTestCase
 {
     private $productRepository;
 
+    private $homepageProducts;
+
     public function setUp()
     {
         $this->client = static::createClient();
         $this->productRepository = static::$container->get(ProductRepository::class);
+
+        $this->homepageProducts = (new ChooseHomepageProducts($this->productRepository))->getHomepageProducts();
     }
 
     public function testGetUnfetchedProductsIds()
@@ -60,11 +64,7 @@ class ChooseHomepageProductsTest extends WebTestCase
 
     public function testIfFirstRowWithSixProductsConsistsOfTheSameCategory()
     {
-        $chooseHomepageProducts = new ChooseHomepageProducts($this->productRepository);
-
-        $homepageProducts = $chooseHomepageProducts->getHomepageProducts();
-
-        $firstRowWithSixProducts = $homepageProducts['six_products_row'];
+        $firstRowWithSixProducts = $this->homepageProducts['six_products_row'];
 
         $isRowConsistent = true;
 
@@ -76,5 +76,29 @@ class ChooseHomepageProductsTest extends WebTestCase
         }
         
         $this->assertTrue($isRowConsistent);
+    }
+
+    public function testIfSecondRowWithSixProductsConsistsOfTheSameCategory()
+    {
+        $secondRowWithSixProducts = $this->homepageProducts['second_six_products_row'];
+
+        $isRowConsistent = true;
+
+        $categoryId = $secondRowWithSixProducts[0]->getCategory()->getId();
+
+        foreach ($secondRowWithSixProducts as $product)
+        {
+            if ($product->getCategory()->getId() !== $categoryId) $isRowConsistent = false;
+        }
+        
+        $this->assertTrue($isRowConsistent);
+    }
+
+    public function testIfFirstTwoRowsConsistsOfProductsOfDiffrentCategoryThanOtherRow()
+    {
+        $firstRowCategory = $this->homepageProducts['six_products_row'][0]->getCategory()->getId();
+        $secondRowCategory = $this->homepageProducts['second_six_products_row'][0]->getCategory()->getId();
+
+        $this->assertNotEquals($firstRowCategory, $secondRowCategory);
     }
 }
