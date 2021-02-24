@@ -160,7 +160,9 @@ class ProductController extends AbstractController
 
         $picturesToRemove = $request->request->get('product')['pictures_to_remove'] ?? [] ;
 
-        if (count($picturesToRemove) !== 0 && count($picturesToRemove) >= $product->getProductPictures()->count()) {
+        $newPictures = $form->get('pictures')->getData();
+
+        if (count($picturesToRemove) !== 0 && count($picturesToRemove) >= ($product->getProductPictures()->count() + count($newPictures))) {
             $this->addFlash('product_form_picture_error', 'Musisz zostawić przynajmniej jedno zdjęcie');
         }
         else if ($form->isSubmitted() && $form->isValid()) {
@@ -177,8 +179,6 @@ class ProductController extends AbstractController
             $uploadProductPictures = new UploadProductPictures($entityManager, $this->getParameter('pictures_directory'), $product);
 
             $uploadProductPictures->removePicturesAndPersistChangesToDatabase($picturesToRemove);
-
-            $newPictures = $form->get('pictures')->getData();
 
             $newPictures ? $uploadProductPictures->uploadPicturesAndPersistToDatabase($newPictures, $slugger) : null;
 
