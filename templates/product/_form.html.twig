@@ -46,7 +46,7 @@
             </label>
         </div>
         <div class="product-form-pictures-to-remove mt-3">
-            <div class="row">
+            <div class="row align-items-center">
                 {% for picture in product.productPictures %}
                     <div class="col-3">
                         <img class="img-fluid" src="{{ asset('uploads/pictures/'~picture.name) }}">

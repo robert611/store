@@ -445,6 +445,10 @@ m.pagination li i {
     color: #311b92;
 }
 
+.align-items-center {
+    align-items: center;
+}
+
 @media(min-width: 1510px) {
     .height-350 {
        height: 350px;
