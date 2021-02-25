@@ -17,8 +17,11 @@ fetch(`/api/products${categoryId}${productName}${quantity}${owner}`)
     })
     .then((products) => {
         document.getElementById('loading-filters-spinner').classList.add('hidden');
-        document.getElementById('div-with-filters').classList.remove('hidden');
-        products.length > 0 ? activateFilters(products) : null;
+
+        if (products.length > 0) {
+            document.getElementById('div-with-filters').classList.remove('hidden');
+            activateFilters(products);
+        }
     });   
 
 function activateFilters(products)
