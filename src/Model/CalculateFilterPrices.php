@@ -12,7 +12,7 @@ class CalculateFilterPrices
 
         $productsSummedPrice = $this->getProductsSummedPrice($products);
 
-        $productsAveragePrice = (int) ($productsSummedPrice / count($products));  
+        $productsAveragePrice = count($products) > 0 ? (int) ($productsSummedPrice / count($products)) : 0;  
         
         $filterPrices[0] = (int) (ceil(($productsAveragePrice * 0.4) / 10)) * 10;
         $filterPrices[1] = (int) (ceil(($productsAveragePrice * 0.8) / 10)) * 10;
