@@ -4,6 +4,7 @@
     {{ parent() }}
     <script src="{{ asset('assets/js/show_product.js') }}"></script>   
     <script src="{{ asset('assets/js/display_product_opinion.js') }}"></script>
+    <script src="{{ asset('assets/js/display_product_delivery_types.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -226,5 +227,24 @@
                 </div>
             </div>
         {% endif %}
+
+        <div class="card card-body no-border-radius mt-3 p-4 pl-3">
+            <div class="row">
+                <h4 class="col-md-6 mb-0">Dostawa i Płatność</h4>
+                <p class="col-md-6 mb-0">
+                    <i class="material-icons icon-align mr-2 float-right cursor-pointer" id="show-product-delivery-types">keyboard_arrow_right</i>
+                </p>
+            </div>
+            <div id="product-delivery-types-container" class="hidden mt-2">
+                {% for deliveryType in product.deliveryTypes %}
+                    <div class="mb-3 mt-2">
+                        <p class="mb-0">
+                            {{ deliveryType.name }} - {{ deliveryType.defaultPrice }} zł
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
 {% endblock %}
