@@ -4,4 +4,4 @@ Product can be listed as an acution or be bought now. User can search through al
 In case of annoucement it is possible to start conversation with owner and ask for details. Etc. 
 
 
-![alt text](https://ibb.co/sjsRkyR)
+![alt text](https://i.ibb.co/Px1j3wj/Store.png)
